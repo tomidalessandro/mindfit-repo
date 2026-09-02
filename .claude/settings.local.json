@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($gitPath = \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\"; if \\(Test-Path $gitPath\\) { & $gitPath --version } else { Write-Host \"No encontrado en la ruta esperada\" })"
+    ]
+  }
+}

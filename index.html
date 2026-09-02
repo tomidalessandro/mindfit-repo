@@ -1,0 +1,2855 @@
+<!doctype html>
+<html lang="es-AR" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" id="metatema" content="#0C0D10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MindFit">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>MindFit Rutinas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<style>html,body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>
+  /* El tema se decide antes de pintar, para que no haya un parpadeo claro
+     al abrir la app en modo oscuro (o al revés). */
+  (function(){
+    try { if (localStorage.getItem("mf:tema") === "claro") document.documentElement.setAttribute("data-tema","claro"); }
+    catch(e){}
+  })();
+</script>
+</head>
+<body>
+<style>
+  /* ============================================================
+     SISTEMA DE COLOR
+     Un solo juego de nombres para los dos temas. El oscuro es el que
+     abre por defecto; el claro se activa con data-tema="claro" en <html>.
+     ============================================================ */
+  :root{
+    color-scheme:dark;
+
+    --accent:#FF6A2B;
+    --accent-hi:#FF8B52;
+    --accent-ink:#170800;
+    --accent-soft:#371C0C;
+    --accent-line:#66331A;
+    --accent-soft-ink:#FFB690;
+    --accent-glow:rgba(255,106,43,.20);
+
+    --frame:#050607;
+    --bg:#0C0D10;
+    --surface:#15171B;
+    --surface-2:#1D2026;
+    --surface-3:#262A31;
+    --line:#23262C;
+    --line-strong:#343943;
+
+    --ink:#F3F4F6;
+    --ink-2:#9CA2AC;
+    --ink-3:#6A707A;
+
+    --solid:#F3F4F6;
+    --solid-ink:#0C0D10;
+
+    --danger:#FF8078;
+    --danger-line:#4C2622;
+    --danger-soft:#2B1613;
+
+    --bar:#101216;
+    --bar-ink:#F3F4F6;
+    --bar-ink-2:#8A9099;
+    --bar-line:rgba(255,255,255,.10);
+
+    --scrim:rgba(2,3,4,.72);
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px rgba(0,0,0,.32);
+    --shadow-lift:0 18px 48px rgba(0,0,0,.55);
+
+    /* alias que usa el código para los pesos heredados de otra semana */
+    --muted:var(--ink-2);
+    --faint:var(--ink-3);
+
+    --sans:"Archivo","Archivo Narrow","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  }
+
+  :root[data-tema="claro"]{
+    color-scheme:light;
+
+    --accent:#DD5218;
+    --accent-hi:#FF6A2B;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#FFEEE4;
+    --accent-line:#FFD0B4;
+    --accent-soft-ink:#B8420E;
+    --accent-glow:rgba(221,82,24,.16);
+
+    --frame:#E6E5E2;
+    --bg:#FBFAF8;
+    --surface:#FFFFFF;
+    --surface-2:#F2F1EE;
+    --surface-3:#E8E6E2;
+    --line:#E5E3DF;
+    --line-strong:#D2CFC9;
+
+    --ink:#1A1B1E;
+    --ink-2:#6B6F76;
+    --ink-3:#A3A6AC;
+
+    --solid:#1A1B1E;
+    --solid-ink:#FBFAF8;
+
+    --danger:#B02A20;
+    --danger-line:#EBC3BF;
+    --danger-soft:#FBEBE9;
+
+    --scrim:rgba(20,21,24,.52);
+    --shadow:0 1px 2px rgba(20,21,24,.05),0 8px 22px rgba(20,21,24,.07);
+    --shadow-lift:0 18px 44px rgba(20,21,24,.16);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;padding:0;background:var(--frame);
+    font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;color:inherit}
+  ::selection{background:var(--accent);color:var(--accent-ink)}
+
+  .sheet{
+    max-width:560px;margin:0 auto;min-height:100vh;min-height:100dvh;
+    background:var(--bg);display:flex;flex-direction:column;position:relative;
+  }
+  @media (min-width:620px){
+    .sheet{box-shadow:0 0 0 1px var(--line),var(--shadow-lift)}
+  }
+
+  /* ---------- barra de marca ---------- */
+  .brandbar{
+    position:sticky;top:0;z-index:30;background:var(--bar);color:var(--bar-ink);
+    height:52px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border-bottom:1px solid var(--bar-line);
+  }
+  .brand{display:flex;align-items:center;gap:10px;min-width:0}
+  .mark{
+    width:27px;height:27px;border-radius:9px;flex:none;
+    background:linear-gradient(145deg,var(--accent-hi),var(--accent));
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:15px;letter-spacing:-.04em;
+    box-shadow:0 2px 10px var(--accent-glow);
+  }
+  .wordmark{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .wordmark b{
+    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.20em;
+    text-transform:uppercase;line-height:1;white-space:nowrap;
+  }
+  .wordmark i{
+    font-style:normal;font-family:var(--mono);font-size:7.5px;font-weight:400;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--bar-ink-2);line-height:1;white-space:nowrap;
+  }
+  .bartools{display:flex;align-items:center;gap:8px;flex:none}
+  .iconbtn{
+    width:30px;height:30px;flex:none;border-radius:50%;cursor:pointer;
+    background:transparent;border:1px solid var(--bar-line);color:var(--bar-ink-2);
+    display:flex;align-items:center;justify-content:center;padding:0;
+  }
+  .iconbtn:hover{color:var(--accent-hi);border-color:var(--accent)}
+  :root[data-tema="oscuro"] .ico-luna{display:none}
+  :root[data-tema="claro"] .ico-sol{display:none}
+  .brandbar .state{
+    font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+    white-space:nowrap;color:var(--bar-ink-2);display:flex;align-items:center;gap:6px;cursor:pointer;
+    background:transparent;border:1px solid var(--bar-line);border-radius:999px;padding:6px 11px;
+  }
+  .brandbar .state:hover{color:var(--bar-ink)}
+  .brandbar .state .lamp{width:6px;height:6px;border-radius:50%;background:var(--ink-3);flex:none}
+  .brandbar .state[data-sync="nube"] .lamp{background:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+  .brandbar .state[data-sync="local"] .lamp{background:var(--ink-3)}
+
+  /* ---------- barra de navegación ---------- */
+  .crumbs{
+    position:sticky;top:52px;z-index:25;background:var(--bg);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;padding:10px 20px;min-height:42px;
+  }
+  .back{
+    background:none;border:0;padding:0;cursor:pointer;color:var(--ink-2);
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    display:flex;align-items:center;gap:6px;
+  }
+  .back:hover{color:var(--accent)}
+  .crumbs .here{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-left:auto;text-align:right}
+
+  main{flex:1;padding:28px 20px 0}
+  .eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px}
+  .title{font-size:clamp(33px,10vw,46px);font-weight:800;letter-spacing:-.035em;line-height:.94;margin:0;text-wrap:balance;color:var(--ink)}
+  .titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .titlenum{font-family:var(--mono);font-size:clamp(25px,7.5vw,34px);font-weight:500;color:var(--accent);line-height:1;margin-top:5px;opacity:.85}
+  .rule{width:64px;height:3px;border-radius:999px;background:var(--accent);margin:18px 0 28px}
+  .lead{margin:0 0 26px;font-size:14.5px;line-height:1.55;color:var(--ink-2);font-weight:500;max-width:44ch}
+
+  /* ---------- secciones ---------- */
+  .block{margin-bottom:30px}
+  .blockhead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .blocktitle{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;color:var(--ink)}
+  .blockline{flex:1;height:1px;background:var(--line)}
+  .blockmeta{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .blockedit{background:none;border:0;cursor:pointer;color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:0}
+  .blockedit:hover{color:var(--accent)}
+
+  /* ---------- tarjetas (alumnos / planes) ---------- */
+  .cards{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+  .card{
+    width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:15px 17px;cursor:pointer;display:flex;align-items:center;gap:14px;color:var(--ink);
+    box-shadow:var(--shadow);
+    transition:border-color .18s ease,transform .12s ease,background-color .18s ease;
+  }
+  .card:hover{border-color:var(--accent)}
+  .card:active{transform:scale(.995)}
+  .card .initial{
+    width:38px;height:38px;border-radius:12px;background:var(--accent-soft);color:var(--accent-soft-ink);flex:none;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
+    border:1px solid var(--accent-line);
+  }
+  .card .body{flex:1;min-width:0}
+  .card .name{font-size:16.5px;font-weight:600;letter-spacing:-.015em;display:block;color:var(--ink)}
+  .card .sub{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);margin-top:3px;display:block}
+  .card .chev{color:var(--ink-3);font-family:var(--mono);font-size:14px;flex:none}
+  .card .name{border-bottom:0;padding-bottom:0}
+  .card--archivo{background:transparent;border-style:dashed;box-shadow:none}
+  .card--archivo .initial{background:var(--surface-2);color:var(--ink-2);border-color:var(--line)}
+
+  .tagline{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-soft-ink);margin-top:6px}
+  .tagline--off{background:var(--surface-2);color:var(--ink-2)}
+
+  /* ---------- selector de días ---------- */
+  .days{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);margin:0 -20px 0;padding:0 20px}
+  .days::-webkit-scrollbar{display:none}
+  .daytab{
+    flex:1 0 auto;background:none;border:0;cursor:pointer;padding:13px 10px 11px;
+    font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);
+    border-bottom:2px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .daytab:hover{color:var(--ink-2)}
+  .daytab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+  .daytab .dot{width:5px;height:5px;border-radius:50%;border:1px solid var(--line-strong);background:transparent}
+  .daytab[data-done="true"] .dot{background:var(--accent);border-color:var(--accent)}
+
+  .weekbar{display:flex;align-items:center;gap:12px;margin:-6px 0 26px;flex-wrap:wrap}
+  .weekbar-label{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+  .weektabs{display:flex;gap:6px;flex-wrap:wrap}
+  .weektab{
+    font-family:var(--mono);font-size:11px;font-weight:500;cursor:pointer;padding:6px 13px;border-radius:999px;
+    border:1.5px solid var(--line);background:transparent;color:var(--ink-2);
+    transition:background-color .15s ease,border-color .15s ease,color .15s ease;
+  }
+  .weektab:hover{border-color:var(--line-strong);color:var(--ink)}
+  .weektab[aria-selected="true"]{background:var(--solid);border-color:var(--solid);color:var(--solid-ink)}
+
+  /* ---------- filas de ejercicio ---------- */
+  .row{display:grid;grid-template-columns:16px 1fr auto;align-items:center;gap:9px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .idx{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+  .name{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.25;color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--accent-line);padding-bottom:1px;justify-self:start}
+  a.name:hover{border-bottom-color:var(--accent);color:var(--accent)}
+  .name.plain{border-bottom:0;padding-bottom:0}
+  .load{display:flex;align-items:center;gap:6px;flex-shrink:0}
+
+  .pill{font-family:var(--mono);font-size:11px;padding:5px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink);white-space:nowrap;border:0;cursor:pointer}
+  .pill--reps{background:var(--accent-soft);color:var(--accent-soft-ink);font-weight:500}
+  .pill--sets{background:var(--solid);color:var(--solid-ink);font-weight:500}
+  .pill--ajustado{box-shadow:0 0 0 1.5px var(--accent)}
+  .pillinput{
+    font-family:var(--mono);font-size:11px;font-weight:500;width:74px;text-align:center;
+    padding:5px 6px;border-radius:999px;border:1.5px solid var(--accent);background:var(--surface);color:var(--ink);outline:none;
+  }
+
+  .kg{display:inline-flex;align-items:center;gap:3px;background:transparent;border:1.5px dashed var(--accent-line);border-radius:999px;padding:3px 8px}
+  .kg.filled{background:var(--surface-2);border-color:transparent;border-style:solid}
+  .kg.auto{background:transparent;border-style:solid;border-color:var(--line)}
+  .kg.auto input{color:var(--ink-2)}
+  .kg:focus-within{border-color:var(--accent);border-style:solid;background:var(--surface)}
+  .kg input{width:44px;border:0;background:transparent;outline:none;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink);text-align:right;padding:0}
+  .kg input::placeholder{color:var(--ink-3);font-weight:400}
+  .kg label{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+
+  /* ---------- ejercicio con sus series ---------- */
+  .ex{padding:14px 0;border-bottom:1px solid var(--line)}
+  .exhead{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:center}
+  .sets{margin:11px 0 0 20px;display:flex;flex-direction:column;gap:5px}
+  .set{
+    display:grid;
+    grid-template-columns:20px minmax(58px,100px) 10px minmax(58px,var(--repsw,72px)) 32px minmax(0,1fr);
+    gap:7px;align-items:center;padding:3px 0;border-radius:10px;
+  }
+  .setn{font-family:var(--mono);font-size:10px;color:var(--ink-3);text-align:center}
+  .set--ok .setn{color:var(--accent);font-weight:600}
+  .setx{font-family:var(--mono);font-size:10px;color:var(--ink-3);text-align:center}
+
+  /* Cada casillero lleva su color: el peso en gris de superficie y las
+     repeticiones en naranja — los dos tonos que ordenan toda la app. */
+  .setfield{
+    display:flex;align-items:center;gap:3px;justify-content:flex-end;
+    background:var(--surface-2);border:1.5px solid transparent;border-radius:999px;padding:4px 9px;
+    transition:background-color .15s ease,border-color .15s ease;
+  }
+  .setfield--reps{background:var(--accent-soft);border-color:var(--accent-line)}
+  .setfield--reps input{color:var(--accent-soft-ink)}
+  .setfield--reps span{color:var(--accent-soft-ink);opacity:.7}
+  .setfield--reps input::placeholder{color:var(--accent-soft-ink)}
+
+  /* Serie hecha: el naranja se vuelve sólido y el peso queda perfilado. */
+  .set--ok .setfield{background:var(--surface);border-color:var(--line-strong)}
+  .set--ok .setfield--reps{background:var(--accent);border-color:var(--accent)}
+  .set--ok .setfield--reps input{color:var(--accent-ink)}
+  .set--ok .setfield--reps span{color:var(--accent-ink);opacity:.7}
+  .set--ok .setfield--reps input::placeholder{color:var(--accent-ink)}
+
+  .setfield:focus-within,
+  .set--ok .setfield:focus-within{background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+  .set--ok .setfield--reps:focus-within input{color:var(--ink)}
+  .setfield input{
+    width:100%;min-width:0;border:0;background:transparent;outline:none;
+    font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--ink);
+    text-align:right;padding:0;font-variant-numeric:tabular-nums;
+  }
+  .setfield input::placeholder{color:var(--ink-3);font-weight:400}
+  /* El objetivo del plan (12 reps) se dibuja igual que un valor ya cargado:
+     mismo color y mismo grosor. Asi el numero no cambia de tono al tildar
+     la serie ni al destildarla. */
+  .setfield--reps input::placeholder{color:var(--ink);font-weight:500;opacity:1}
+  .set--ok .setfield--reps input::placeholder{color:var(--accent-ink);font-weight:500;opacity:1}
+  .setfield input::-webkit-outer-spin-button,.setfield input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .setfield span{font-family:var(--mono);font-size:10px;color:var(--ink-2);flex:none}
+  .setok{
+    width:30px;height:30px;border-radius:50%;cursor:pointer;
+    border:1.5px solid var(--line-strong);background:transparent;color:var(--ink-3);
+    font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;
+    transition:background-color .15s ease,border-color .15s ease,color .15s ease;
+  }
+  .setok:hover{border-color:var(--accent);color:var(--accent)}
+  .setok[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 4px var(--accent-glow)}
+  .setactions{display:flex;align-items:center;gap:14px;margin:9px 0 0 20px;flex-wrap:wrap}
+  .addrow{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+
+  /* ---------- superseries y circuitos ---------- */
+  .grupo{
+    border-left:2px solid var(--accent-line);
+    padding-left:13px;margin:0 0 0 1px;
+  }
+  .grupo .ex:last-child{border-bottom:0}
+  .grupohead{display:flex;align-items:center;gap:9px;padding:14px 0 2px}
+  .grupoletra{
+    font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;
+    background:var(--solid);color:var(--solid-ink);border-radius:999px;padding:3px 8px;flex:none;
+  }
+  .grupotipo{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);flex:none;
+  }
+  .grupoline{flex:1;height:1px;background:var(--line)}
+  .grupometa{
+    font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);flex:none;white-space:nowrap;
+  }
+  .idx--grupo{font-weight:600;color:var(--accent)}
+
+  /* ---------- botones ---------- */
+  .btn{
+    width:100%;border:0;cursor:pointer;background:var(--solid);color:var(--solid-ink);border-radius:999px;padding:15px 18px;
+    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+    transition:opacity .15s ease,background-color .15s ease,border-color .15s ease;
+  }
+  .btn:hover{opacity:.85}
+  .btn:disabled{opacity:.28;cursor:not-allowed}
+  .btn--ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line-strong)}
+  .btn--ghost:hover{opacity:1;background:var(--surface-2);border-color:var(--accent)}
+  .btn--danger{background:transparent;color:var(--danger);border:1.5px solid var(--danger-line)}
+  .btn--danger:hover{opacity:1;background:var(--danger-soft)}
+  .btnrow{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+  .sendnote{margin:2px;font-family:var(--mono);font-size:10px;line-height:1.6;color:var(--ink-3);text-align:center}
+
+  /* ---------- progreso ---------- */
+  .prow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+  .prow .pname{font-size:14.5px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+  .prow .ptrack{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);margin-top:4px;font-variant-numeric:tabular-nums}
+  .delta{font-family:var(--mono);font-size:11px;font-weight:500;padding:5px 9px;border-radius:999px;white-space:nowrap;background:var(--surface-2);color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .delta--up{background:var(--accent-soft);color:var(--accent-soft-ink)}
+
+  /* ---------- guía ---------- */
+  .note{display:grid;grid-template-columns:16px 1fr;gap:9px;align-items:start;padding:11px 0;border-bottom:1px solid var(--line)}
+  .note:last-child{border-bottom:0}
+  .note b{display:block;font-size:14.5px;font-weight:600;margin-bottom:3px;color:var(--ink)}
+  .note span{display:block;font-size:13.5px;line-height:1.5;color:var(--ink-2);font-weight:500}
+  .tablenote{margin:12px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3)}
+
+  .empty{text-align:center;padding:30px 18px;color:var(--ink-2);border:1px dashed var(--line);border-radius:16px;margin-bottom:24px}
+  .empty p{margin:0 0 6px;font-size:14.5px;font-weight:600;color:var(--ink)}
+  .empty small{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.6;display:block;max-width:32ch;margin:0 auto}
+
+  /* ---------- pie ---------- */
+  footer{margin-top:auto;padding:22px 20px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid var(--line)}
+  .hint{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+  .linkbtn{background:none;border:0;padding:0;cursor:pointer;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px}
+  .linkbtn:hover{color:var(--accent)}
+
+  /* ---------- modal ---------- */
+  .scrim{position:fixed;inset:0;background:var(--scrim);display:none;align-items:flex-end;justify-content:center;z-index:60;padding:0;backdrop-filter:blur(3px)}
+  .scrim.open{display:flex}
+  .modal{
+    width:100%;max-width:560px;background:var(--surface);border-top:1px solid var(--line);
+    border-radius:22px 22px 0 0;padding:14px 20px 26px;max-height:88vh;overflow-y:auto;
+    box-shadow:var(--shadow-lift);
+  }
+  .modal::before{content:"";display:block;width:38px;height:4px;border-radius:999px;background:var(--line-strong);margin:0 auto 16px}
+  .modal h2{margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-.025em;color:var(--ink)}
+  .modal .msub{margin:0 0 18px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+  .field label{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+  .field input,.field select,.field textarea{
+    font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--surface-2);
+    border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;outline:none;width:100%;
+  }
+  .field textarea{font-family:var(--mono);font-size:12px;line-height:1.5}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+  .field input::placeholder,.field textarea::placeholder{color:var(--ink-3)}
+  .field .help{font-family:var(--mono);font-size:10px;color:var(--ink-3);line-height:1.5}
+  .field--row{flex-direction:row;gap:10px;flex-wrap:wrap}
+  .field--row>div{min-width:96px}
+  .field--row>div{flex:1}
+  .weekfields{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}
+  .weekfields input{font-family:var(--mono);font-size:13px;text-align:center;padding:9px 6px}
+  .weekfields span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);text-align:center;margin-bottom:4px}
+
+  .biblist{display:flex;flex-direction:column;gap:0;max-height:44vh;overflow-y:auto;margin:-4px 0 14px;border-top:1px solid var(--line);scrollbar-width:thin}
+  .bibitem{
+    width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);
+    padding:13px 2px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--ink);
+  }
+  .bibitem:hover{background:var(--surface-2)}
+  .bibitem .bn{flex:1;font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
+  .bibitem .bv{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);flex:none}
+  .bibitem .bplus{font-family:var(--mono);font-size:15px;color:var(--accent);flex:none}
+  .bibempty{padding:18px 2px;font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.6}
+
+  /* ---------- cronómetro de descanso ---------- */
+  .restchip{
+    margin-left:auto;display:inline-flex;align-items:center;gap:5px;cursor:pointer;
+    background:transparent;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-2);
+  }
+  .restchip:hover{border-color:var(--accent);color:var(--ink)}
+  .restchip[data-off="true"]{opacity:.5}
+
+  .crono{
+    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    background:var(--bar);color:var(--bar-ink);
+    border-top:1px solid var(--bar-line);
+    box-shadow:0 -12px 34px rgba(0,0,0,.35);
+    padding:12px 20px calc(14px + env(safe-area-inset-bottom,0px));
+  }
+  .crono-in{max-width:560px;margin:0 auto}
+  .cronobar{height:4px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-bottom:11px}
+  .cronofill{display:block;height:100%;border-radius:999px;background:var(--accent);width:100%;transition:width .25s linear}
+  .cronorow{display:flex;align-items:center;gap:10px}
+  .cronolabel{
+    display:block;margin-bottom:7px;
+    font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent-hi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .cronotime{
+    font-family:var(--mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;
+    letter-spacing:-.02em;flex:1;min-width:0;
+  }
+  .cronobtn{
+    background:transparent;border:1.5px solid var(--bar-line);color:var(--bar-ink);border-radius:999px;
+    padding:7px 11px;cursor:pointer;flex:none;
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .cronobtn:hover{border-color:var(--accent)}
+  .crono--fin .cronofill{background:var(--accent-hi)}
+  body.con-crono .sheet{padding-bottom:120px}
+
+  /* En pantallas muy angostas apretamos la fila de series para que no se
+     corte ni el "Peso corporal" ni objetivos largos como "20” x lado". */
+  @media (max-width:365px){
+    .setfield{padding:4px 8px}
+    .setfield input{font-size:11.5px}
+    .set{
+      gap:5px;
+      grid-template-columns:18px minmax(50px,98px) 8px minmax(50px,var(--repsw,68px)) 30px minmax(0,1fr);
+    }
+    .setok{width:28px;height:28px}
+  }
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--solid);color:var(--solid-ink);
+    font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:10px 17px;border-radius:999px;
+    opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:80;box-shadow:var(--shadow-lift);
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media (max-width:400px){
+    main,.crumbs,footer,.brandbar{padding-left:16px;padding-right:16px}
+    .days{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
+    .wordmark b{font-size:10px;letter-spacing:.16em}
+    .wordmark i{font-size:7px;letter-spacing:.18em}
+    .brandbar .state{font-size:8px;letter-spacing:.14em;padding:6px 9px}
+    .name{font-size:14.5px}
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="sheet">
+  <div class="brandbar">
+    <div class="brand">
+      <span class="mark">M</span>
+      <span class="wordmark"><b>MindFit</b><i>Power in Balance</i></span>
+    </div>
+    <div class="bartools">
+      <button class="iconbtn" id="tema" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">
+        <svg class="ico-sol" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.2v2.1M12 19.7v2.1M4.5 4.5l1.5 1.5M18 18l1.5 1.5M2.2 12h2.1M19.7 12h2.1M4.5 19.5L6 18M18 6l1.5-1.5"/></svg>
+        <svg class="ico-luna" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.6A8.6 8.6 0 1 1 9.4 3.5a6.9 6.9 0 0 0 11.1 11.1Z"/></svg>
+      </button>
+      <button class="state" id="state" type="button" data-sync="local"><span class="lamp"></span><span id="statetxt">Local</span></button>
+    </div>
+  </div>
+  <div class="crumbs" id="crumbs"></div>
+  <main id="view"></main>
+  <footer id="foot"></footer>
+</div>
+
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<script>/*ALUMNO*/</script>
+
+<datalist id="colores-banda"></datalist>
+
+<div class="crono" id="crono" hidden>
+  <div class="crono-in">
+    <div class="cronobar"><i class="cronofill" id="cronofill"></i></div>
+    <span class="cronolabel" id="cronolabel">Descanso</span>
+    <div class="cronorow">
+      <span class="cronotime" id="cronotime">0:00</span>
+      <button class="cronobtn" id="cronomenos" type="button">−15</button>
+      <button class="cronobtn" id="cronomas" type="button">+15</button>
+      <button class="cronobtn" id="cronofin" type="button">Listo</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Guardado</div>
+
+<script>
+/* ============================================================
+   TEMA CLARO / OSCURO
+   Solo cambia colores: no toca ningún dato ni ninguna función.
+   La elección queda guardada en este dispositivo.
+   ============================================================ */
+(function(){
+  const raiz = document.documentElement;
+  const meta = document.getElementById("metatema");
+  const boton = document.getElementById("tema");
+
+  function aplicar(t){
+    raiz.setAttribute("data-tema", t);
+    if (meta) meta.setAttribute("content", t === "claro" ? "#FBFAF8" : "#0C0D10");
+    if (boton) boton.title = t === "claro" ? "Pasar al tema oscuro" : "Pasar al tema claro";
+  }
+
+  let tema = "oscuro";
+  try { tema = localStorage.getItem("mf:tema") === "claro" ? "claro" : "oscuro"; } catch(e){}
+  aplicar(tema);
+
+  if (boton) boton.addEventListener("click", () => {
+    tema = tema === "oscuro" ? "claro" : "oscuro";
+    try { localStorage.setItem("mf:tema", tema); } catch(e){}
+    aplicar(tema);
+  });
+})();
+</script>
+
+<script>
+/* ============================================================
+   MINDFIT · app de rutinas
+   ------------------------------------------------------------
+   CONFIG — lo único que se toca a mano
+   ============================================================ */
+const CFG = {
+  whatsappCoach: "5491152601612",
+  pinCoach: "mindfit",
+
+  // ---- Nube compartida, para que los alumnos entren desde cualquier lado ----
+  // Opción 1 (recomendada): Supabase. Creás el proyecto, corrés el SQL que
+  // viene en el instructivo y pegás acá la URL del proyecto y la clave
+  // pública (anon). Anda con la app subida a cualquier hosting.
+  supabase: { url: "", anonKey: "" },
+
+  // Opción 2: Google Apps Script. Si la app la sirve el propio Apps Script,
+  // se detecta sola y no hay que completar nada acá. Este campo es solo
+  // para el caso de tener la app alojada aparte y el script como base.
+  apiUrl: ""
+};
+
+/* ============================================================
+   GUÍA — texto de "Cómo progresar"
+   ============================================================ */
+const GUIA = {
+  rotulo: "Doble progresión · MindFit",
+  titulo: "¿Cómo progresar?",
+  intro: "Cómo elegir el peso y cómo ir subiendo, semana a semana. Ejemplo con 3 series de 6 a 8 repeticiones.",
+  pasos: [
+    "Elegí un peso con el que puedas completar 3 series de 6 repeticiones sin llegar al fallo en ninguna serie.",
+    "Cada semana sumá una repetición en las tres series: 6.6.6 → 7.7.7 → 8.8.8. Evitá el fallo (podés quedar cerca, pero no fallar) o comprometerás las repeticiones siguientes.",
+    "Al llegar al objetivo (3x8 en este ejemplo) en la semana 3, la semana 4 aumentá la carga y volvé a empezar el ciclo con 3x6."
+  ],
+  ejemplo: [
+    { semana:"Semana 1", carga:"35 kg", reps:"6.6.6" },
+    { semana:"Semana 2", carga:"35 kg", reps:"7.7.7" },
+    { semana:"Semana 3", carga:"35 kg", reps:"8.8.8" },
+    { semana:"Semana 4", carga:"40 kg", reps:"6.6.6" }
+  ],
+  cierre: [
+    { t:"La técnica manda", d:"Si para mover el peso tenés que romper la técnica, ese peso todavía no es tuyo." },
+    { t:"Respetá las pausas", d:"En fuerza, los 2 a 3 minutos entre series no son tiempo perdido: son lo que te permite levantar bien la serie siguiente." },
+    { t:"Anotá siempre", d:"Cargá el peso de cada ejercicio el mismo día que entrenás. Es lo que deja ver tu evolución y ajustar la rutina." }
+  ]
+};
+
+/* ============================================================
+   CAPA DE DATOS
+   Tres backends con la misma interfaz: read / write / watch.
+   1. apiUrl → Google Sheets vía Apps Script (todos, con el link)
+   2. claude db → base compartida de Claude (solo la organización)
+   3. localStorage → este celular
+   ============================================================ */
+let backend = "local";
+
+const Local = {
+  read: async (k) => { try { return JSON.parse(localStorage.getItem("mf:" + k) || "null"); } catch(e){ return null; } },
+  write: async (k, v) => { try { localStorage.setItem("mf:" + k, JSON.stringify(v)); } catch(e){} },
+  watch: () => () => {}
+};
+
+const Api = {
+  async call(payload){
+    const r = await fetch(CFG.apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    return await r.json();
+  },
+  async read(k){
+    try { const r = await Api.call({ action:"get", key:k }); return r && r.ok ? r.value : null; }
+    catch(e){ return await Local.read(k); }
+  },
+  async write(k, v){
+    await Local.write(k, v);
+    try { await Api.call({ action:"set", key:k, value:v }); }
+    catch(e){ avisar("Sin conexión · guardado en el celular"); }
+  },
+  watch(k, cb){
+    const t = setInterval(async () => { const v = await Api.read(k); if (v) cb(v); }, 25000);
+    return () => clearInterval(t);
+  }
+};
+
+/* Supabase: una tabla clave/valor con su API REST. Al ser una API abierta
+   con CORS, funciona con la app subida a cualquier hosting. La clave
+   pública viaja dentro del archivo: alcanza para esto, pero tenelo
+   presente — cualquiera con el link puede leer y escribir la base. */
+const Sup = {
+  cfg(){ return CFG.supabase; },
+  cab(){
+    const k = Sup.cfg().anonKey;
+    return { "apikey": k, "Authorization": "Bearer " + k, "Content-Type": "application/json" };
+  },
+  tabla(){ return Sup.cfg().url.replace(/\/+$/, "") + "/rest/v1/mindfit_store"; },
+  async read(k){
+    try {
+      const r = await fetch(Sup.tabla() + "?clave=eq." + encodeURIComponent(k) + "&select=valor",
+                            { headers: Sup.cab() });
+      const filas = await r.json();
+      return (filas && filas[0]) ? filas[0].valor : null;
+    } catch(e){ return await Local.read(k); }
+  },
+  async write(k, v){
+    await Local.write(k, v);
+    try {
+      await fetch(Sup.tabla(), {
+        method: "POST",
+        headers: Object.assign({ "Prefer": "resolution=merge-duplicates" }, Sup.cab()),
+        body: JSON.stringify({ clave: k, valor: v })
+      });
+    } catch(e){ avisar("Sin conexión · guardado en el celular"); }
+  },
+  watch(k, cb){
+    const t = setInterval(async () => { const v = await Sup.read(k); if (v) cb(v); }, 20000);
+    return () => clearInterval(t);
+  }
+};
+
+/* Cuando la app la sirve el Apps Script, el navegador la corre dentro de un
+   marco de Google: no se puede usar fetch contra el /exec (no hay CORS),
+   pero sí google.script.run, que es el puente que Google provee. */
+const enAppsScript = () =>
+  typeof google !== "undefined" && google.script && google.script.run;
+
+const Gas = {
+  llamar(fn, args){
+    return new Promise((res, rej) => {
+      google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn].apply(null, args || []);
+    });
+  },
+  async read(k){
+    try {
+      const txt = await Gas.llamar("apiGet", [k]);
+      return txt ? JSON.parse(txt) : null;
+    } catch(e){ return await Local.read(k); }
+  },
+  async write(k, v){
+    await Local.write(k, v);                       // copia local por si se corta
+    try { await Gas.llamar("apiSet", [k, JSON.stringify(v)]); }
+    catch(e){ avisar("Sin conexión · guardado en el celular"); }
+  },
+  watch(k, cb){
+    const t = setInterval(async () => { const v = await Gas.read(k); if (v) cb(v); }, 25000);
+    return () => clearInterval(t);
+  }
+};
+
+let cdb = null;
+const rutaDe = (k) => {
+  if (k === "alumnos") return "app/alumnos";
+  if (k === "indice") return "app/indice";
+  const [tipo, id] = k.split(":");
+  return (tipo === "plan" ? "planes/" : "cargas/") + id;
+};
+const Cdb = {
+  async read(k){ const s = await cdb.doc(rutaDe(k)).get(); return s.exists ? (s.data().d || null) : null; },
+  async write(k, v){ await cdb.doc(rutaDe(k)).set({ d: v, t: Date.now() }); },
+  watch(k, cb){
+    return cdb.doc(rutaDe(k)).onSnapshot(
+      (s) => { if (s.exists && !s.metadata.hasPendingWrites && s.data().d) cb(s.data().d); },
+      () => {}
+    );
+  }
+};
+
+let store = Local;
+
+async function elegirBackend(){
+  if (CFG.supabase && CFG.supabase.url && CFG.supabase.anonKey){
+    store = Sup; backend = "nube";
+    return;
+  }
+  if (enAppsScript()){
+    store = Gas; backend = "nube";
+    return;
+  }
+  if (CFG.apiUrl){
+    store = Api; backend = "nube";
+    return;
+  }
+  try {
+    const d = await Promise.race([
+      claude.use("db"),
+      new Promise((res) => setTimeout(() => res(null), 6000))
+    ]);
+    if (d){ cdb = d; store = Cdb; backend = "nube"; return; }
+  } catch(e){}
+  store = Local; backend = "local";
+}
+
+/* ============================================================
+   BIBLIOTECA DE EJERCICIOS — nombre + video
+   El coach puede sumar los suyos; se guardan junto al resto.
+   ============================================================ */
+const BIBLIOTECA_BASE = [
+  { n:"Abducciones en máquina", v:"https://www.youtube.com/watch?v=pVGCaMmxuEg" },
+  { n:"Aductores en máquina", v:"https://www.youtube.com/watch?v=3DaEZ0Er6cU" },
+  { n:"Band pull apart", v:"https://www.youtube.com/watch?v=pASXdGKh-nc" },
+  { n:"Bíceps con mancuerna", v:"https://www.youtube.com/watch?v=l1tXK8CzxB4" },
+  { n:"Crunch", v:"https://www.youtube.com/shorts/6okNQ2lGr3g" },
+  { n:"Crunch invertido", v:"https://www.youtube.com/watch?v=idIahhhsEC0" },
+  { n:"Crunch oblicuos", v:"https://www.youtube.com/shorts/_cdt_-Bhi48" },
+  { n:"Curl de bíceps con barra", v:"https://www.youtube.com/watch?v=-gSM-kqNlUw" },
+  { n:"Curl de bíceps con barra EZ", v:"https://www.youtube.com/watch?v=-gSM-kqNlUw" },
+  { n:"Curl de bíceps con mancuerna", v:"https://www.youtube.com/watch?v=l1tXK8CzxB4" },
+  { n:"Curl martillo con mancuerna", v:"https://www.youtube.com/watch?v=RIEMoYL_h1Y" },
+  { n:"Dominadas", v:"https://www.youtube.com/watch?v=2m58VKBEQuo" },
+  { n:"Estocadas atrás con déficit", v:"https://www.youtube.com/shorts/7zKdEH5DLEU" },
+  { n:"Estocadas atrás con mancuerna", v:"https://www.youtube.com/watch?v=Q2k3kYbtOcI" },
+  { n:"Extensión de tríceps en polea", v:"https://www.youtube.com/watch?v=LXkCrxn3caQ" },
+  { n:"Fondos", v:"https://www.youtube.com/watch?v=VNa0hX_y6Fk" },
+  { n:"Hip thrust", v:"https://www.youtube.com/watch?v=JVe0AjERVsE" },
+  { n:"Hiperextensiones en banco romano", v:"https://www.youtube.com/watch?v=YGUOyLf6BUg" },
+  { n:"Hollow hold", v:"https://www.youtube.com/watch?v=EsnM8eBtazU" },
+  { n:"Hollow hold con carga", v:"https://www.youtube.com/shorts/rEnq_2GiX3I" },
+  { n:"Isquios en máquina sentado", v:"https://www.youtube.com/watch?v=ceG0f6ntNcw" },
+  { n:"Jalones en polea", v:"https://www.youtube.com/watch?v=PEv0gTcMY3g" },
+  { n:"Jalones en polea (toma neutra)", v:"https://www.youtube.com/watch?v=gNFMkFL5yPQ" },
+  { n:"Pantorrillas en multipower", v:"https://www.youtube.com/watch?v=ofEDDXpFgj8" },
+  { n:"Pantorrillas sentado", v:"https://www.youtube.com/watch?v=2Q-HQ3mnePg" },
+  { n:"Patada de glúteos (variante 45°)", v:"https://www.youtube.com/watch?v=50uCtMJze0s" },
+  { n:"Patada de glúteos 45°", v:"https://www.youtube.com/shorts/lLqk1vIJHmU" },
+  { n:"Peso muerto a una pierna", v:"https://www.youtube.com/shorts/Ex_pPwkzS1k" },
+  { n:"Peso muerto con trap bar", v:"https://www.youtube.com/watch?v=FYx76NSijfU" },
+  { n:"Peso muerto rumano", v:"https://www.youtube.com/shorts/g5u75sgpn04" },
+  { n:"Plancha alta a baja", v:"https://www.youtube.com/watch?v=hqcFXBY4sH8" },
+  { n:"Plancha de oso", v:"https://www.youtube.com/watch?v=O9lM_2t4Z0U" },
+  { n:"Plancha frontal con toque hombros", v:"https://www.youtube.com/watch?v=Rl-koX3NLFE" },
+  { n:"Plancha lateral", v:"https://www.youtube.com/watch?v=OMc5f_JUDUU" },
+  { n:"Plancha lateral con abducción", v:"https://www.youtube.com/shorts/eOW4Zvv60i0" },
+  { n:"Plancha lateral con rotación", v:"https://www.youtube.com/watch?v=OMc5f_JUDUU" },
+  { n:"Plancha oso", v:"https://www.youtube.com/shorts/fUM4U38lgbk" },
+  { n:"Prensa 45°", v:"https://www.youtube.com/watch?v=B8KqmwdomoU" },
+  { n:"Press de banca", v:"https://www.youtube.com/watch?v=ejI1Nlsul9k" },
+  { n:"Press de hombros", v:"https://www.youtube.com/watch?v=RgkzQ008m3I" },
+  { n:"Press de hombros en máquina", v:"https://www.youtube.com/watch?v=LEhz8ZXNWaY" },
+  { n:"Press en landmine", v:"https://www.youtube.com/watch?v=5KZF1xdgA-A" },
+  { n:"Press inclinado con mancuernas", v:"https://www.youtube.com/watch?v=jMQA3XtJSgo" },
+  { n:"Press landmine", v:"https://www.youtube.com/watch?v=5KZF1xdgA-A" },
+  { n:"Press plano con mancuernas", v:"https://www.youtube.com/watch?v=ZaDlbm8E8Tg" },
+  { n:"Puente de glúteos a una pierna", v:"https://www.youtube.com/watch?v=sVfp4LN9niA" },
+  { n:"Push-up", v:"https://www.youtube.com/watch?v=Ql8PKKsDE70" },
+  { n:"Push-up (rodillas)", v:"https://www.youtube.com/watch?v=8XQ-okb5NWE" },
+  { n:"Remo a un brazo con mancuerna", v:"https://www.youtube.com/watch?v=iLhwICt4R9A" },
+  { n:"Remo bajo", v:"https://www.youtube.com/watch?v=lJoozxC0Rns" },
+  { n:"Remo sentado", v:"https://www.youtube.com/shorts/0XMPmlhFrMc" },
+  { n:"Remo en máquina sentado", v:"https://www.youtube.com/shorts/0XMPmlhFrMc" },
+  { n:"Roll-out", v:"https://www.youtube.com/shorts/F6NlDOcgr04" },
+  { n:"Sentadilla", v:"https://www.youtube.com/watch?v=5KlSXnQWCXg" },
+  { n:"Sentadilla búlgara", v:"https://www.youtube.com/watch?v=8kvZmrlOo2M" },
+  { n:"Sentadilla con barra", v:"https://www.youtube.com/watch?v=j-KDHkRMer0" },
+  { n:"Sentadilla con barra atrás", v:"https://www.youtube.com/watch?v=j-KDHkRMer0" },
+  { n:"Sentadilla de pulso", v:"https://www.youtube.com/shorts/vCYFgvG2Pck" },
+  { n:"Sentadilla profunda", v:"https://youtube.com/shorts/4omGbN19aog" },
+  { n:"Sentadillas", v:"https://www.youtube.com/watch?v=iiKn5FiVUjI" },
+  { n:"Sillón de cuádriceps", v:"https://www.youtube.com/watch?v=s1JfTvyWdTs" },
+  { n:"Sillón de isquiotibiales", v:"https://www.youtube.com/watch?v=ceG0f6ntNcw" },
+  { n:"Sillón de isquios", v:"https://www.youtube.com/watch?v=ceG0f6ntNcw" },
+  { n:"Sit-up", v:"https://www.youtube.com/shorts/u8cwbmk3TqQ" },
+  { n:"Sit-up con disco", v:"https://www.youtube.com/watch?v=pTZL-Hirhwg" },
+  { n:"Superman alternado", v:"https://www.youtube.com/shorts/60rDAM5BUEU" },
+  { n:"Thruster con mancuerna", v:"https://www.youtube.com/watch?v=sLIswEpOHng" },
+  { n:"Thruster con mancuernas", v:"https://www.youtube.com/watch?v=sLIswEpOHng" },
+  { n:"Tríceps en polea alta", v:"https://www.youtube.com/watch?v=LXkCrxn3caQ" },
+  { n:"Tríceps francés con barra EZ", v:"https://www.youtube.com/watch?v=eluOhtYkm-0" },
+  { n:"Vitalizaciones", v:"https://www.youtube.com/watch?v=pdbME8Z03Yg" },
+  { n:"Vitalizaciones con disco", v:"https://www.youtube.com/watch?v=pdbME8Z03Yg" },
+  { n:"Vuelos laterales", v:"https://www.youtube.com/watch?v=XPPfnSEATJA" },
+  { n:"Vuelos laterales con mancuerna", v:"https://www.youtube.com/watch?v=8aUc9snLOxU" },
+  { n:"Camilla de isquiotibiales", v:"https://www.youtube.com/watch?v=SbSNUXPRkc8" }
+];
+let biblioteca = [];
+
+async function cargarBiblioteca(){
+  const guardada = await store.read("biblioteca");
+  const mapa = new Map();
+  BIBLIOTECA_BASE.forEach((e) => mapa.set(e.n.toLowerCase(), e));
+  (guardada || []).forEach((e) => { if (e && e.n) mapa.set(e.n.toLowerCase(), e); });
+  biblioteca = [...mapa.values()].sort((a, b) => a.n.localeCompare(b.n, "es"));
+}
+
+async function sumarABiblioteca(nombre, video){
+  if (!nombre) return;
+  const existe = biblioteca.find((e) => e.n.toLowerCase() === nombre.toLowerCase());
+  if (existe && existe.v === video) return;
+  if (existe) existe.v = video; else biblioteca.push({ n: nombre, v: video || "" });
+  biblioteca.sort((a, b) => a.n.localeCompare(b.n, "es"));
+  await store.write("biblioteca", biblioteca);
+}
+
+/* Reps sugeridas al agregar un ejercicio: el calentamiento no progresa,
+   la fuerza arranca en 8x3 y suma una repetición por semana hasta la
+   última, que vuelve al piso con más carga. */
+function repsPorDefecto(bloque, semanas){
+  if ((bloque.propaga || "ciclo") === "todas") return Array(semanas).fill("12 reps");
+  return Array.from({ length: semanas }, (_, i) => (i === semanas - 1 ? "8x3" : (8 + i) + "x3"));
+}
+
+/* ============================================================
+   ESTADO EN MEMORIA
+   ============================================================ */
+let alumnos = [];   // [{id, nombre}]
+let indice  = [];   // [{id, alumnoId, titulo, inicio, estado}]
+let plan    = null; // plan abierto
+let cargas  = { v:{}, a:{}, r:{}, d:{}, n:{} };
+let vista   = { pantalla:"inicio", alumnoId:null, planId:null, dia:0, semana:0 };
+let coach   = sessionStorage.getItem("mf:coach") === "1";
+let soloAlumno = null;   // cuando el link trae un alumno, la app es solo suya
+let desuscribir = [];
+
+const $ = (id) => document.getElementById(id);
+const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40) || "x";
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+let tToast;
+function avisar(txt){
+  const t = $("toast");
+  t.textContent = txt; t.classList.add("show");
+  clearTimeout(tToast); tToast = setTimeout(() => t.classList.remove("show"), 1600);
+}
+
+/* ============================================================
+   TIPO DE CARGA DE CADA EJERCICIO
+   "kg"       → peso en kilos (lo normal en fuerza)
+   "corporal" → peso del cuerpo; el casillero queda para el lastre extra
+   "banda"    → banda elástica; se escribe el color
+   ============================================================ */
+const CARGAS = {
+  kg:       { etiqueta: "Peso (kg)",      col: "Peso",  unidad: "kg",  hint: "" },
+  corporal: { etiqueta: "Peso corporal",  col: "Peso",  unidad: "kg", hint: "Peso corporal" },
+  banda:    { etiqueta: "Banda elástica", col: "Banda", unidad: "",    hint: "color" }
+};
+const COLORES_BANDA = ["Amarilla","Roja","Negra","Verde","Azul","Naranja","Violeta","Gris"];
+
+const RE_CORPORAL = /^(plancha|hollow|sit-?up|crunch|superman|puente de gl|push-?up|dominadas|fondos|hiperextensiones|roll-?out|sentadilla de pulso|sentadillas$|vitalizaciones)/i;
+const RE_BANDA = /(band pull|con banda|banda el)/i;
+const RE_CON_CARGA = /(con disco|con carga|con mancuerna|con barra|con trap|lastre)/i;
+
+/* Adivina el tipo al agregar un ejercicio desde la biblioteca. Siempre se
+   puede corregir a mano; esto solo evita tocar 40 fichas. */
+function cargaSugerida(nombre){
+  const n = String(nombre || "");
+  if (RE_BANDA.test(n)) return "banda";
+  if (RE_CON_CARGA.test(n)) return "kg";
+  if (RE_CORPORAL.test(n)) return "corporal";
+  return "kg";
+}
+
+function tipoCarga(ej){ return CARGAS[ej.carga] ? ej.carga : "kg"; }
+
+/* Cómo se lee una carga en el mensaje al coach. */
+function textoCarga(ej, valor){
+  const t = tipoCarga(ej);
+  if (t === "banda") return valor ? "banda " + valor.toLowerCase() : "—";
+  if (t === "corporal") return valor ? "corporal + " + valor + " kg" : "corporal";
+  return valor ? valor + " kg" : "—";
+}
+
+/* Los colores que ya usó el coach se suman a la lista de sugerencias. */
+function coloresUsados(){
+  const set = new Set(COLORES_BANDA);
+  Object.keys(cargas.v || {}).forEach((k) => {
+    const v = String(cargas.v[k] || "").trim();
+    if (v && isNaN(parseFloat(v))) set.add(v.charAt(0).toUpperCase() + v.slice(1));
+  });
+  return [...set];
+}
+
+/* Una vez por plan: los ejercicios que claramente no van con kilos pasan a
+   corporal o banda, para no tener que corregirlos uno por uno. De paso, las
+   notas del tipo "3-5’ pausa entre series" pierden el número, porque el
+   tiempo real ahora lo muestra el reloj de cada ejercicio. */
+function migrarTiposDeCarga(){
+  if (!plan || plan.cargaAuto >= 5) return;
+  plan.dias.forEach((d) => d.bloques.forEach((b) => {
+    b.ejercicios.forEach((ej) => {
+      if (ej.carga && ej.carga !== "kg") return;
+      const sug = cargaSugerida(ej.nombre);
+      if (sug !== "kg") ej.carga = sug;
+    });
+    if (typeof b.descanso !== "number" && /^\s*\d+(\s*-\s*\d+)?\s*(?:'|’)\s*pausa/i.test(b.meta || "")){
+      b.meta = "Pausa entre series";
+    }
+    /* Los calentamientos que ya se hacían en circuito quedan encadenados:
+       es lo que venían siendo, ahora escrito como tal. */
+    const esCircuito = /circuito|sin pausa/i.test(b.meta || "") || b.propaga === "todas";
+    if (esCircuito && b.ejercicios.length > 1 && !b.ejercicios.some((e) => e.unido)){
+      b.ejercicios.forEach((e, i) => { if (i > 0) e.unido = true; });
+    }
+    /* Las notas del bloque: la del calentamiento ("3 series", "sin pausa")
+       y la de fuerza ("pausa entre series") repetían lo que la pantalla ya
+       muestra sola: las series van una por una y la pausa la dice el reloj
+       de cada ejercicio. Antes de borrar el texto nos guardamos los números
+       que salían de ahí, así ninguna rutina cambia de series ni de
+       descanso. */
+    const notaVieja = String(b.meta || "");
+    if (/\d+\s*series|sin pausa|pausa entre series/i.test(notaVieja)){
+      const cuantas = notaVieja.match(/(\d+)\s*series/i);
+      if (cuantas && typeof b.series !== "number") b.series = Number(cuantas[1]);
+      if (typeof b.descanso !== "number"){
+        b.descanso = descansoDesdeTexto(notaVieja, (b.propaga || "ciclo") === "todas");
+      }
+      b.meta = "";
+    }
+  }));
+  plan.cargaAuto = 5;
+  guardarPlan(true);
+}
+
+/* ============================================================
+   SUPERSERIES, TRISERIES Y CIRCUITOS
+   Un ejercicio con ej.unido = true se encadena con el anterior. Las
+   corridas de ejercicios encadenados forman un grupo, que se numera con
+   letra y posición: A1 y A2 en una superserie, A1-A2-A3 en una triserie.
+   Un ejercicio suelto lleva solo la letra.
+   ============================================================ */
+function letraGrupo(n){
+  let out = "";
+  while (n > 0){ const r = (n - 1) % 26; out = String.fromCharCode(65 + r) + out; n = Math.floor((n - 1) / 26); }
+  return out;
+}
+
+function nombreGrupo(cantidad){
+  if (cantidad === 2) return "Superserie";
+  if (cantidad === 3) return "Triserie";
+  return "Circuito";
+}
+
+/* Cada bloque arranca de nuevo en la A: en el método de MindFit la parte
+   de fuerza no continúa la letra de la entrada en calor. */
+function agruparEjercicios(bloque){
+  const grupos = [];
+  bloque.ejercicios.forEach((ej, ei) => {
+    if (!grupos.length || !ej.unido) grupos.push({ letra: letraGrupo(grupos.length + 1), items: [] });
+    grupos[grupos.length - 1].items.push({ ej, ei });
+  });
+  grupos.forEach((g) => {
+    g.items.forEach((it, i) => {
+      it.etiqueta = g.items.length > 1 ? g.letra + (i + 1) : g.letra;
+      it.ultimo = i === g.items.length - 1;
+      it.siguiente = g.items[i + 1] || null;
+    });
+  });
+  return grupos;
+}
+
+/* ============================================================
+   CRONÓMETRO DE DESCANSO
+   El descanso lo define el coach por bloque (y puede afinarlo por
+   ejercicio). El alumno decide si quiere que se lo cronometre: con el
+   cronómetro activado, cada serie que marca como hecha lo arranca solo.
+   ============================================================ */
+let cronoOn = true;   // activado por defecto
+try { cronoOn = localStorage.getItem("mf:crono") !== "0"; } catch (e) {}
+let cronoT = null, cronoFin = 0, cronoTotal = 0, cronoAudio = null;
+
+function mmss(seg){
+  const s = Math.max(0, Math.round(seg));
+  return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+
+/* Acepta "2:00", "120", "2'" o "90 seg" y devuelve segundos. */
+function parseDescanso(txt){
+  const t = String(txt || "").trim().toLowerCase();
+  if (!t) return null;
+  const reloj = t.match(/^(\d+)\s*:\s*(\d{1,2})$/);
+  if (reloj) return Number(reloj[1]) * 60 + Number(reloj[2]);
+  const min = t.match(/^(\d+(?:[.,]\d+)?)\s*(?:'|’|m|min)/);
+  if (min) return Math.round(parseFloat(min[1].replace(",", ".")) * 60);
+  const num = t.match(/^(\d+)/);
+  return num ? Number(num[1]) : null;
+}
+
+/* Si el coach no cargó un número, la pausa por defecto es de 2 minutos en
+   fuerza y 30 segundos en circuito; los bloques que dicen "sin pausa" van
+   en cero. Cualquiera de estos se cambia a mano por bloque o ejercicio. */
+function descansoDesdeTexto(meta, esCircuito){
+  if (/sin pausa/i.test(String(meta || ""))) return 0;
+  return esCircuito ? 30 : 120;
+}
+
+function descansoDe(bloque, ej){
+  if (ej && typeof ej.descanso === "number") return ej.descanso;
+  if (typeof bloque.descanso === "number") return bloque.descanso;
+  return descansoDesdeTexto(bloque.meta, (bloque.propaga || "ciclo") === "todas");
+}
+
+function pitar(){
+  try {
+    cronoAudio = cronoAudio || new (window.AudioContext || window.webkitAudioContext)();
+    if (cronoAudio.state === "suspended") cronoAudio.resume();
+    [0, 0.18].forEach((t) => {
+      const o = cronoAudio.createOscillator(), g = cronoAudio.createGain();
+      o.frequency.value = 880; o.type = "sine";
+      g.gain.setValueAtTime(0.0001, cronoAudio.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.25, cronoAudio.currentTime + t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, cronoAudio.currentTime + t + 0.14);
+      o.connect(g); g.connect(cronoAudio.destination);
+      o.start(cronoAudio.currentTime + t); o.stop(cronoAudio.currentTime + t + 0.16);
+    });
+  } catch (e) {}
+  if (navigator.vibrate) { try { navigator.vibrate([120, 80, 120]); } catch (e) {} }
+}
+
+function pintarCrono(){
+  const queda = (cronoFin - Date.now()) / 1000;
+  $("cronotime").textContent = mmss(queda);
+  $("cronofill").style.width = Math.max(0, Math.min(100, (queda / cronoTotal) * 100)) + "%";
+  if (queda > 0) return;
+
+  clearInterval(cronoT); cronoT = null;
+  $("crono").classList.add("crono--fin");
+  $("cronolabel").textContent = "Descanso terminado";
+  $("cronotime").textContent = "0:00";
+  pitar();
+  setTimeout(() => { if (!cronoT) cerrarCrono(); }, 4000);
+}
+
+function iniciarDescanso(segundos, etiqueta){
+  if (!segundos){ avisar("Este bloque va sin pausa"); return; }
+  cronoTotal = segundos;
+  cronoFin = Date.now() + segundos * 1000;
+  const c = $("crono");
+  c.hidden = false;
+  c.classList.remove("crono--fin");
+  document.body.classList.add("con-crono");
+  $("cronolabel").textContent = etiqueta || "Descanso";
+  clearInterval(cronoT);
+  cronoT = setInterval(pintarCrono, 250);
+  pintarCrono();
+  try { cronoAudio = cronoAudio || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+}
+
+function cerrarCrono(){
+  clearInterval(cronoT); cronoT = null;
+  $("crono").hidden = true;
+  $("crono").classList.remove("crono--fin");
+  document.body.classList.remove("con-crono");
+}
+
+function ajustarCrono(seg){
+  if ($("crono").hidden) return;
+  cronoFin = Math.max(Date.now(), cronoFin + seg * 1000);
+  cronoTotal = Math.max(cronoTotal + seg, 5);
+  $("crono").classList.remove("crono--fin");
+  if (!cronoT) cronoT = setInterval(pintarCrono, 250);
+  pintarCrono();
+}
+
+function alternarCrono(){
+  cronoOn = !cronoOn;
+  try { localStorage.setItem("mf:crono", cronoOn ? "1" : "0"); } catch (e) {}
+  if (!cronoOn) cerrarCrono();
+  render();
+  avisar(cronoOn ? "Cronómetro activado" : "Cronómetro apagado");
+}
+
+$("cronomenos").onclick = () => ajustarCrono(-15);
+$("cronomas").onclick = () => ajustarCrono(15);
+$("cronofin").onclick = cerrarCrono;
+
+/* ============================================================
+   PERSISTENCIA
+   ============================================================ */
+async function guardarAlumnos(){ await store.write("alumnos", alumnos); }
+async function guardarIndice(){ await store.write("indice", indice); }
+
+/* Los guardados esperan medio segundo para no escribir en cada tecla. Eso
+   deja una ventana corta en la que lo recién cargado todavía no se guardó:
+   si el alumno bloquea el celular justo ahí, se perdía. Por eso llevamos
+   una marca de "pendiente" y vaciamos antes de que la página se vaya. */
+let tPlan, planPendiente = false;
+function guardarPlan(inmediato){
+  if (!plan) return;
+  plan.actualizado = Date.now();
+  clearTimeout(tPlan);
+  planPendiente = true;
+  const f = () => { planPendiente = false; store.write("plan:" + plan.id, plan); };
+  if (inmediato) f(); else tPlan = setTimeout(f, 500);
+}
+
+let tCargas, cargasPendientes = false;
+function guardarCargas(){
+  if (!plan) return;
+  clearTimeout(tCargas);
+  cargasPendientes = true;
+  tCargas = setTimeout(() => {
+    cargasPendientes = false;
+    store.write("cargas:" + plan.id, cargas);
+  }, 600);
+}
+
+/* Se dispara cuando el celular se bloquea, cuando el alumno cambia de app y
+   cuando cierra la pestaña. Es la última oportunidad de guardar. */
+function vaciarPendientes(){
+  if (!plan) return;
+  if (planPendiente){ clearTimeout(tPlan); planPendiente = false; store.write("plan:" + plan.id, plan); }
+  if (cargasPendientes){ clearTimeout(tCargas); cargasPendientes = false; store.write("cargas:" + plan.id, cargas); }
+}
+window.addEventListener("pagehide", vaciarPendientes);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") vaciarPendientes();
+});
+
+function limpiarSubs(){ desuscribir.forEach((f) => { try { f(); } catch(e){} }); desuscribir = []; }
+
+/* ============================================================
+   MODELO
+   ============================================================ */
+function planesDe(alumnoId){
+  return indice.filter((p) => p.alumnoId === alumnoId)
+               .sort((a,b) => (b.creado||0) - (a.creado||0));
+}
+function planActivoDe(alumnoId){
+  return planesDe(alumnoId).find((p) => p.estado !== "archivado") || null;
+}
+function nombreAlumno(id){ const a = alumnos.find((x) => x.id === id); return a ? a.nombre : "—"; }
+
+function planVacio(alumnoId, titulo, semanas){
+  return {
+    id: slug(nombreAlumno(alumnoId)) + "-" + uid(),
+    alumnoId, titulo,
+    semanas,
+    cicloCarga: semanas === 4 ? [[0,1,2],[3]] : [[...Array(semanas).keys()]],
+    creado: Date.now(),
+    estado: "activo",
+    dias: [nuevoDia(1)]
+  };
+}
+function nuevoDia(n){
+  return {
+    nombre: "Día " + n,
+    num: String(n).padStart(2,"0"),
+    bloques: [
+      { titulo:"Calentamiento", meta:"", propaga:"todas", ejercicios:[] },
+      { titulo:"Fuerza", meta:"", propaga:"ciclo", ejercicios:[] }
+    ]
+  };
+}
+function nuevoEjercicio(semanas){
+  return { nombre:"Ejercicio nuevo", video:"", carga:"kg", tipo:"sets",
+           reps: Array(semanas).fill("8x3"), repsBase: Array(semanas).fill("8x3") };
+}
+
+/* ---- claves, series y propagación de cargas ---- */
+const claveDe = (d, bi, ei, s) => d + "-" + bi + "-" + ei + "-s" + (s + 1);
+const claveSerie = (base, i) => base + "-e" + i;
+
+function normalizarCargas(c){
+  const x = c || {};
+  return { v: x.v || {}, a: x.a || {}, r: x.r || {}, d: x.d || {}, n: x.n || {} };
+}
+
+/* Cuántas series lleva un ejercicio y con qué repeticiones vienen escritas.
+   "8x3" = 8 repeticiones por 3 series. En los circuitos la cantidad sale de
+   la nota del bloque ("3 series del circuito") y las reps son el texto tal
+   cual ("20” x lado"). El coach puede fijar ej.series y manda eso. */
+function seriesDe(ej, bloque, semana){
+  const txt = String((ej.reps || [])[semana] || "").trim();
+  const m = txt.match(/^(\d+)\s*[xX]\s*(\d+)$/);
+  if (m) return { n: ej.series || Number(m[2]), objetivo: m[1] };
+  const c = String(bloque.meta || "").match(/(\d+)\s*series/i);
+  return { n: ej.series || bloque.series || (c ? Number(c[1]) : 3), objetivo: txt.replace(/\s*reps$/i, "") };
+}
+
+function cantidadSeries(ej, bloque, di, bi, ei, s){
+  const propio = cargas.n[claveDe(di, bi, ei, s)];
+  return propio || seriesDe(ej, bloque, s).n;
+}
+
+function modoDe(d, bi, ei){
+  const b = plan.dias[d].bloques[bi];
+  return b.ejercicios[ei].propaga || b.propaga || "ciclo";
+}
+function hermanas(modo, s){
+  if (modo === "ninguna") return [s];
+  if (modo === "todas") return [...Array(plan.semanas).keys()];
+  const ciclo = plan.cicloCarga || [[...Array(plan.semanas).keys()]];
+  const g = ciclo.find((grupo) => grupo.indexOf(s) !== -1);
+  return g ? g.slice() : [s];
+}
+
+/* El kg de una serie se copia a la misma serie de las semanas hermanas,
+   salvo que ahí ya lo hayan cargado a mano. */
+function aplicarCarga(d, bi, ei, s, serie, valor){
+  const propia = claveSerie(claveDe(d, bi, ei, s), serie);
+  if (valor) cargas.v[propia] = valor; else delete cargas.v[propia];
+  delete cargas.a[propia];
+  hermanas(modoDe(d, bi, ei), s).forEach((w) => {
+    if (w === s) return;
+    const k = claveSerie(claveDe(d, bi, ei, w), serie);
+    if (cargas.v[k] && !cargas.a[k]) return;
+    if (valor){ cargas.v[k] = valor; cargas.a[k] = true; }
+    else { delete cargas.v[k]; delete cargas.a[k]; }
+  });
+  guardarCargas();
+}
+
+/* Los pesos viejos se guardaban uno por ejercicio. Al abrir un plan de esos,
+   ese kg pasa a ser el de todas sus series. */
+function migrarCargas(){
+  if (!plan) return;
+  let cambio = false;
+  plan.dias.forEach((dia, di) => dia.bloques.forEach((b, bi) => b.ejercicios.forEach((ej, ei) => {
+    for (let s = 0; s < plan.semanas; s++){
+      const base = claveDe(di, bi, ei, s);
+      if (cargas.v[base] === undefined) continue;
+      const info = seriesDe(ej, b, s);
+      for (let i = 1; i <= info.n; i++){
+        const k = claveSerie(base, i);
+        if (cargas.v[k] === undefined){
+          cargas.v[k] = cargas.v[base];
+          if (cargas.a[base]) cargas.a[k] = true;
+        }
+      }
+      delete cargas.v[base]; delete cargas.a[base];
+      cambio = true;
+    }
+  })));
+  if (cambio) guardarCargas();
+}
+
+/* ============================================================
+   LINK PERSONAL DEL ALUMNO
+   El link lleva el alumno al final: .../MindFit_Rutinas.html#karina
+   Abierto así, la app arranca en su rutina y no muestra el listado ni
+   nada del modo coach. El link pelado sigue siendo el del entrenador.
+   ============================================================ */
+function linkDeAlumno(id){
+  /* Servida por Apps Script, la dirección buena la sabe el servidor y el
+     alumno viaja como ?a=. Suelta o alojada, alcanza con el # al final. */
+  if (window.MINDFIT_URL) return window.MINDFIT_URL + "?a=" + encodeURIComponent(id);
+  return location.href.split("#")[0] + "#" + id;
+}
+
+function alumnoDelLink(){
+  const desdeServidor = String(window.MINDFIT_ALUMNO || "").trim();
+  const h = desdeServidor ||
+    decodeURIComponent(String(location.hash || "").replace(/^#/, "").replace(/^alumno=/, "")).trim();
+  if (!h) return null;
+  const a = alumnos.find((x) => x.id === h || slug(x.nombre) === slug(h));
+  return a ? a.id : null;
+}
+
+/* Manda el link por donde el celular quiera: el menú de compartir abre
+   WhatsApp directo. Sin menú de compartir, queda en el portapapeles. */
+function compartirLink(a){
+  const url = linkDeAlumno(a.id);
+  const texto = "Hola " + a.nombre + "! Este es tu link de MindFit para ver la rutina y cargar los pesos:\n" + url +
+                "\n\nAbrilo en el celular y agregalo a la pantalla de inicio así lo tenés a mano.";
+  if (navigator.share){
+    navigator.share({ title: "MindFit · " + a.nombre, text: texto }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard){
+    navigator.clipboard.writeText(texto)
+      .then(() => avisar("Link copiado · pegalo en el chat"))
+      .catch(() => avisar("No se pudo copiar"));
+    return;
+  }
+  avisar("No se pudo compartir");
+}
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+async function ir(pantalla, extra){
+  Object.assign(vista, { pantalla }, extra || {});
+  if (pantalla === "plan" || pantalla === "guia"){
+    if (!plan || plan.id !== vista.planId) await abrirPlan(vista.planId);
+  }
+  render();
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+async function abrirPlan(planId){
+  limpiarSubs();
+  plan = await store.read("plan:" + planId);
+  cargas = normalizarCargas(await store.read("cargas:" + planId));
+  migrarCargas();
+  migrarTiposDeCarga();
+  vista.dia = 0; vista.semana = 0;
+  desuscribir.push(store.watch("plan:" + planId, (p) => {
+    if (!plan || p.actualizado <= (plan.actualizado||0)) return;
+    plan = p; if (vista.pantalla === "plan") render();
+  }));
+  desuscribir.push(store.watch("cargas:" + planId, (c) => {
+    cargas = normalizarCargas(c); if (vista.pantalla === "plan") render();
+  }));
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render(){
+  const v = $("view"), c = $("crumbs"), f = $("foot");
+  c.innerHTML = ""; f.innerHTML = "";
+  if (vista.pantalla === "inicio")   return pantallaInicio(v, c, f);
+  if (vista.pantalla === "alumno")   return pantallaAlumno(v, c, f);
+  if (vista.pantalla === "plan")     return pantallaPlan(v, c, f);
+  if (vista.pantalla === "progreso") return pantallaProgreso(v, c, f);
+  if (vista.pantalla === "guia")     return pantallaGuia(v, c, f);
+}
+
+function migas(c, texto, volver, derecha){
+  if (volver){
+    const b = document.createElement("button");
+    b.className = "back"; b.type = "button";
+    b.innerHTML = "&larr; " + esc(texto);
+    b.onclick = volver;
+    c.appendChild(b);
+  } else {
+    const s = document.createElement("span");
+    s.className = "back"; s.style.cursor = "default"; s.textContent = texto;
+    c.appendChild(s);
+  }
+  if (derecha){
+    const d = document.createElement("span");
+    d.className = "here"; d.textContent = derecha;
+    c.appendChild(d);
+  }
+}
+
+function botonera(f, items){
+  items.forEach((it) => {
+    const b = document.createElement("button");
+    b.className = "linkbtn"; b.type = "button"; b.textContent = it.t; b.onclick = it.f;
+    f.appendChild(b);
+  });
+}
+
+/* ---------- 1. inicio: alumnos ---------- */
+function pantallaInicio(v, c, f){
+  if (soloAlumno) return ir("alumno", { alumnoId: soloAlumno });
+  migas(c, "Alumnos", null, coach ? "Modo coach" : "");
+  v.innerHTML = '<p class="eyebrow">MindFit · Entrenamiento de la fuerza</p>' +
+                '<div class="titlerow"><h1 class="title">Alumnos</h1>' +
+                '<div class="titlenum">' + String(alumnos.length).padStart(2,"0") + '</div></div>' +
+                '<div class="rule"></div>';
+
+  if (!alumnos.length){
+    v.insertAdjacentHTML("beforeend",
+      '<div class="empty"><p>Todavía no hay alumnos</p><small>Entrá en modo coach y agregá el primero para empezar a armar sus mesociclos.</small></div>');
+  }
+
+  const cards = document.createElement("div");
+  cards.className = "cards";
+  alumnos.forEach((a) => {
+    const activo = planActivoDe(a.id);
+    const total = planesDe(a.id).length;
+    const card = document.createElement("button");
+    card.className = "card"; card.type = "button";
+    card.innerHTML =
+      '<div class="initial">' + esc(a.nombre.slice(0,1).toUpperCase()) + '</div>' +
+      '<div class="body"><span class="name">' + esc(a.nombre) + '</span>' +
+      '<span class="sub">' + (activo ? esc(activo.titulo) : "Sin plan activo") +
+      (total ? " · " + total + (total === 1 ? " mesociclo" : " mesociclos") : "") + '</span></div>' +
+      '<div class="chev">&rsaquo;</div>';
+    card.onclick = () => ir("alumno", { alumnoId: a.id });
+    cards.appendChild(card);
+  });
+  v.appendChild(cards);
+
+  if (coach){
+    const row = document.createElement("div");
+    row.className = "btnrow";
+    row.appendChild(boton("Agregar alumno", () => modalAlumno()));
+    row.appendChild(boton("Exportar copia de seguridad", exportar, "ghost"));
+    row.appendChild(boton("Importar copia", importar, "ghost"));
+    v.appendChild(row);
+  }
+
+  const hint = document.createElement("div");
+  hint.className = "hint";
+  hint.textContent = backend === "nube" ? "Los datos se guardan en la nube" : "Los datos se guardan en este celular";
+  f.appendChild(hint);
+  botonera(f, [{ t: coach ? "Salir del modo coach" : "Modo coach", f: alternarCoach }]);
+}
+
+function boton(txt, fn, tipo){
+  const b = document.createElement("button");
+  b.className = "btn" + (tipo ? " btn--" + tipo : "");
+  b.type = "button"; b.textContent = txt; b.onclick = fn;
+  return b;
+}
+
+/* ---------- 2. alumno: mesociclos ---------- */
+function pantallaAlumno(v, c, f){
+  const a = alumnos.find((x) => x.id === vista.alumnoId);
+  if (!a) return ir("inicio");
+  if (soloAlumno) migas(c, "Mi entrenamiento", null, "MindFit");
+  else migas(c, "Alumnos", () => ir("inicio"), coach ? "Modo coach" : "");
+
+  const lista = planesDe(a.id);
+  const activos = lista.filter((p) => p.estado !== "archivado");
+  const viejos  = lista.filter((p) => p.estado === "archivado");
+
+  v.innerHTML = '<p class="eyebrow">Plan de entrenamiento</p>' +
+                '<div class="titlerow"><h1 class="title">' + esc(a.nombre) + '</h1></div>' +
+                '<div class="rule"></div>';
+
+  if (!lista.length){
+    v.insertAdjacentHTML("beforeend",
+      '<div class="empty"><p>Sin mesociclos cargados</p><small>' +
+      (coach ? "Creá el primer mesociclo para empezar a cargar los días y los ejercicios."
+             : "El coach todavía no cargó ninguna rutina.") + '</small></div>');
+  }
+
+  if (activos.length){
+    v.appendChild(seccionPlanes("En curso", activos, lista.length + " en total"));
+  }
+  if (viejos.length){
+    v.appendChild(seccionPlanes("Historial", viejos, viejos.length + (viejos.length === 1 ? " ciclo" : " ciclos")));
+  }
+
+  const row = document.createElement("div");
+  row.className = "btnrow";
+  if (lista.length) row.appendChild(boton("Ver progreso del año", () => ir("progreso", { alumnoId: a.id }), "ghost"));
+  if (coach){
+    row.appendChild(boton("Nuevo mesociclo", () => modalPlan(a.id)));
+    row.appendChild(boton("Enviar link a " + a.nombre, () => compartirLink(a), "ghost"));
+    row.appendChild(boton("Renombrar alumno", () => modalAlumno(a), "ghost"));
+    row.appendChild(boton("Eliminar alumno", () => eliminarAlumno(a), "danger"));
+  }
+  v.appendChild(row);
+  if (!soloAlumno) botonera(f, [{ t: coach ? "Salir del modo coach" : "Modo coach", f: alternarCoach }]);
+}
+
+function seccionPlanes(titulo, lista, meta){
+  const sec = document.createElement("section");
+  sec.className = "block";
+  sec.innerHTML = '<div class="blockhead"><div class="blocktitle">' + esc(titulo) + '</div>' +
+                  '<div class="blockline"></div><div class="blockmeta">' + esc(meta) + '</div></div>';
+  const cards = document.createElement("div");
+  cards.className = "cards"; cards.style.marginTop = "12px";
+  lista.forEach((p) => {
+    const card = document.createElement("button");
+    card.className = "card" + (p.estado === "archivado" ? " card--archivo" : "");
+    card.type = "button";
+    card.innerHTML =
+      '<div class="initial">' + esc(String(p.semanas || 4)) + '</div>' +
+      '<div class="body"><span class="name">' + esc(p.titulo) + '</span>' +
+      '<span class="sub">' + esc(p.inicio || fechaCorta(p.creado)) + ' · ' + (p.semanas || 4) + ' semanas · ' +
+      (p.dias || 0) + ' días</span></div><div class="chev">&rsaquo;</div>';
+    card.onclick = () => ir("plan", { planId: p.id, alumnoId: p.alumnoId });
+    cards.appendChild(card);
+  });
+  sec.appendChild(cards);
+  return sec;
+}
+
+function fechaCorta(ts){
+  if (!ts) return "";
+  return new Date(ts).toLocaleDateString("es-AR", { month:"long", year:"numeric" });
+}
+
+/* ---------- 3. plan: el entrenamiento ---------- */
+function pantallaPlan(v, c, f){
+  if (!plan) return ir("alumno");
+  const dia = plan.dias[vista.dia];
+  migas(c, nombreAlumno(plan.alumnoId), () => ir("alumno", { alumnoId: plan.alumnoId }), plan.titulo);
+
+  v.innerHTML = "";
+
+  /* pestañas de días */
+  const days = document.createElement("div");
+  days.className = "days";
+  plan.dias.forEach((d, i) => {
+    const b = document.createElement("button");
+    b.className = "daytab"; b.type = "button";
+    b.setAttribute("aria-selected", i === vista.dia ? "true" : "false");
+    b.dataset.done = diaCompleto(i) ? "true" : "false";
+    b.innerHTML = '<span class="dot"></span>' + esc(d.nombre);
+    b.onclick = () => { vista.dia = i; render(); };
+    days.appendChild(b);
+  });
+  const bg = document.createElement("button");
+  bg.className = "daytab"; bg.type = "button"; bg.textContent = "Guía";
+  bg.onclick = () => ir("guia");
+  days.appendChild(bg);
+  if (coach){
+    const ba = document.createElement("button");
+    ba.className = "daytab"; ba.type = "button"; ba.textContent = "+ Día";
+    ba.onclick = agregarDia;
+    days.appendChild(ba);
+  }
+  v.appendChild(days);
+
+  const head = document.createElement("div");
+  head.innerHTML =
+    '<p class="eyebrow" style="margin-top:26px">' + esc(plan.titulo) + (mostrarSub(dia) ? ' · ' + esc(dia.sub) : '') + '</p>' +
+    '<div class="titlerow"><h1 class="title">' + esc(dia.nombre) + '</h1>' +
+    '<div class="titlenum">' + esc(dia.num) + '</div></div>' +
+    '<div class="rule"></div>';
+  v.appendChild(head);
+
+  /* selector de semana */
+  const wb = document.createElement("div");
+  wb.className = "weekbar";
+  wb.innerHTML = '<span class="weekbar-label">Semana</span>';
+  const wt = document.createElement("div");
+  wt.className = "weektabs";
+  for (let s = 0; s < plan.semanas; s++){
+    const w = document.createElement("button");
+    w.className = "weektab"; w.type = "button";
+    w.setAttribute("aria-selected", s === vista.semana ? "true" : "false");
+    w.textContent = "S" + (s + 1);
+    w.onclick = () => { vista.semana = s; render(); };
+    wt.appendChild(w);
+  }
+  wb.appendChild(wt);
+  v.appendChild(wb);
+
+  $("colores-banda").innerHTML = coloresUsados()
+    .map((c) => '<option value="' + esc(c) + '"></option>').join("");
+
+  /* bloques */
+  dia.bloques.forEach((bloque, bi) => {
+    const sec = document.createElement("section");
+    sec.className = "block";
+
+    const bh = document.createElement("div");
+    bh.className = "blockhead";
+    bh.innerHTML = '<div class="blocktitle">' + esc(bloque.titulo) + '</div>' +
+                   '<div class="blockline"></div>' +
+                   (bloque.meta ? '<div class="blockmeta">' + esc(bloque.meta) + '</div>' : '');
+    if (coach){
+      const e = document.createElement("button");
+      e.className = "blockedit"; e.type = "button"; e.textContent = "Editar";
+      e.onclick = () => modalBloque(bi);
+      bh.appendChild(e);
+    }
+    sec.appendChild(bh);
+
+    agruparEjercicios(bloque).forEach((g) => {
+      if (g.items.length === 1){
+        const it = g.items[0];
+        sec.appendChild(filaEjercicio(bloque, bi, it.ej, it.ei, it, g));
+        return;
+      }
+      const cont = document.createElement("div");
+      cont.className = "grupo";
+      const head = document.createElement("div");
+      head.className = "grupohead";
+      head.innerHTML =
+        '<span class="grupoletra">' + esc(g.letra) + '</span>' +
+        '<span class="grupotipo">' + esc(nombreGrupo(g.items.length)) + '</span>' +
+        '<span class="grupoline"></span>';
+      cont.appendChild(head);
+      g.items.forEach((it) => cont.appendChild(filaEjercicio(bloque, bi, it.ej, it.ei, it, g)));
+      sec.appendChild(cont);
+    });
+
+    if (coach){
+      const fila = document.createElement("div");
+      fila.className = "addrow";
+      [["+ Ejercicio", null],
+       ["+ Superserie", { cantidad: 2 }],
+       ["+ Triserie", { cantidad: 3 }],
+       ["+ Circuito", { cantidad: 0 }]].forEach(([txt, modo]) => {
+        const b = document.createElement("button");
+        b.className = "linkbtn"; b.type = "button"; b.textContent = txt;
+        b.onclick = () => modalBiblioteca(bi, modo);
+        fila.appendChild(b);
+      });
+      sec.appendChild(fila);
+    }
+    v.appendChild(sec);
+  });
+
+  if (coach){
+    const row = document.createElement("div");
+    row.className = "btnrow";
+    row.appendChild(boton("Agregar bloque", agregarBloque, "ghost"));
+    row.appendChild(boton("Duplicar este día", duplicarDia, "ghost"));
+    if (plan.dias.length > 1) row.appendChild(boton("Eliminar este día", eliminarDia, "danger"));
+    row.appendChild(boton("Eliminar mesociclo", eliminarPlan, "danger"));
+    v.appendChild(row);
+  }
+
+  /* enviar al coach */
+  const envio = document.createElement("div");
+  envio.className = "btnrow";
+  const { total, hechos, auto } = contarDia(vista.dia);
+  const b1 = boton("Enviar pesos al coach", () => enviarWhatsapp());
+  b1.disabled = hechos === 0;
+  envio.append(b1);
+  const nota = document.createElement("p");
+  nota.className = "sendnote";
+  nota.textContent = hechos === 0 ? "Cargá al menos una serie para poder enviarla"
+    : hechos < total ? "Vas " + hechos + " de " + total + " series"
+    : "Día completo · " + total + " series de la semana " + (vista.semana + 1);
+  if (auto) nota.textContent += " · " + auto + " en gris vienen de la semana anterior, confirmalas o corregilas";
+  envio.appendChild(nota);
+  v.appendChild(envio);
+
+  const hint = document.createElement("div");
+  hint.className = "hint";
+  hint.textContent = "Marcá cada serie a medida que entrenás";
+  f.appendChild(hint);
+  const acciones = [{ t: cronoOn ? "Cronómetro activado" : "Activar cronómetro", f: alternarCrono }];
+  if (!soloAlumno) acciones.push({ t: coach ? "Salir del modo coach" : "Modo coach", f: alternarCoach });
+  if (coach) acciones.push({ t: plan.estado === "archivado" ? "Reactivar plan" : "Archivar plan", f: archivarPlan });
+  botonera(f, acciones);
+}
+
+/* El subtítulo del día (Torso, Piernas, Full body) solo se muestra si no
+   repite exactamente lo que ya dice el título del mesociclo. */
+function mostrarSub(dia){
+  if (!dia.sub) return false;
+  const partes = plan.titulo.split("·").map((x) => x.trim().toLowerCase());
+  return partes.indexOf(dia.sub.trim().toLowerCase()) === -1;
+}
+
+/* El casillero de repeticiones se achica hasta lo que realmente entra: en
+   fuerza son dos dígitos más el "reps"; en circuito puede decir "20” x lado"
+   y ahí se ensancha. Así deja de verse medio vacío. */
+function anchoReps(info){
+  const txt = String(info.objetivo || "");
+  const conUnidad = /^\d+$/.test(txt);
+  const px = 24 + txt.length * 7.6 + (conUnidad ? 30 : 0);
+  return Math.round(Math.max(66, Math.min(px, 112)));
+}
+
+function filaEjercicio(bloque, bi, ej, ei, it, grupo){
+  const wrap = document.createElement("div");
+  wrap.className = "ex";
+  wrap.dataset.ej = bi + "-" + ei;
+
+  /* --- encabezado: código del ejercicio y nombre con video --- */
+  const head = document.createElement("div");
+  head.className = "exhead";
+
+  const idx = document.createElement("div");
+  idx.className = "idx" + (grupo.items.length > 1 ? " idx--grupo" : "");
+  idx.textContent = it.etiqueta;
+
+  const nombre = document.createElement(ej.video ? "a" : "span");
+  nombre.className = "name" + (ej.video ? "" : " plain");
+  nombre.textContent = ej.nombre;
+  if (ej.video){ nombre.href = ej.video; nombre.target = "_blank"; nombre.rel = "noopener"; }
+  if (coach){
+    nombre.style.cursor = "pointer";
+    nombre.addEventListener("click", (e) => { e.preventDefault(); modalEjercicio(bi, ei); });
+  }
+
+  head.append(idx, nombre);
+  wrap.appendChild(head);
+
+  /* --- las series, una por una --- */
+  const claveBase = claveDe(vista.dia, bi, ei, vista.semana);
+  const info = seriesDe(ej, bloque, vista.semana);
+  const n = cargas.n[claveBase] || info.n;
+
+  const sets = document.createElement("div");
+  sets.className = "sets";
+  sets.style.setProperty("--repsw", anchoReps(info) + "px");
+  /* En una superserie no se descansa entre A1 y A2: la pausa va al cerrar
+     la vuelta, y la define el último ejercicio del grupo. */
+  const cierre = grupo.items[grupo.items.length - 1].ej;
+  const descanso = descansoDe(bloque, cierre);
+  const etiquetaPausa = grupo.items.length > 1
+    ? "Descanso · " + nombreGrupo(grupo.items.length) + " " + grupo.letra
+    : "Descanso · " + ej.nombre;
+  for (let i = 1; i <= n; i++){
+    sets.appendChild(filaSerie(bi, ei, i, info, claveBase, it.ultimo ? descanso : 0, etiquetaPausa));
+  }
+  wrap.appendChild(sets);
+
+  const acciones = document.createElement("div");
+  acciones.className = "setactions";
+  const add = document.createElement("button");
+  add.className = "linkbtn"; add.type = "button"; add.textContent = "+ serie";
+  add.onclick = () => { cargas.n[claveBase] = n + 1; guardarCargas(); render(); };
+  acciones.appendChild(add);
+  if (n > 1){
+    const rm = document.createElement("button");
+    rm.className = "linkbtn"; rm.type = "button"; rm.textContent = "− serie";
+    rm.onclick = () => {
+      const k = claveSerie(claveBase, n);
+      delete cargas.v[k]; delete cargas.r[k]; delete cargas.d[k]; delete cargas.a[k];
+      cargas.n[claveBase] = n - 1; guardarCargas(); render();
+    };
+    acciones.appendChild(rm);
+  }
+
+  if (coach && (ei > 0 || ej.unido)){
+    const enlazar = document.createElement("button");
+    enlazar.className = "linkbtn"; enlazar.type = "button";
+    enlazar.textContent = ej.unido ? "Separar" : "Unir con el anterior";
+    enlazar.onclick = () => {
+      if (ej.unido) delete ej.unido; else ej.unido = true;
+      guardarPlan(true); render();
+      avisar(ej.unido ? "Encadenado" : "Separado");
+    };
+    acciones.appendChild(enlazar);
+  }
+
+  const chip = document.createElement("button");
+  chip.className = "restchip"; chip.type = "button";
+  if (!it.ultimo){
+    chip.dataset.off = "true";
+    chip.innerHTML = '<span>→</span><span>Seguí con ' + esc(it.siguiente.etiqueta) + '</span>';
+    chip.title = "Sin pausa: pasás directo al siguiente";
+    chip.onclick = () => {
+      const dest = document.querySelector('[data-ej="' + bi + "-" + it.siguiente.ei + '"]');
+      if (dest) dest.scrollIntoView({ behavior:"smooth", block:"center" });
+    };
+  } else {
+    chip.dataset.off = descanso ? "false" : "true";
+    chip.innerHTML = '<span>⏱</span><span>' + (descanso ? mmss(descanso) : "sin pausa") + '</span>';
+    chip.title = descanso ? "Arrancar el descanso ahora" : "Este bloque va sin pausa";
+    chip.onclick = () => iniciarDescanso(descanso, etiquetaPausa);
+  }
+  acciones.appendChild(chip);
+
+  wrap.appendChild(acciones);
+
+  return wrap;
+}
+
+function campoSerie(valor, unidad, etiqueta, alCambiar){
+  const box = document.createElement("div");
+  box.className = "setfield";
+  const input = document.createElement("input");
+  input.type = "text"; input.inputMode = "decimal"; input.value = valor;
+  input.setAttribute("aria-label", etiqueta);
+  const u = document.createElement("span"); u.textContent = unidad;
+  input.addEventListener("input", () => alCambiar(input.value.trim()));
+  box.append(input, u);
+  return box;
+}
+
+/* Una serie: el peso que levantó y las repeticiones que realmente hizo.
+   Las reps vienen escritas del plan; si ese día hizo otras, las cambia y
+   queda guardado lo que hizo, sin tocar la consigna del coach. */
+function filaSerie(bi, ei, i, info, claveBase, descanso, etiquetaPausa){
+  const k = claveSerie(claveBase, i);
+  const ej = plan.dias[vista.dia].bloques[bi].ejercicios[ei];
+  const tipo = tipoCarga(ej);
+  const cfg = CARGAS[tipo];
+  const row = document.createElement("div");
+  row.className = "set" + (cargas.d[k] ? " set--ok" : "");
+
+  const num = document.createElement("div");
+  num.className = "setn"; num.textContent = i;
+
+  const kg = campoSerie(cargas.v[k] || "", cfg.unidad, cfg.col + " de la serie " + i, (val) => {
+    aplicarCarga(vista.dia, bi, ei, vista.semana, i, val);
+    refrescarEstado();
+  });
+  const inputKg = kg.querySelector("input");
+  if (cfg.hint) inputKg.placeholder = cfg.hint;
+  /* En peso corporal el "kg" solo aparece cuando además agregó lastre:
+     sin número, el casillero dice "corporal" y nada más. */
+  if (tipo === "corporal"){
+    const uni = kg.querySelector("span");
+    const refrescarUnidad = () => {
+      const hay = !!inputKg.value.trim();
+      uni.textContent = hay ? "+kg" : "";
+      /* "Peso corporal" no entra a 12,5px en pantallas angostas: vacío se
+         muestra chico y centrado, y al escribir el lastre vuelve a lo normal. */
+      inputKg.style.fontSize = hay ? "" : (window.innerWidth < 366 ? "9px" : "10px");
+      inputKg.style.textAlign = hay ? "" : "center";
+    };
+    refrescarUnidad();
+    inputKg.addEventListener("input", refrescarUnidad);
+  }
+  if (tipo === "banda"){
+    inputKg.inputMode = "text";
+    inputKg.setAttribute("list", "colores-banda");
+    inputKg.style.textAlign = "center";
+    inputKg.autocapitalize = "words";
+  }
+  if (cargas.a[k]) inputKg.style.color = "var(--muted)";
+
+  const x = document.createElement("div");
+  x.className = "setx"; x.textContent = "×";
+
+  /* En fuerza el objetivo es un número y la unidad "reps" ayuda; en los
+     circuitos es un texto ("20” x lado") y la unidad solo estorba. */
+  const numerico = /^\d+$/.test(info.objetivo);
+  const reps = campoSerie(cargas.r[k] || "", numerico ? "reps" : "", "Repeticiones de la serie " + i, (val) => {
+    if (val) cargas.r[k] = val; else delete cargas.r[k];
+    guardarCargas();
+  });
+  reps.classList.add("setfield--reps");
+  const inputReps = reps.querySelector("input");
+  inputReps.placeholder = info.objetivo;
+  if (!numerico) inputReps.style.textAlign = "center";
+
+  const ok = document.createElement("button");
+  ok.className = "setok"; ok.type = "button";
+  ok.setAttribute("aria-pressed", cargas.d[k] ? "true" : "false");
+  ok.setAttribute("aria-label", "Marcar la serie " + i + " como hecha");
+  ok.textContent = "✓";
+  ok.onclick = () => {
+    if (cargas.d[k]){ delete cargas.d[k]; }
+    else {
+      cargas.d[k] = true;
+      /* si no escribió las reps, damos por hechas las que pedía el plan */
+      if (!cargas.r[k] && info.objetivo) cargas.r[k] = info.objetivo;
+      if (cronoOn && descanso) iniciarDescanso(descanso, etiquetaPausa);
+    }
+    guardarCargas(); render();
+  };
+
+  row.append(num, kg, x, reps, ok);
+  return row;
+}
+
+function contarDia(i){
+  let total = 0, hechos = 0, auto = 0;
+  plan.dias[i].bloques.forEach((b, bi) => b.ejercicios.forEach((ej, ei) => {
+    const base = claveDe(i, bi, ei, vista.semana);
+    const n = cantidadSeries(ej, b, i, bi, ei, vista.semana);
+    for (let k = 1; k <= n; k++){
+      total++;
+      const key = claveSerie(base, k);
+      if (cargas.v[key] || cargas.d[key]){ hechos++; if (cargas.a[key] && !cargas.d[key]) auto++; }
+    }
+  }));
+  return { total, hechos, auto };
+}
+function diaCompleto(i){
+  const { total, hechos } = contarDia(i);
+  return total > 0 && hechos === total;
+}
+
+/* Actualiza solo los puntitos de los días y la nota del envío, sin
+   redibujar la pantalla: si redibujáramos, el próximo casillero que toca
+   el alumno desaparecería bajo el dedo. */
+function refrescarEstado(){
+  const tabs = document.querySelectorAll(".daytab");
+  plan.dias.forEach((d, i) => { if (tabs[i]) tabs[i].dataset.done = diaCompleto(i) ? "true" : "false"; });
+  const nota = document.querySelector(".sendnote");
+  const btns = document.querySelectorAll(".btnrow .btn");
+  if (!nota) return;
+  const { total, hechos, auto } = contarDia(vista.dia);
+  btns.forEach((b) => { if (/Enviar pesos/.test(b.textContent)) b.disabled = hechos === 0; });
+  nota.textContent = hechos === 0 ? "Cargá al menos una serie para poder enviarla"
+    : hechos < total ? "Vas " + hechos + " de " + total + " series"
+    : "Día completo · " + total + " series de la semana " + (vista.semana + 1);
+  if (auto) nota.textContent += " · " + auto + " en gris vienen de la semana anterior, confirmalas o corregilas";
+}
+
+/* ---------- 4. progreso ---------- */
+function pantallaProgreso(v, c, f){
+  const a = alumnos.find((x) => x.id === vista.alumnoId);
+  migas(c, a ? a.nombre : "Alumno", () => ir("alumno", { alumnoId: vista.alumnoId }), "Progreso");
+  v.innerHTML = '<p class="eyebrow">Evolución de cargas</p>' +
+                '<div class="titlerow"><h1 class="title">Progreso</h1></div>' +
+                '<div class="rule"></div>' +
+                '<p class="lead">Cada ejercicio con el peso más alto que registró en cada mesociclo, del más viejo al más nuevo.</p>' +
+                '<div class="empty"><p>Calculando…</p><small>Leyendo los mesociclos guardados.</small></div>';
+  construirProgreso(a, v);
+}
+
+async function construirProgreso(a, v){
+  const lista = planesDe(a.id).slice().reverse(); // cronológico
+  const porEjercicio = {};
+  for (const meta of lista){
+    const p = await store.read("plan:" + meta.id);
+    const cg = (await store.read("cargas:" + meta.id)) || { v:{} };
+    if (!p) continue;
+    p.dias.forEach((d, di) => d.bloques.forEach((b, bi) => b.ejercicios.forEach((ej, ei) => {
+      let max = null;
+      const valores = cg.v || {};
+      Object.keys(valores).forEach((k) => {
+        for (let s = 0; s < p.semanas; s++){
+          if (k.indexOf(claveDe(di, bi, ei, s) + "-e") !== 0) continue;
+          const num = parseFloat(String(valores[k] || "").replace(",", "."));
+          if (!isNaN(num) && (max === null || num > max)) max = num;
+        }
+      });
+      if (max === null) return;
+      (porEjercicio[ej.nombre] = porEjercicio[ej.nombre] || []).push({ plan: p.titulo, kg: max });
+    })));
+  }
+
+  const nombres = Object.keys(porEjercicio).sort();
+  v.querySelector(".empty").remove();
+  if (!nombres.length){
+    v.insertAdjacentHTML("beforeend",
+      '<div class="empty"><p>Todavía no hay pesos cargados</p><small>Apenas se registren kilos en algún mesociclo, acá aparece la evolución de cada ejercicio.</small></div>');
+    return;
+  }
+
+  const sec = document.createElement("section");
+  sec.className = "block";
+  sec.innerHTML = '<div class="blockhead"><div class="blocktitle">Por ejercicio</div><div class="blockline"></div>' +
+                  '<div class="blockmeta">' + nombres.length + (nombres.length === 1 ? ' ejercicio' : ' ejercicios') + '</div></div>';
+  nombres.forEach((n) => {
+    const serie = porEjercicio[n];
+    const primero = serie[0].kg, ultimo = serie[serie.length - 1].kg;
+    const d = ultimo - primero;
+    const row = document.createElement("div");
+    row.className = "prow";
+    row.innerHTML =
+      '<div><div class="pname">' + esc(n) + '</div>' +
+      '<div class="ptrack">' + serie.map((x) => x.kg + " kg").join("  →  ") + '</div></div>' +
+      '<div class="delta' + (d > 0 ? " delta--up" : "") + '">' +
+      (serie.length < 2 ? ultimo + " kg" : (d > 0 ? "+" : "") + (Math.round(d * 10) / 10) + " kg") + '</div>';
+    sec.appendChild(row);
+  });
+  v.appendChild(sec);
+}
+
+/* ---------- 5. guía ---------- */
+function pantallaGuia(v, c, f){
+  migas(c, plan ? plan.titulo : "Plan", () => ir("plan", { planId: vista.planId }), "Guía");
+  v.innerHTML =
+    '<p class="eyebrow">' + esc(GUIA.rotulo) + '</p>' +
+    '<div class="titlerow"><h1 class="title">' + esc(GUIA.titulo) + '</h1></div>' +
+    '<div class="rule"></div>' +
+    '<p class="lead">' + esc(GUIA.intro) + '</p>' +
+    '<section class="block"><div class="blockhead"><div class="blocktitle">El método</div><div class="blockline"></div><div class="blockmeta">Paso a paso</div></div>' +
+    GUIA.pasos.map((t, i) => '<div class="note"><div class="idx">' + (i+1) + '</div><div><span>' + esc(t) + '</span></div></div>').join("") +
+    '</section>' +
+    '<section class="block"><div class="blockhead"><div class="blocktitle">Ejemplo</div><div class="blockline"></div><div class="blockmeta">Carga · Reps</div></div>' +
+    GUIA.ejemplo.map((f2, i) => '<div class="row"><div class="idx">' + (i+1) + '</div><div class="name plain">' + esc(f2.semana) + '</div>' +
+      '<div class="load"><div class="pill">' + esc(f2.carga) + '</div><div class="pill pill--sets">' + esc(f2.reps) + '</div></div></div>').join("") +
+    '<p class="tablenote">Cada número es una serie: 7.7.7 = 7 reps por serie</p></section>' +
+    '<section class="block"><div class="blockhead"><div class="blocktitle">Lo que no se negocia</div><div class="blockline"></div><div class="blockmeta">Antes que el peso</div></div>' +
+    GUIA.cierre.map((it, i) => '<div class="note"><div class="idx">' + (i+1) + '</div><div><b>' + esc(it.t) + '</b><span>' + esc(it.d) + '</span></div></div>').join("") +
+    '</section>';
+}
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function abrirModal(html, alMontar){
+  const m = $("modal");
+  m.innerHTML = html;
+  $("scrim").classList.add("open");
+  if (alMontar) alMontar(m);
+  const primero = m.querySelector("input,select,textarea");
+  if (primero) setTimeout(() => primero.focus(), 60);
+}
+function cerrarModal(){ $("scrim").classList.remove("open"); $("modal").innerHTML = ""; }
+$("scrim").addEventListener("click", (e) => { if (e.target === $("scrim")) cerrarModal(); });
+
+function modalAlumno(existente){
+  abrirModal(
+    '<h2>' + (existente ? "Renombrar alumno" : "Nuevo alumno") + '</h2>' +
+    '<p class="msub">MindFit</p>' +
+    '<div class="field"><label for="m-nombre">Nombre</label>' +
+    '<input id="m-nombre" value="' + esc(existente ? existente.nombre : "") + '" placeholder="Karina"></div>' +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Guardar</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      m.querySelector("#m-ok").onclick = async () => {
+        const nombre = m.querySelector("#m-nombre").value.trim();
+        if (!nombre) return avisar("Poné un nombre");
+        if (existente){
+          existente.nombre = nombre;
+          await guardarAlumnos();
+          cerrarModal(); render(); avisar("Guardado");
+          return;
+        }
+        const nuevo = { id: slug(nombre) + "-" + uid().slice(0,4), nombre, creado: Date.now() };
+        alumnos.push(nuevo);
+        await guardarAlumnos();
+        cerrarModal(); render();
+        modalPlan(nuevo.id);   // seguimos derecho al armado de su primera rutina
+      };
+    }
+  );
+}
+
+function modalPlan(alumnoId){
+  const previos = planesDe(alumnoId);
+  abrirModal(
+    '<h2>Nuevo mesociclo</h2><p class="msub">' + esc(nombreAlumno(alumnoId)) + '</p>' +
+    '<div class="field"><label for="m-titulo">Título</label>' +
+    '<input id="m-titulo" placeholder="Septiembre · Fuerza"></div>' +
+    '<div class="field field--row"><div><label for="m-semanas">Semanas</label>' +
+    '<input id="m-semanas" type="number" min="1" max="12" value="4"></div>' +
+    '<div><label for="m-dias">Días por semana</label>' +
+    '<input id="m-dias" type="number" min="1" max="7" value="3"></div></div>' +
+    (previos.length ?
+      '<div class="field"><label for="m-copiar">Copiar estructura de</label>' +
+      '<select id="m-copiar"><option value="">Empezar vacío</option>' +
+      previos.map((p) => '<option value="' + esc(p.id) + '">' + esc(p.titulo) + '</option>').join("") +
+      '</select><span class="help">Copia días, bloques y ejercicios. Los pesos arrancan en blanco.</span></div>' : "") +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Crear</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      m.querySelector("#m-ok").onclick = async () => {
+        const titulo = m.querySelector("#m-titulo").value.trim() || fechaCorta(Date.now());
+        const semanas = Math.max(1, Math.min(12, parseInt(m.querySelector("#m-semanas").value, 10) || 4));
+        const nDias = Math.max(1, Math.min(7, parseInt(m.querySelector("#m-dias").value, 10) || 3));
+        const copiarDe = m.querySelector("#m-copiar") ? m.querySelector("#m-copiar").value : "";
+
+        let nuevo = planVacio(alumnoId, titulo, semanas);
+        if (copiarDe){
+          const fuente = await store.read("plan:" + copiarDe);
+          if (fuente){
+            nuevo.dias = JSON.parse(JSON.stringify(fuente.dias));
+            nuevo.cicloCarga = fuente.cicloCarga;
+            nuevo.dias.forEach((d) => d.bloques.forEach((b) => b.ejercicios.forEach((ej) => {
+              const r = ej.repsBase || ej.reps;
+              ej.reps = ajustarLargo(r, semanas);
+              ej.repsBase = ej.reps.slice();
+            })));
+          }
+        } else {
+          nuevo.dias = Array.from({ length: nDias }, (_, i) => nuevoDia(i + 1));
+        }
+        await store.write("plan:" + nuevo.id, nuevo);
+        await store.write("cargas:" + nuevo.id, { v:{}, a:{} });
+        indice.push({ id:nuevo.id, alumnoId, titulo, inicio: fechaCorta(Date.now()),
+                      semanas, dias: nuevo.dias.length, estado:"activo", creado: nuevo.creado });
+        await guardarIndice();
+        cerrarModal();
+        ir("plan", { planId: nuevo.id, alumnoId });
+      };
+    }
+  );
+}
+
+function ajustarLargo(arr, n){
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(arr[i] != null ? arr[i] : (arr[arr.length - 1] || ""));
+  return out;
+}
+
+/* Alta de ejercicios desde la biblioteca. Con `modo` arma un grupo entero:
+   {cantidad:2} superserie, {cantidad:3} triserie, {cantidad:0} circuito
+   abierto hasta que el coach toca Listo. Los que se agregan en la misma
+   tanda quedan encadenados solos. */
+function modalBiblioteca(bi, modo){
+  const dia = plan.dias[vista.dia];
+  const bloque = dia.bloques[bi];
+  const nuevos = [];
+
+  const titulo = !modo ? "Agregar ejercicio"
+    : modo.cantidad === 2 ? "Nueva superserie"
+    : modo.cantidad === 3 ? "Nueva triserie" : "Nuevo circuito";
+
+  const subtitulo = () => {
+    if (!modo) return esc(bloque.titulo) + " · " + esc(dia.nombre);
+    if (modo.cantidad){
+      const faltan = modo.cantidad - nuevos.length;
+      return faltan > 0 ? "Elegí " + faltan + (faltan === 1 ? " ejercicio más" : " ejercicios") : "Listo";
+    }
+    return nuevos.length ? nuevos.length + " ejercicios en el circuito" : "Elegí los ejercicios del circuito";
+  };
+
+  abrirModal(
+    '<h2>' + titulo + '</h2>' +
+    '<p class="msub" id="m-sub">' + subtitulo() + '</p>' +
+    '<div class="field"><input id="m-buscar" placeholder="Buscar: sentadilla, remo, plancha…" autocomplete="off"></div>' +
+    '<div class="biblist" id="m-lista"></div>' +
+    '<div class="btnrow">' +
+    '<button class="btn btn--ghost" id="m-nuevo" type="button">Crear uno que no está en la lista</button>' +
+    '<button class="btn" id="m-listo" type="button">Listo</button></div>',
+    (m) => {
+      const lista = m.querySelector("#m-lista");
+      const buscar = m.querySelector("#m-buscar");
+      const sub = m.querySelector("#m-sub");
+
+      const normal = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      function pintar(){
+        sub.textContent = subtitulo();
+        const q = normal(buscar.value.trim());
+        const usados = new Set(bloque.ejercicios.map((e) => e.nombre.toLowerCase()));
+        const hits = biblioteca.filter((e) => !q || normal(e.n).indexOf(q) !== -1).slice(0, 60);
+        lista.innerHTML = "";
+        if (!hits.length){
+          lista.innerHTML = '<div class="bibempty">Ningún ejercicio con ese nombre. Podés crearlo con el botón de abajo.</div>';
+          return;
+        }
+        hits.forEach((e) => {
+          const b = document.createElement("button");
+          b.className = "bibitem"; b.type = "button";
+          b.innerHTML = '<span class="bn">' + esc(e.n) + '</span>' +
+                        (usados.has(e.n.toLowerCase()) ? '<span class="bv">Ya está</span>' : '') +
+                        (e.v ? '' : '<span class="bv">Sin video</span>') +
+                        '<span class="bplus">+</span>';
+          b.onclick = () => sumar(e.n, e.v);
+          lista.appendChild(b);
+        });
+      }
+
+      function nuevoDesdeBiblioteca(nombre, video){
+        return {
+          nombre, video: video || "", carga: cargaSugerida(nombre),
+          tipo: (bloque.propaga || "ciclo") === "todas" ? "reps" : "sets",
+          reps: repsPorDefecto(bloque, plan.semanas),
+          repsBase: repsPorDefecto(bloque, plan.semanas)
+        };
+      }
+
+      function sumar(nombre, video){
+        bloque.ejercicios.push(nuevoDesdeBiblioteca(nombre, video));
+        nuevos.push(bloque.ejercicios.length - 1);
+        guardarPlan(true);
+        if (modo && modo.cantidad && nuevos.length >= modo.cantidad) return cerrar();
+        avisar(nombre + " agregado");
+        buscar.value = ""; pintar(); buscar.focus();
+      }
+
+      /* Al cerrar, lo agregado en esta tanda se encadena: el primero queda
+         suelto y los siguientes se enganchan. */
+      function cerrar(){
+        if (modo && nuevos.length > 1){
+          nuevos.forEach((idx, i) => {
+            const e = bloque.ejercicios[idx];
+            if (i === 0) delete e.unido; else e.unido = true;
+          });
+          guardarPlan(true);
+        }
+        cerrarModal(); render();
+        if (modo && nuevos.length > 1) avisar(nombreGrupo(nuevos.length) + " armada");
+      }
+
+      buscar.addEventListener("input", pintar);
+      pintar();
+
+      m.querySelector("#m-listo").onclick = cerrar;
+      m.querySelector("#m-nuevo").onclick = () => {
+        const nombre = buscar.value.trim() || "Ejercicio nuevo";
+        bloque.ejercicios.push(nuevoDesdeBiblioteca(nombre, ""));
+        nuevos.push(bloque.ejercicios.length - 1);
+        const ultimo = bloque.ejercicios.length - 1;
+        if (modo && nuevos.length > 1) bloque.ejercicios[ultimo].unido = true;
+        guardarPlan(true); cerrarModal(); render();
+        modalEjercicio(bi, ultimo);
+      };
+    }
+  );
+}
+
+function modalEjercicio(bi, ei){
+  const bloque = plan.dias[vista.dia].bloques[bi];
+  const ej = bloque.ejercicios[ei];
+  abrirModal(
+    '<h2>Ejercicio</h2><p class="msub">' + esc(bloque.titulo) + ' · ' + esc(plan.dias[vista.dia].nombre) + '</p>' +
+    '<div class="field"><label for="m-n">Nombre</label><input id="m-n" value="' + esc(ej.nombre) + '"></div>' +
+    '<div class="field"><label for="m-v">Link del video</label><input id="m-v" value="' + esc(ej.video || "") + '" placeholder="https://www.youtube.com/watch?v=..."></div>' +
+    '<div class="field"><label>Series y reps por semana</label><div class="weekfields">' +
+    ej.reps.map((r, i) => '<div><span>S' + (i+1) + '</span><input data-w="' + i + '" value="' + esc(r) + '"></div>').join("") +
+    '</div><span class="help">Escribilo como lo usás: 8x3, 12 reps, 20” x lado.</span></div>' +
+    (ei > 0 ? '<div class="field"><label for="m-unido">Cómo entra</label><select id="m-unido">' +
+      '<option value=""' + (ej.unido ? "" : " selected") + '>Suelto, con su propia pausa</option>' +
+      '<option value="1"' + (ej.unido ? " selected" : "") + '>Encadenado con el anterior</option>' +
+      '</select><span class="help">Encadenado forma superserie, triserie o circuito: se hacen seguidos y la pausa va recién al cerrar la vuelta.</span></div>' : "") +
+    '<div class="field"><label for="m-carga">Cómo se carga</label><select id="m-carga">' +
+    Object.keys(CARGAS).map((k) => '<option value="' + k + '"' +
+      (tipoCarga(ej) === k ? " selected" : "") + '>' + CARGAS[k].etiqueta + '</option>').join("") +
+    '</select><span class="help">En banda elástica el alumno escribe el color; en peso corporal el casillero queda para el lastre que agregue.</span></div>' +
+    '<div class="field field--row"><div><label for="m-tipo">Estilo</label><select id="m-tipo">' +
+    '<option value="sets"' + (ej.tipo === "sets" ? " selected" : "") + '>Fuerza</option>' +
+    '<option value="reps"' + (ej.tipo === "reps" ? " selected" : "") + '>Circuito</option></select></div>' +
+    '<div><label for="m-desc">Descanso</label>' +
+    '<input id="m-desc" value="' + (typeof ej.descanso === "number" ? esc(mmss(ej.descanso)) : "") + '" placeholder="' + esc(mmss(descansoDe(bloque))) + '"></div>' +
+    '<div><label for="m-prop">Repetir kg</label><select id="m-prop">' +
+    '<option value="">Como el bloque</option>' +
+    '<option value="ciclo"' + (ej.propaga === "ciclo" ? " selected" : "") + '>Dentro del ciclo</option>' +
+    '<option value="todas"' + (ej.propaga === "todas" ? " selected" : "") + '>Todas las semanas</option>' +
+    '<option value="ninguna"' + (ej.propaga === "ninguna" ? " selected" : "") + '>Semana por semana</option>' +
+    '</select></div></div>' +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Guardar</button>' +
+    (coach ? '<button class="btn btn--ghost" id="m-up" type="button">Mover arriba</button>' +
+             '<button class="btn btn--ghost" id="m-down" type="button">Mover abajo</button>' : '') +
+    '<button class="btn btn--danger" id="m-del" type="button">Eliminar ejercicio</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      m.querySelector("#m-del").onclick = () => {
+        if (!confirm("¿Eliminar «" + ej.nombre + "»?")) return;
+        bloque.ejercicios.splice(ei, 1);
+        guardarPlan(true); cerrarModal(); render(); avisar("Eliminado");
+      };
+      const mover = (paso) => {
+        const destino = ei + paso;
+        if (destino < 0 || destino >= bloque.ejercicios.length) return avisar("Ya está en la punta");
+        const [x] = bloque.ejercicios.splice(ei, 1);
+        bloque.ejercicios.splice(destino, 0, x);
+        guardarPlan(true); cerrarModal(); render();
+      };
+      if (m.querySelector("#m-up")) m.querySelector("#m-up").onclick = () => mover(-1);
+      if (m.querySelector("#m-down")) m.querySelector("#m-down").onclick = () => mover(1);
+      m.querySelector("#m-ok").onclick = () => {
+        ej.nombre = m.querySelector("#m-n").value.trim() || ej.nombre;
+        ej.video = m.querySelector("#m-v").value.trim();
+        ej.tipo = m.querySelector("#m-tipo").value;
+        ej.carga = m.querySelector("#m-carga").value;
+        const u = m.querySelector("#m-unido");
+        if (u && u.value) ej.unido = true; else delete ej.unido;
+        const p = m.querySelector("#m-prop").value;
+        if (p) ej.propaga = p; else delete ej.propaga;
+        const d = parseDescanso(m.querySelector("#m-desc").value);
+        if (d === null) delete ej.descanso; else ej.descanso = d;
+        m.querySelectorAll("[data-w]").forEach((inp) => { ej.reps[+inp.dataset.w] = inp.value.trim(); });
+        ej.repsBase = ej.reps.slice();
+        guardarPlan(true);
+        if (coach) sumarABiblioteca(ej.nombre, ej.video);
+        cerrarModal(); render(); avisar("Guardado");
+      };
+    }
+  );
+}
+
+function modalBloque(bi){
+  const dia = plan.dias[vista.dia];
+  const b = dia.bloques[bi];
+  abrirModal(
+    '<h2>Bloque</h2><p class="msub">' + esc(dia.nombre) + '</p>' +
+    '<div class="field"><label for="m-t">Título</label><input id="m-t" value="' + esc(b.titulo) + '"></div>' +
+    '<div class="field"><label for="m-m">Nota al costado</label><input id="m-m" value="' + esc(b.meta || "") + '" placeholder="Opcional: se muestra al lado del título"></div>' +
+    '<div class="field"><label for="m-d">Descanso entre series</label>' +
+    '<input id="m-d" value="' + esc(mmss(descansoDe(b))) + '" placeholder="2:00">' +
+    '<span class="help">Podés escribirlo como 2:00, 120 o 2\'. En cero, el cronómetro no arranca.</span></div>' +
+    '<div class="field"><label for="m-p">Repetir kg entre semanas</label><select id="m-p">' +
+    '<option value="ciclo"' + (b.propaga === "ciclo" ? " selected" : "") + '>Dentro del ciclo de carga</option>' +
+    '<option value="todas"' + (b.propaga === "todas" ? " selected" : "") + '>Todas las semanas</option>' +
+    '<option value="ninguna"' + (b.propaga === "ninguna" ? " selected" : "") + '>Semana por semana</option></select></div>' +
+    '<div class="field"><label for="m-dn">Nombre del día</label><input id="m-dn" value="' + esc(dia.nombre) + '"></div>' +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Guardar</button>' +
+    '<button class="btn btn--danger" id="m-del" type="button">Eliminar bloque</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      m.querySelector("#m-del").onclick = () => {
+        if (!confirm("¿Eliminar el bloque «" + b.titulo + "» con sus ejercicios?")) return;
+        dia.bloques.splice(bi, 1); guardarPlan(true); cerrarModal(); render();
+      };
+      m.querySelector("#m-ok").onclick = () => {
+        b.titulo = m.querySelector("#m-t").value.trim() || b.titulo;
+        b.meta = m.querySelector("#m-m").value.trim();
+        b.propaga = m.querySelector("#m-p").value;
+        const d = parseDescanso(m.querySelector("#m-d").value);
+        if (d === null) delete b.descanso; else b.descanso = d;
+        dia.nombre = m.querySelector("#m-dn").value.trim() || dia.nombre;
+        guardarPlan(true); cerrarModal(); render(); avisar("Guardado");
+      };
+    }
+  );
+}
+
+function agregarBloque(){
+  plan.dias[vista.dia].bloques.push({ titulo:"Bloque nuevo", meta:"", propaga:"ciclo", ejercicios:[] });
+  guardarPlan(true); render();
+}
+function agregarDia(){
+  plan.dias.push(nuevoDia(plan.dias.length + 1));
+  vista.dia = plan.dias.length - 1;
+  renumerarDias(); guardarPlan(true); render();
+}
+function renumerarDias(){
+  plan.dias.forEach((d, i) => { d.num = String(i + 1).padStart(2, "0"); });
+  const meta = indice.find((x) => x.id === plan.id);
+  if (meta){ meta.dias = plan.dias.length; guardarIndice(); }
+}
+function duplicarDia(){
+  const copia = JSON.parse(JSON.stringify(plan.dias[vista.dia]));
+  copia.nombre = "Día " + (plan.dias.length + 1);
+  plan.dias.splice(vista.dia + 1, 0, copia);
+  vista.dia = vista.dia + 1;
+  renumerarDias(); guardarPlan(true); render(); avisar("Día duplicado");
+}
+function eliminarDia(){
+  if (plan.dias.length <= 1) return avisar("Es el único día del plan");
+  if (!confirm("¿Eliminar «" + plan.dias[vista.dia].nombre + "» con todos sus ejercicios?")) return;
+  plan.dias.splice(vista.dia, 1);
+  vista.dia = Math.max(0, vista.dia - 1);
+  renumerarDias(); guardarPlan(true); render(); avisar("Día eliminado");
+}
+
+async function archivarPlan(){
+  const meta = indice.find((p) => p.id === plan.id);
+  if (!meta) return;
+  meta.estado = meta.estado === "archivado" ? "activo" : "archivado";
+  plan.estado = meta.estado;
+  await guardarIndice(); guardarPlan(true);
+  avisar(meta.estado === "archivado" ? "Archivado" : "Reactivado");
+  render();
+}
+
+/* ============================================================
+   ELIMINAR — mesociclo y alumno
+   Borrar no es archivar: saca el registro del índice y vacía sus datos.
+   No hay papelera, así que antes pedimos escribir el nombre. Solo aparece
+   en modo coach, nunca desde el link de un alumno.
+   ============================================================ */
+function modalConfirmarBorrado(titulo, sub, nombre, aviso, alConfirmar){
+  abrirModal(
+    '<h2>' + esc(titulo) + '</h2><p class="msub">' + esc(sub) + '</p>' +
+    '<p class="lead" style="font-size:13.5px;margin:0 0 16px">' + esc(aviso) + '</p>' +
+    '<div class="field"><label for="m-conf">Escribí &laquo;' + esc(nombre) + '&raquo; para confirmar</label>' +
+    '<input id="m-conf" autocomplete="off" autocapitalize="off" placeholder="' + esc(nombre) + '"></div>' +
+    '<div class="btnrow"><button class="btn btn--danger" id="m-ok" type="button">Eliminar definitivamente</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      const campo = m.querySelector("#m-conf");
+      const ok = m.querySelector("#m-ok");
+      const coincide = () => campo.value.trim().toLowerCase() === String(nombre).trim().toLowerCase();
+      ok.disabled = true;
+      campo.addEventListener("input", () => { ok.disabled = !coincide(); });
+      campo.addEventListener("keydown", (e) => { if (e.key === "Enter" && coincide()) ok.click(); });
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      ok.onclick = () => { if (coincide()) alConfirmar(); };
+    }
+  );
+}
+
+/* Vacía los dos registros de un plan (la rutina y los pesos) y saca la
+   copia local, si la había. */
+async function borrarRegistrosDePlan(id){
+  await store.write("plan:" + id, null);
+  await store.write("cargas:" + id, null);
+  try {
+    localStorage.removeItem("mf:plan:" + id);
+    localStorage.removeItem("mf:cargas:" + id);
+  } catch(e){}
+}
+
+/* Cortamos los guardados con retardo antes de borrar: si quedaba uno en
+   camino, volvería a escribir el plan que acabamos de eliminar. */
+function frenarGuardados(){
+  clearTimeout(tPlan);
+  clearTimeout(tCargas);
+  planPendiente = false;
+  cargasPendientes = false;
+  limpiarSubs();
+}
+
+function eliminarPlan(){
+  if (!plan) return;
+  const id = plan.id, alumnoId = plan.alumnoId, titulo = plan.titulo;
+  modalConfirmarBorrado(
+    "Eliminar mesociclo", nombreAlumno(alumnoId), titulo,
+    "Se borra el mesociclo completo: sus días, sus ejercicios y todos los pesos cargados. No se puede deshacer.",
+    async () => {
+      frenarGuardados();
+      indice = indice.filter((p) => p.id !== id);
+      await guardarIndice();
+      await borrarRegistrosDePlan(id);
+      plan = null;
+      cargas = normalizarCargas(null);
+      vista.planId = null;
+      cerrarModal();
+      ir("alumno", { alumnoId });
+      avisar("Mesociclo eliminado");
+    }
+  );
+}
+
+function eliminarAlumno(a){
+  const suyos = planesDe(a.id);
+  const cuenta = suyos.length
+    ? "sus " + suyos.length + (suyos.length === 1 ? " mesociclo" : " mesociclos") + " con todos los pesos cargados"
+    : "todavía no tiene mesociclos cargados";
+  modalConfirmarBorrado(
+    "Eliminar alumno", "MindFit", a.nombre,
+    "Se borra " + a.nombre + " y " + cuenta + ". Su link personal deja de mostrar la rutina. No se puede deshacer.",
+    async () => {
+      frenarGuardados();
+      for (const p of suyos) await borrarRegistrosDePlan(p.id);
+      indice = indice.filter((p) => p.alumnoId !== a.id);
+      alumnos = alumnos.filter((x) => x.id !== a.id);
+      await guardarIndice();
+      await guardarAlumnos();
+      plan = null;
+      cargas = normalizarCargas(null);
+      vista.planId = null; vista.alumnoId = null;
+      cerrarModal();
+      ir("inicio");
+      avisar("Alumno eliminado");
+    }
+  );
+}
+
+/* ============================================================
+   MODO COACH
+   ============================================================ */
+function alternarCoach(){
+  if (coach){
+    coach = false; sessionStorage.removeItem("mf:coach"); render(); avisar("Modo alumno");
+    return;
+  }
+  abrirModal(
+    '<h2>Modo coach</h2><p class="msub">Solo para el entrenador</p>' +
+    '<div class="field"><label for="m-pin">Clave</label><input id="m-pin" type="password" autocomplete="off">' +
+    '<span class="help">Habilita crear alumnos, armar mesociclos y editar la estructura de la rutina.</span></div>' +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Entrar</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      const ok = () => {
+        if (m.querySelector("#m-pin").value !== CFG.pinCoach) return avisar("Clave incorrecta");
+        coach = true; sessionStorage.setItem("mf:coach", "1");
+        cerrarModal(); render(); avisar("Modo coach");
+      };
+      m.querySelector("#m-ok").onclick = ok;
+      m.querySelector("#m-pin").addEventListener("keydown", (e) => { if (e.key === "Enter") ok(); });
+    }
+  );
+}
+
+/* ============================================================
+   ENVÍO AL COACH
+   ============================================================ */
+function armarTexto(){
+  const dia = plan.dias[vista.dia];
+  const hoy = new Date().toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"numeric" });
+  const L = ["MINDFIT · " + nombreAlumno(plan.alumnoId),
+             plan.titulo + " · Semana " + (vista.semana + 1) + " · " + dia.nombre + " · " + hoy];
+  dia.bloques.forEach((b, bi) => {
+    L.push(""); L.push(b.titulo.toUpperCase());
+    const etiquetas = {};
+    agruparEjercicios(b).forEach((g) => g.items.forEach((it) => { etiquetas[it.ei] = it.etiqueta; }));
+    b.ejercicios.forEach((ej, ei) => {
+      const cbase = claveDe(vista.dia, bi, ei, vista.semana);
+      const info = seriesDe(ej, b, vista.semana);
+      const n = cargas.n[cbase] || info.n;
+      const partes = [];
+      for (let i = 1; i <= n; i++){
+        const k = claveSerie(cbase, i);
+        const kg = cargas.v[k];
+        const reps = cargas.r[k] || info.objetivo;
+        if (!kg && !cargas.d[k] && !cargas.r[k]) continue;
+        partes.push(textoCarga(ej, kg) + " × " + (reps || "?"));
+      }
+      L.push(etiquetas[ei] + ". " + ej.nombre + ": " + (partes.length ? partes.join("  |  ") : "—"));
+    });
+  });
+  return L.join("\n");
+}
+
+function enviarWhatsapp(){
+  const texto = armarTexto();
+  if (CFG.whatsappCoach){
+    window.open("https://api.whatsapp.com/send?phone=" + CFG.whatsappCoach + "&text=" + encodeURIComponent(texto), "_blank");
+    return;
+  }
+  if (navigator.share) navigator.share({ text: texto }).catch(() => {});
+  else copiar();
+}
+/* Ya no hay botón de copiar: el envío va derecho a WhatsApp. Esto queda
+   como última salida por si alguna vez se vacía CFG.whatsappCoach y el
+   celular tampoco tiene menú de compartir. */
+function copiar(){
+  const texto = armarTexto();
+  if (navigator.clipboard) navigator.clipboard.writeText(texto).then(() => avisar("Copiado")).catch(() => avisar("No se pudo copiar"));
+  else avisar("No se pudo copiar");
+}
+
+/* ============================================================
+   COPIA DE SEGURIDAD
+   ============================================================ */
+async function exportar(){
+  const bundle = { alumnos, indice, planes:{}, cargas:{} };
+  for (const p of indice){
+    bundle.planes[p.id] = await store.read("plan:" + p.id);
+    bundle.cargas[p.id] = await store.read("cargas:" + p.id);
+  }
+  const txt = JSON.stringify(bundle);
+  if (navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(() => avisar("Copia en el portapapeles")).catch(() => {});
+  }
+  abrirModal(
+    '<h2>Copia de seguridad</h2><p class="msub">' + indice.length + ' mesociclos · ' + alumnos.length + ' alumnos</p>' +
+    '<div class="field"><label for="m-json">Pegala en un archivo de texto</label>' +
+    '<textarea id="m-json" rows="8"></textarea></div>' +
+    '<div class="btnrow"><button class="btn btn--ghost" id="m-cancel" type="button">Cerrar</button></div>',
+    (m) => { m.querySelector("#m-json").value = txt; m.querySelector("#m-cancel").onclick = cerrarModal; }
+  );
+}
+
+function importar(){
+  abrirModal(
+    '<h2>Importar copia</h2><p class="msub">Reemplaza todo lo que hay</p>' +
+    '<div class="field"><label for="m-json">Pegá acá el texto de la copia</label>' +
+    '<textarea id="m-json" rows="8" placeholder=\'{"alumnos":[...]}\'></textarea></div>' +
+    '<div class="btnrow"><button class="btn" id="m-ok" type="button">Importar</button>' +
+    '<button class="btn btn--ghost" id="m-cancel" type="button">Cancelar</button></div>',
+    (m) => {
+      m.querySelector("#m-cancel").onclick = cerrarModal;
+      m.querySelector("#m-ok").onclick = async () => {
+        let b;
+        try { b = JSON.parse(m.querySelector("#m-json").value); }
+        catch(e){ return avisar("El texto no es una copia válida"); }
+        if (!b || !b.alumnos || !b.indice) return avisar("Falta información en la copia");
+        alumnos = b.alumnos; indice = b.indice;
+        await guardarAlumnos(); await guardarIndice();
+        for (const id of Object.keys(b.planes || {})) await store.write("plan:" + id, b.planes[id]);
+        for (const id of Object.keys(b.cargas || {})) await store.write("cargas:" + id, b.cargas[id] || { v:{}, a:{} });
+        cerrarModal(); ir("inicio"); avisar("Importado");
+      };
+    }
+  );
+}
+
+/* ============================================================
+   SEMILLA — los planes de agosto ya cargados
+   ============================================================ */
+const SEMILLA = {
+  alumnos: [
+    { id:"karina", nombre:"Karina" },
+    { id:"anita", nombre:"Anita" },
+    { id:"natalie", nombre:"Natalie" },
+    { id:"lenin", nombre:"Lenin" },
+    { id:"francisco", nombre:"Francisco" }
+  ],
+  planes: [
+
+  /* ---------------- KARINA · 3 días · full body ---------------- */
+  { id:"karina-agosto", alumnoId:"karina", titulo:"Agosto · Full body", semanas:4,
+    cicloCarga:[[0,1,2],[3]], estado:"activo",
+    dias:[
+      { nombre:"Día 1", num:"01", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito", propaga:"todas", ejercicios:[
+          { nombre:"Sit-up con disco", video:"https://www.youtube.com/watch?v=pTZL-Hirhwg", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] },
+          { nombre:"Plancha lateral", video:"https://www.youtube.com/watch?v=OMc5f_JUDUU", carga:"kg", tipo:"reps", reps:["20” x lado","20” x lado","20” x lado","20” x lado"] },
+          { nombre:"Vitalizaciones", video:"https://www.youtube.com/watch?v=pdbME8Z03Yg", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Peso muerto con trap bar", video:"https://www.youtube.com/watch?v=FYx76NSijfU", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Press en landmine", video:"https://www.youtube.com/watch?v=5KZF1xdgA-A", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Estocadas atrás con déficit", video:"https://www.youtube.com/shorts/7zKdEH5DLEU", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Jalones en polea (toma neutra)", video:"https://www.youtube.com/watch?v=gNFMkFL5yPQ", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Patada de glúteos (variante 45°)", video:"https://www.youtube.com/watch?v=50uCtMJze0s", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 2", num:"02", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"Sin pausa entre ejercicios", propaga:"todas", ejercicios:[
+          { nombre:"Hollow hold", video:"https://www.youtube.com/watch?v=EsnM8eBtazU", carga:"kg", tipo:"reps", reps:["20”","20”","20”","20”"] },
+          { nombre:"Thruster con mancuernas", video:"https://www.youtube.com/watch?v=sLIswEpOHng", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Sentadilla con barra atrás", video:"https://www.youtube.com/watch?v=j-KDHkRMer0", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Remo a un brazo con mancuerna", video:"https://www.youtube.com/watch?v=iLhwICt4R9A", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Sillón de isquiotibiales", video:"https://www.youtube.com/watch?v=ceG0f6ntNcw", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Vuelos laterales con mancuerna", video:"https://www.youtube.com/watch?v=8aUc9snLOxU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Sillón de cuádriceps", video:"https://www.youtube.com/watch?v=s1JfTvyWdTs", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 3", num:"03", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"Sin pausa entre ejercicios", propaga:"todas", ejercicios:[
+          { nombre:"Plancha de oso", video:"https://www.youtube.com/watch?v=O9lM_2t4Z0U", carga:"kg", tipo:"reps", reps:["20”","20”","20”","20”"] },
+          { nombre:"Puente de glúteos a una pierna", video:"https://www.youtube.com/watch?v=sVfp4LN9niA", carga:"kg", tipo:"reps", reps:["10 x lado","10 x lado","10 x lado","10 x lado"] },
+          { nombre:"Sentadillas", video:"https://www.youtube.com/watch?v=iiKn5FiVUjI", carga:"kg", tipo:"reps", reps:["10 reps","10 reps","10 reps","10 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Prensa 45°", video:"https://www.youtube.com/watch?v=B8KqmwdomoU", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Remo bajo", video:"https://www.youtube.com/watch?v=lJoozxC0Rns", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Hip thrust", video:"https://www.youtube.com/watch?v=JVe0AjERVsE", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Tríceps en polea alta", video:"https://www.youtube.com/watch?v=LXkCrxn3caQ", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Abducciones en máquina", video:"https://www.youtube.com/watch?v=pVGCaMmxuEg", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]}
+    ]},
+
+  /* ---------------- ANITA · 3 días · full body + piernas ---------------- */
+  { id:"anita-agosto", alumnoId:"anita", titulo:"Agosto · Full body", semanas:4,
+    cicloCarga:[[0,1,2],[3]], estado:"activo",
+    dias:[
+      { nombre:"Día 1", num:"01", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito, sin pausa", propaga:"todas", ejercicios:[
+          { nombre:"Sit-up", video:"https://www.youtube.com/shorts/u8cwbmk3TqQ", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] },
+          { nombre:"Superman alternado", video:"https://www.youtube.com/shorts/60rDAM5BUEU", carga:"kg", tipo:"reps", reps:["8+8 reps","8+8 reps","8+8 reps","8+8 reps"] },
+          { nombre:"Vitalizaciones con disco", video:"https://www.youtube.com/watch?v=pdbME8Z03Yg", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Peso muerto con trap bar", video:"https://www.youtube.com/watch?v=FYx76NSijfU", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Press plano con mancuernas", video:"https://www.youtube.com/watch?v=ZaDlbm8E8Tg", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Sentadilla búlgara", video:"https://www.youtube.com/watch?v=8kvZmrlOo2M", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Remo a un brazo con mancuerna", video:"https://www.youtube.com/watch?v=iLhwICt4R9A", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Patada de glúteos 45°", video:"https://www.youtube.com/shorts/lLqk1vIJHmU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Vuelos laterales con mancuerna", video:"https://www.youtube.com/watch?v=8aUc9snLOxU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 2", num:"02", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito, sin pausa", propaga:"todas", ejercicios:[
+          { nombre:"Crunch invertido", video:"https://www.youtube.com/watch?v=idIahhhsEC0", carga:"kg", tipo:"reps", reps:["15 reps","15 reps","15 reps","15 reps"] },
+          { nombre:"Plancha oso", video:"https://www.youtube.com/shorts/fUM4U38lgbk", carga:"kg", tipo:"reps", reps:["8+8 reps","8+8 reps","8+8 reps","8+8 reps"] },
+          { nombre:"Thruster con mancuerna", video:"https://www.youtube.com/watch?v=sLIswEpOHng", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Prensa 45°", video:"https://www.youtube.com/watch?v=B8KqmwdomoU", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Jalones en polea", video:"https://www.youtube.com/watch?v=PEv0gTcMY3g", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Peso muerto a una pierna", video:"https://www.youtube.com/shorts/Ex_pPwkzS1k", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Press landmine", video:"https://www.youtube.com/watch?v=5KZF1xdgA-A", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Abducciones en máquina", video:"https://www.youtube.com/watch?v=pVGCaMmxuEg", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Bíceps con mancuerna", video:"https://www.youtube.com/watch?v=l1tXK8CzxB4", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 3", num:"03", sub:"Piernas", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito, sin pausa", propaga:"todas", ejercicios:[
+          { nombre:"Hollow hold", video:"https://www.youtube.com/watch?v=EsnM8eBtazU", carga:"kg", tipo:"reps", reps:["30”","30”","30”","30”"] },
+          { nombre:"Puente de glúteos a una pierna", video:"https://www.youtube.com/watch?v=sVfp4LN9niA", carga:"kg", tipo:"reps", reps:["8+8 reps","8+8 reps","8+8 reps","8+8 reps"] },
+          { nombre:"Sentadilla de pulso", video:"https://www.youtube.com/shorts/vCYFgvG2Pck", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Sentadilla con barra", video:"https://www.youtube.com/watch?v=j-KDHkRMer0", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Peso muerto rumano", video:"https://www.youtube.com/shorts/g5u75sgpn04", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Hip thrust", video:"https://www.youtube.com/watch?v=JVe0AjERVsE", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Sillón de cuádriceps", video:"https://www.youtube.com/watch?v=s1JfTvyWdTs", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Isquios en máquina sentado", video:"https://www.youtube.com/watch?v=ceG0f6ntNcw", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]}
+    ]},
+
+  /* ---------------- NATALIE · 3 días · full body ---------------- */
+  { id:"natalie-agosto", alumnoId:"natalie", titulo:"Agosto · Full body", semanas:4,
+    cicloCarga:[[0,1,2],[3]], estado:"activo",
+    dias:[
+      { nombre:"Día 1", num:"01", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito", propaga:"todas", ejercicios:[
+          { nombre:"Sit-up con disco", video:"https://www.youtube.com/watch?v=pTZL-Hirhwg", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] },
+          { nombre:"Plancha lateral", video:"https://www.youtube.com/watch?v=OMc5f_JUDUU", carga:"kg", tipo:"reps", reps:["20” x lado","20” x lado","20” x lado","20” x lado"] },
+          { nombre:"Vitalizaciones", video:"https://www.youtube.com/watch?v=pdbME8Z03Yg", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Peso muerto con trap bar", video:"https://www.youtube.com/watch?v=FYx76NSijfU", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Press en landmine", video:"https://www.youtube.com/watch?v=5KZF1xdgA-A", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Estocadas atrás con mancuerna", video:"", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Jalones en polea (toma neutra)", video:"https://www.youtube.com/watch?v=gNFMkFL5yPQ", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Patada de glúteos 45°", video:"https://www.youtube.com/shorts/lLqk1vIJHmU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 2", num:"02", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"Sin pausa entre ejercicios", propaga:"todas", ejercicios:[
+          { nombre:"Hollow hold", video:"https://www.youtube.com/watch?v=EsnM8eBtazU", carga:"kg", tipo:"reps", reps:["20”","20”","20”","20”"] },
+          { nombre:"Thruster con mancuernas", video:"https://www.youtube.com/watch?v=sLIswEpOHng", carga:"kg", tipo:"reps", reps:["12 reps","12 reps","12 reps","12 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Sentadilla de copa", video:"", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Remo a un brazo con mancuerna", video:"https://www.youtube.com/watch?v=iLhwICt4R9A", carga:"kg", tipo:"sets", reps:["6x3","7x3","8x3","6x3"] },
+          { nombre:"Sillón de isquiotibiales", video:"https://www.youtube.com/watch?v=ceG0f6ntNcw", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Vuelos laterales con mancuerna", video:"https://www.youtube.com/watch?v=8aUc9snLOxU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Sillón de cuádriceps", video:"https://www.youtube.com/watch?v=s1JfTvyWdTs", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 3", num:"03", sub:"Full body", bloques:[
+        { titulo:"Calentamiento", meta:"Sin pausa entre ejercicios", propaga:"todas", ejercicios:[
+          { nombre:"Plancha de oso", video:"https://www.youtube.com/watch?v=O9lM_2t4Z0U", carga:"kg", tipo:"reps", reps:["20”","20”","20”","20”"] },
+          { nombre:"Puente de glúteos a una pierna", video:"https://www.youtube.com/watch?v=sVfp4LN9niA", carga:"kg", tipo:"reps", reps:["10 x lado","10 x lado","10 x lado","10 x lado"] },
+          { nombre:"Sentadillas", video:"https://www.youtube.com/watch?v=iiKn5FiVUjI", carga:"kg", tipo:"reps", reps:["10 reps","10 reps","10 reps","10 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Prensa 45°", video:"https://www.youtube.com/watch?v=B8KqmwdomoU", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Remo bajo", video:"https://www.youtube.com/watch?v=lJoozxC0Rns", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Hip thrust", video:"https://www.youtube.com/watch?v=JVe0AjERVsE", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Tríceps en polea alta", video:"https://www.youtube.com/watch?v=LXkCrxn3caQ", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Abducciones en máquina", video:"https://www.youtube.com/watch?v=pVGCaMmxuEg", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]}
+    ]},
+
+  /* ---------------- LENIN · 4 días · torso / piernas ---------------- */
+  { id:"lenin-agosto", alumnoId:"lenin", titulo:"Agosto · Torso-pierna", semanas:4,
+    cicloCarga:[[0,1,2],[3]], estado:"activo",
+    dias:[
+      { nombre:"Día 1", num:"01", sub:"Torso", bloques:[
+        { titulo:"Calentamiento", meta:"3 series al circuito", propaga:"todas", ejercicios:[
+          { nombre:"Sit-up", video:"https://www.youtube.com/shorts/u8cwbmk3TqQ", carga:"kg", tipo:"reps", reps:["15 reps","15 reps","15 reps","15 reps"] },
+          { nombre:"Plancha lateral con rotación", video:"https://www.youtube.com/watch?v=OMc5f_JUDUU", carga:"kg", tipo:"reps", reps:["20” x lado","20” x lado","20” x lado","20” x lado"] },
+          { nombre:"Push-up (rodillas)", video:"https://www.youtube.com/watch?v=8XQ-okb5NWE", carga:"kg", tipo:"reps", reps:["8 reps","8 reps","8 reps","8 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Press de banca", video:"https://www.youtube.com/watch?v=ejI1Nlsul9k", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Jalones en polea", video:"https://www.youtube.com/watch?v=PEv0gTcMY3g", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Vuelos laterales con mancuerna", video:"https://www.youtube.com/watch?v=8aUc9snLOxU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Curl de bíceps con barra EZ", video:"https://www.youtube.com/watch?v=-gSM-kqNlUw", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Tríceps en polea alta", video:"https://www.youtube.com/watch?v=LXkCrxn3caQ", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 2", num:"02", sub:"Piernas", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito", propaga:"todas", ejercicios:[
+          { nombre:"Crunch oblicuos", video:"https://www.youtube.com/shorts/_cdt_-Bhi48", carga:"kg", tipo:"reps", reps:["10+10 reps","10+10 reps","10+10 reps","10+10 reps"] },
+          { nombre:"Plancha frontal con toque hombros", video:"https://www.youtube.com/watch?v=Rl-koX3NLFE", carga:"kg", tipo:"reps", reps:["30”","30”","30”","30”"] },
+          { nombre:"Sentadilla de pulso", video:"https://www.youtube.com/shorts/vCYFgvG2Pck", carga:"kg", tipo:"reps", reps:["10 reps","10 reps","10 reps","10 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Peso muerto con trap bar", video:"https://www.youtube.com/watch?v=FYx76NSijfU", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Prensa 45°", video:"https://www.youtube.com/watch?v=B8KqmwdomoU", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Camilla de isquiotibiales", video:"https://www.youtube.com/watch?v=SbSNUXPRkc8", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Sillón de cuádriceps", video:"https://www.youtube.com/watch?v=s1JfTvyWdTs", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Pantorrillas en multipower", video:"https://www.youtube.com/watch?v=ofEDDXpFgj8", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 3", num:"03", sub:"Torso", bloques:[
+        { titulo:"Calentamiento", meta:"3 series al circuito", propaga:"todas", ejercicios:[
+          { nombre:"Sit-up", video:"https://www.youtube.com/shorts/u8cwbmk3TqQ", carga:"kg", tipo:"reps", reps:["15 reps","15 reps","15 reps","15 reps"] },
+          { nombre:"Plancha alta a baja", video:"https://www.youtube.com/watch?v=hqcFXBY4sH8", carga:"kg", tipo:"reps", reps:["30”","30”","30”","30”"] },
+          { nombre:"Band pull apart", video:"https://www.youtube.com/watch?v=pASXdGKh-nc", carga:"kg", tipo:"reps", reps:["10 reps","10 reps","10 reps","10 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Press inclinado con mancuernas", video:"https://www.youtube.com/watch?v=jMQA3XtJSgo", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Remo en máquina sentado", video:"https://www.youtube.com/shorts/0XMPmlhFrMc", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Press de hombros en máquina", video:"https://www.youtube.com/watch?v=LEhz8ZXNWaY", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Tríceps francés con barra EZ", video:"https://www.youtube.com/watch?v=eluOhtYkm-0", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Curl martillo con mancuerna", video:"https://www.youtube.com/watch?v=RIEMoYL_h1Y", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]},
+      { nombre:"Día 4", num:"04", sub:"Piernas", bloques:[
+        { titulo:"Calentamiento", meta:"3 series del circuito", propaga:"todas", ejercicios:[
+          { nombre:"Crunch", video:"https://www.youtube.com/shorts/6okNQ2lGr3g", carga:"kg", tipo:"reps", reps:["15 reps","15 reps","15 reps","15 reps"] },
+          { nombre:"Plancha frontal con toque hombros", video:"https://www.youtube.com/watch?v=Rl-koX3NLFE", carga:"kg", tipo:"reps", reps:["30”","30”","30”","30”"] },
+          { nombre:"Sentadilla de pulso", video:"https://www.youtube.com/shorts/vCYFgvG2Pck", carga:"kg", tipo:"reps", reps:["10 reps","10 reps","10 reps","10 reps"] }
+        ]},
+        { titulo:"Fuerza", meta:"3-5’ pausa entre series", propaga:"ciclo", ejercicios:[
+          { nombre:"Estocadas atrás con mancuerna", video:"https://www.youtube.com/watch?v=Q2k3kYbtOcI", carga:"kg", tipo:"sets", reps:["8x3","9x3","10x3","8x3"] },
+          { nombre:"Sillón de isquios", video:"https://www.youtube.com/watch?v=ceG0f6ntNcw", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Aductores en máquina", video:"https://www.youtube.com/watch?v=3DaEZ0Er6cU", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Abductores en máquina", video:"https://www.youtube.com/watch?v=pVGCaMmxuEg", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] },
+          { nombre:"Pantorrillas sentado", video:"https://www.youtube.com/watch?v=2Q-HQ3mnePg", carga:"kg", tipo:"sets", reps:["10x3","11x3","12x3","10x3"] }
+        ]}
+      ]}
+    ]}
+
+  ]
+};
+
+async function sembrar(){
+  alumnos = SEMILLA.alumnos.map((a) => ({ ...a, creado: Date.now() }));
+  indice = [];
+  for (const base of SEMILLA.planes){
+    const p = JSON.parse(JSON.stringify(base));
+    p.creado = Date.now();
+    p.dias.forEach((d) => d.bloques.forEach((b) => b.ejercicios.forEach((ej) => { ej.repsBase = ej.reps.slice(); })));
+    await store.write("plan:" + p.id, p);
+    await store.write("cargas:" + p.id, { v:{}, a:{} });
+    indice.push({ id:p.id, alumnoId:p.alumnoId, titulo:p.titulo, inicio:"agosto de 2026",
+                  semanas:p.semanas, dias:p.dias.length, estado:"activo", creado:p.creado });
+  }
+  await guardarAlumnos();
+  await guardarIndice();
+}
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+async function arrancar(){
+  await elegirBackend();
+  const st = $("state");
+  st.dataset.sync = backend;
+  $("statetxt").textContent = backend === "nube" ? "Nube" : "Este celular";
+  st.title = backend === "nube" ? "Los datos se sincronizan para todos" : "Los datos viven solo en este dispositivo";
+
+  await cargarBiblioteca();
+  alumnos = (await store.read("alumnos")) || [];
+  indice  = (await store.read("indice")) || [];
+  if (!alumnos.length && !indice.length) await sembrar();
+
+  soloAlumno = alumnoDelLink();
+  if (soloAlumno){
+    coach = false;                       // el link del alumno nunca abre el modo coach
+    vista.pantalla = "alumno";
+    vista.alumnoId = soloAlumno;
+  }
+
+  desuscribir.push(store.watch("alumnos", (a) => { alumnos = a; if (vista.pantalla === "inicio") render(); }));
+  desuscribir.push(store.watch("indice", (i) => { indice = i; if (vista.pantalla !== "plan") render(); }));
+
+  render();
+}
+
+$("state").addEventListener("click", () => {
+  avisar(backend === "nube" ? "Sincronizando en la nube" : "Guardado en este celular");
+});
+
+arrancar();
+</script>
+
+</body>
+</html>
