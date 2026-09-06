@@ -12,13 +12,17 @@ a cualquier hosting estático.
 ## Qué hay en este repo
 
 | Archivo | Qué es |
-|---|---|
+| --- | --- |
 | `index.html` | **La app entera.** HTML, CSS y JavaScript en un solo archivo. |
 | `vercel.json` | Cabeceras de caché y seguridad. Es lo que hace que actualizar la app no obligue a remandar los links. |
 | `manifest.webmanifest` | Para que "Agregar a pantalla de inicio" se comporte como una app. |
 | `icon-*.png` | Íconos de la app. |
-| `supabase/01_esquema_actual.sql` | El SQL que se corre una vez al crear el proyecto de Supabase. |
-| `supabase/02_esquema_relacional.sql` | El esquema propuesto para más adelante. **No correr todavía.** |
+| `supabase/migrations/` | El esquema nuevo, versionado: perfiles, planes, registros y las políticas RLS. Todavía **no** está en producción. |
+| `supabase/tests/rls.sql` | Pruebas de las políticas: quién ve qué, y sobre todo qué **no** ve. |
+| `packages/types/src/supabase.ts` | Tipos TypeScript generados desde el esquema. |
+| `apps/worker/` | Los trabajos de fondo, en Python: migración de datos, backups, informes. La app **no** habla con esto. |
+| `supabase/legado/01_esquema_actual.sql` | El SQL de la tabla que hoy está en producción. |
+| `supabase/legado/02_esquema_relacional.sql` | El borrador del que salieron las migraciones. Queda como referencia. |
 | `tests/smoke.mjs` | Pruebas automáticas en un navegador real. |
 | `docs/ejemplos/api-store.js` | Ejemplo del backend propio (Etapa 2). No está activo. |
 | `docs/version_anterior_v1.html` | La versión previa al rediseño, por las dudas. |
@@ -102,3 +106,60 @@ se rompen: cargar un peso, tildar una serie, cambiar de tema, crear y borrar
 un mesociclo, y que todo siga ahí después de recargar.
 
 Corré esto antes de cada `git push`.
+
+---
+
+## La base, en tu máquina
+
+Desde ahora el esquema no se pega a mano en el SQL Editor: vive versionado en
+`supabase/migrations/` y se prueba local antes de tocar la nube. Necesitás
+Docker andando.
+
+```bash
+npm run db:start     # levanta Postgres local (la primera vez baja imágenes)
+npm run db:reset     # borra y aplica todas las migraciones desde cero
+npm run test:rls     # 28 pruebas de las políticas de acceso
+npm run db:tipos     # regenera los tipos TS desde el esquema
+npm run db:stop
+```
+
+`npm run test:rls` es el que importa. Simula sesiones de verdad —una alumna,
+dos coaches que no se conocen, y alguien sin sesión— y verifica que cada uno
+vea solo lo suyo. Corrélo cada vez que toques una política.
+
+> Nada de esto toca tu proyecto de Supabase en la nube. El esquema nuevo se
+> aplica allá recién en el cutover, y con los datos migrados. Hasta entonces
+> producción sigue sobre `mindfit_store`, igual que siempre.
+
+## Migrar los datos al esquema nuevo
+
+Vive en `apps/worker/`. Los cuatro pasos, en orden, y ninguno toca producción
+salvo el que dice que sí.
+
+```bash
+cd apps/worker
+uv sync --extra dev
+uv run pytest                                     # 24 pruebas de la conversión, sin base
+
+uv run python -m mindfit_worker.volcar            # 1. baja una copia (SOLO LEE)
+uv run python -m mindfit_worker.migrar --plantilla-alumnos   # 2. csv de mails a completar
+uv run python -m mindfit_worker.migrar            # 3. ensayo: convierte e informa, no escribe
+uv run python -m mindfit_worker.migrar --escribir # 4. en serio
+uv run python -m mindfit_worker.verificar         # 5. ¿se perdió algo?
+```
+
+El paso 3 es el que hay que mirar con calma: imprime un aviso por cada cosa
+que no pudo traducir limpio —claves rotas, pesos que apuntan a ejercicios que
+ya no están, planes que quedaron en el índice sin documento—. Una migración
+silenciosa es una migración en la que no se puede confiar.
+
+El paso 5 compara el volcado contra la base, dato por dato, y sale con error
+si falta un solo peso.
+
+> El paso 2 necesita algo que la app vieja no tiene: **el mail de cada
+> alumno**. El modelo actual los identifica por nombre (`#karina`), y Auth
+> necesita un mail para mandar el link mágico. Por eso la migración no puede
+> ser del todo automática: esa columna la completás vos.
+
+⚠️ `apps/worker/datos/` tiene los datos reales de tus alumnos y está en el
+`.gitignore`. Que siga ahí.

@@ -6,3 +6,13 @@ node_modules/
 test-results/
 playwright-report/
 copias/
+
+# Worker de Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Los volcados tienen los datos reales de los alumnos. Nunca a GitHub.
+apps/worker/datos/*
+!apps/worker/datos/*.ejemplo.*

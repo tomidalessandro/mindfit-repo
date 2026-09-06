@@ -1,0 +1,1704 @@
+{
+  "alumnos": [
+    {
+      "id": "karina",
+      "nombre": "Karina",
+      "creado": 1788722326525
+    },
+    {
+      "id": "anita",
+      "nombre": "Anita",
+      "creado": 1788722326525
+    },
+    {
+      "id": "natalie",
+      "nombre": "Natalie",
+      "creado": 1788722326525
+    },
+    {
+      "id": "lenin",
+      "nombre": "Lenin",
+      "creado": 1788722326525
+    },
+    {
+      "id": "francisco",
+      "nombre": "Francisco",
+      "creado": 1788722326525
+    }
+  ],
+  "indice": [
+    {
+      "id": "karina-agosto",
+      "alumnoId": "karina",
+      "titulo": "Agosto · Full body",
+      "semanas": 4,
+      "dias": 3,
+      "estado": "activo"
+    },
+    {
+      "id": "anita-agosto",
+      "alumnoId": "anita",
+      "titulo": "Agosto · Full body",
+      "semanas": 4,
+      "dias": 3,
+      "estado": "activo"
+    },
+    {
+      "id": "natalie-agosto",
+      "alumnoId": "natalie",
+      "titulo": "Agosto · Full body",
+      "semanas": 4,
+      "dias": 3,
+      "estado": "activo"
+    },
+    {
+      "id": "lenin-agosto",
+      "alumnoId": "lenin",
+      "titulo": "Agosto · Torso-pierna",
+      "semanas": 4,
+      "dias": 4,
+      "estado": "activo"
+    },
+    {
+      "id": "fantasma",
+      "alumnoId": "karina",
+      "titulo": "Borrado",
+      "estado": "activo"
+    }
+  ],
+  "biblioteca": [
+    {
+      "n": "Ejercicio propio del coach",
+      "v": "https://ej.com/x",
+      "carga": "kg"
+    }
+  ],
+  "plan:karina-agosto": {
+    "id": "karina-agosto",
+    "alumnoId": "karina",
+    "titulo": "Agosto · Full body",
+    "semanas": 4,
+    "cicloCarga": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "estado": "activo",
+    "dias": [
+      {
+        "nombre": "Día 1",
+        "num": "01",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Sit-up con disco",
+                "video": "https://www.youtube.com/watch?v=pTZL-Hirhwg",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha lateral",
+                "video": "https://www.youtube.com/watch?v=OMc5f_JUDUU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado"
+                ]
+              },
+              {
+                "nombre": "Vitalizaciones",
+                "video": "https://www.youtube.com/watch?v=pdbME8Z03Yg",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Peso muerto con trap bar",
+                "video": "https://www.youtube.com/watch?v=FYx76NSijfU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Press en landmine",
+                "video": "https://www.youtube.com/watch?v=5KZF1xdgA-A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Estocadas atrás con déficit",
+                "video": "https://www.youtube.com/shorts/7zKdEH5DLEU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Jalones en polea (toma neutra)",
+                "video": "https://www.youtube.com/watch?v=gNFMkFL5yPQ",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Patada de glúteos (variante 45°)",
+                "video": "https://www.youtube.com/watch?v=50uCtMJze0s",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 2",
+        "num": "02",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "Sin pausa entre ejercicios",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Hollow hold",
+                "video": "https://www.youtube.com/watch?v=EsnM8eBtazU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20”",
+                  "20”",
+                  "20”",
+                  "20”"
+                ]
+              },
+              {
+                "nombre": "Thruster con mancuernas",
+                "video": "https://www.youtube.com/watch?v=sLIswEpOHng",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Sentadilla con barra atrás",
+                "video": "https://www.youtube.com/watch?v=j-KDHkRMer0",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Remo a un brazo con mancuerna",
+                "video": "https://www.youtube.com/watch?v=iLhwICt4R9A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de isquiotibiales",
+                "video": "https://www.youtube.com/watch?v=ceG0f6ntNcw",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Vuelos laterales con mancuerna",
+                "video": "https://www.youtube.com/watch?v=8aUc9snLOxU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de cuádriceps",
+                "video": "https://www.youtube.com/watch?v=s1JfTvyWdTs",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 3",
+        "num": "03",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "Sin pausa entre ejercicios",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Plancha de oso",
+                "video": "https://www.youtube.com/watch?v=O9lM_2t4Z0U",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20”",
+                  "20”",
+                  "20”",
+                  "20”"
+                ]
+              },
+              {
+                "nombre": "Puente de glúteos a una pierna",
+                "video": "https://www.youtube.com/watch?v=sVfp4LN9niA",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 x lado",
+                  "10 x lado",
+                  "10 x lado",
+                  "10 x lado"
+                ]
+              },
+              {
+                "nombre": "Sentadillas",
+                "video": "https://www.youtube.com/watch?v=iiKn5FiVUjI",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 reps",
+                  "10 reps",
+                  "10 reps",
+                  "10 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Prensa 45°",
+                "video": "https://www.youtube.com/watch?v=B8KqmwdomoU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Remo bajo",
+                "video": "https://www.youtube.com/watch?v=lJoozxC0Rns",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Hip thrust",
+                "video": "https://www.youtube.com/watch?v=JVe0AjERVsE",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Tríceps en polea alta",
+                "video": "https://www.youtube.com/watch?v=LXkCrxn3caQ",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Abducciones en máquina",
+                "video": "https://www.youtube.com/watch?v=pVGCaMmxuEg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "plan:anita-agosto": {
+    "id": "anita-agosto",
+    "alumnoId": "anita",
+    "titulo": "Agosto · Full body",
+    "semanas": 4,
+    "cicloCarga": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "estado": "activo",
+    "dias": [
+      {
+        "nombre": "Día 1",
+        "num": "01",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito, sin pausa",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Sit-up",
+                "video": "https://www.youtube.com/shorts/u8cwbmk3TqQ",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              },
+              {
+                "nombre": "Superman alternado",
+                "video": "https://www.youtube.com/shorts/60rDAM5BUEU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps"
+                ]
+              },
+              {
+                "nombre": "Vitalizaciones con disco",
+                "video": "https://www.youtube.com/watch?v=pdbME8Z03Yg",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Peso muerto con trap bar",
+                "video": "https://www.youtube.com/watch?v=FYx76NSijfU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Press plano con mancuernas",
+                "video": "https://www.youtube.com/watch?v=ZaDlbm8E8Tg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Sentadilla búlgara",
+                "video": "https://www.youtube.com/watch?v=8kvZmrlOo2M",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Remo a un brazo con mancuerna",
+                "video": "https://www.youtube.com/watch?v=iLhwICt4R9A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Patada de glúteos 45°",
+                "video": "https://www.youtube.com/shorts/lLqk1vIJHmU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Vuelos laterales con mancuerna",
+                "video": "https://www.youtube.com/watch?v=8aUc9snLOxU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 2",
+        "num": "02",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito, sin pausa",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Crunch invertido",
+                "video": "https://www.youtube.com/watch?v=idIahhhsEC0",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "15 reps",
+                  "15 reps",
+                  "15 reps",
+                  "15 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha oso",
+                "video": "https://www.youtube.com/shorts/fUM4U38lgbk",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps"
+                ]
+              },
+              {
+                "nombre": "Thruster con mancuerna",
+                "video": "https://www.youtube.com/watch?v=sLIswEpOHng",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Prensa 45°",
+                "video": "https://www.youtube.com/watch?v=B8KqmwdomoU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Jalones en polea",
+                "video": "https://www.youtube.com/watch?v=PEv0gTcMY3g",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Peso muerto a una pierna",
+                "video": "https://www.youtube.com/shorts/Ex_pPwkzS1k",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Press landmine",
+                "video": "https://www.youtube.com/watch?v=5KZF1xdgA-A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Abducciones en máquina",
+                "video": "https://www.youtube.com/watch?v=pVGCaMmxuEg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Bíceps con mancuerna",
+                "video": "https://www.youtube.com/watch?v=l1tXK8CzxB4",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 3",
+        "num": "03",
+        "sub": "Piernas",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito, sin pausa",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Hollow hold",
+                "video": "https://www.youtube.com/watch?v=EsnM8eBtazU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "30”",
+                  "30”",
+                  "30”",
+                  "30”"
+                ]
+              },
+              {
+                "nombre": "Puente de glúteos a una pierna",
+                "video": "https://www.youtube.com/watch?v=sVfp4LN9niA",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps",
+                  "8+8 reps"
+                ]
+              },
+              {
+                "nombre": "Sentadilla de pulso",
+                "video": "https://www.youtube.com/shorts/vCYFgvG2Pck",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Sentadilla con barra",
+                "video": "https://www.youtube.com/watch?v=j-KDHkRMer0",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Peso muerto rumano",
+                "video": "https://www.youtube.com/shorts/g5u75sgpn04",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Hip thrust",
+                "video": "https://www.youtube.com/watch?v=JVe0AjERVsE",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de cuádriceps",
+                "video": "https://www.youtube.com/watch?v=s1JfTvyWdTs",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Isquios en máquina sentado",
+                "video": "https://www.youtube.com/watch?v=ceG0f6ntNcw",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "plan:natalie-agosto": {
+    "id": "natalie-agosto",
+    "alumnoId": "natalie",
+    "titulo": "Agosto · Full body",
+    "semanas": 4,
+    "cicloCarga": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "estado": "activo",
+    "dias": [
+      {
+        "nombre": "Día 1",
+        "num": "01",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Sit-up con disco",
+                "video": "https://www.youtube.com/watch?v=pTZL-Hirhwg",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha lateral",
+                "video": "https://www.youtube.com/watch?v=OMc5f_JUDUU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado"
+                ]
+              },
+              {
+                "nombre": "Vitalizaciones",
+                "video": "https://www.youtube.com/watch?v=pdbME8Z03Yg",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Peso muerto con trap bar",
+                "video": "https://www.youtube.com/watch?v=FYx76NSijfU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Press en landmine",
+                "video": "https://www.youtube.com/watch?v=5KZF1xdgA-A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Estocadas atrás con mancuerna",
+                "video": "",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Jalones en polea (toma neutra)",
+                "video": "https://www.youtube.com/watch?v=gNFMkFL5yPQ",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Patada de glúteos 45°",
+                "video": "https://www.youtube.com/shorts/lLqk1vIJHmU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 2",
+        "num": "02",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "Sin pausa entre ejercicios",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Hollow hold",
+                "video": "https://www.youtube.com/watch?v=EsnM8eBtazU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20”",
+                  "20”",
+                  "20”",
+                  "20”"
+                ]
+              },
+              {
+                "nombre": "Thruster con mancuernas",
+                "video": "https://www.youtube.com/watch?v=sLIswEpOHng",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "12 reps",
+                  "12 reps",
+                  "12 reps",
+                  "12 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Sentadilla de copa",
+                "video": "",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Remo a un brazo con mancuerna",
+                "video": "https://www.youtube.com/watch?v=iLhwICt4R9A",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "6x3",
+                  "7x3",
+                  "8x3",
+                  "6x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de isquiotibiales",
+                "video": "https://www.youtube.com/watch?v=ceG0f6ntNcw",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Vuelos laterales con mancuerna",
+                "video": "https://www.youtube.com/watch?v=8aUc9snLOxU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de cuádriceps",
+                "video": "https://www.youtube.com/watch?v=s1JfTvyWdTs",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 3",
+        "num": "03",
+        "sub": "Full body",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "Sin pausa entre ejercicios",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Plancha de oso",
+                "video": "https://www.youtube.com/watch?v=O9lM_2t4Z0U",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20”",
+                  "20”",
+                  "20”",
+                  "20”"
+                ]
+              },
+              {
+                "nombre": "Puente de glúteos a una pierna",
+                "video": "https://www.youtube.com/watch?v=sVfp4LN9niA",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 x lado",
+                  "10 x lado",
+                  "10 x lado",
+                  "10 x lado"
+                ]
+              },
+              {
+                "nombre": "Sentadillas",
+                "video": "https://www.youtube.com/watch?v=iiKn5FiVUjI",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 reps",
+                  "10 reps",
+                  "10 reps",
+                  "10 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Prensa 45°",
+                "video": "https://www.youtube.com/watch?v=B8KqmwdomoU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Remo bajo",
+                "video": "https://www.youtube.com/watch?v=lJoozxC0Rns",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Hip thrust",
+                "video": "https://www.youtube.com/watch?v=JVe0AjERVsE",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Tríceps en polea alta",
+                "video": "https://www.youtube.com/watch?v=LXkCrxn3caQ",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Abducciones en máquina",
+                "video": "https://www.youtube.com/watch?v=pVGCaMmxuEg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "plan:lenin-agosto": {
+    "id": "lenin-agosto",
+    "alumnoId": "lenin",
+    "titulo": "Agosto · Torso-pierna",
+    "semanas": 4,
+    "cicloCarga": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "estado": "activo",
+    "dias": [
+      {
+        "nombre": "Día 1",
+        "num": "01",
+        "sub": "Torso",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series al circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Sit-up",
+                "video": "https://www.youtube.com/shorts/u8cwbmk3TqQ",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "15 reps",
+                  "15 reps",
+                  "15 reps",
+                  "15 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha lateral con rotación",
+                "video": "https://www.youtube.com/watch?v=OMc5f_JUDUU",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado",
+                  "20” x lado"
+                ]
+              },
+              {
+                "nombre": "Push-up (rodillas)",
+                "video": "https://www.youtube.com/watch?v=8XQ-okb5NWE",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "8 reps",
+                  "8 reps",
+                  "8 reps",
+                  "8 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Press de banca",
+                "video": "https://www.youtube.com/watch?v=ejI1Nlsul9k",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Jalones en polea",
+                "video": "https://www.youtube.com/watch?v=PEv0gTcMY3g",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Vuelos laterales con mancuerna",
+                "video": "https://www.youtube.com/watch?v=8aUc9snLOxU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Curl de bíceps con barra EZ",
+                "video": "https://www.youtube.com/watch?v=-gSM-kqNlUw",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Tríceps en polea alta",
+                "video": "https://www.youtube.com/watch?v=LXkCrxn3caQ",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 2",
+        "num": "02",
+        "sub": "Piernas",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Crunch oblicuos",
+                "video": "https://www.youtube.com/shorts/_cdt_-Bhi48",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10+10 reps",
+                  "10+10 reps",
+                  "10+10 reps",
+                  "10+10 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha frontal con toque hombros",
+                "video": "https://www.youtube.com/watch?v=Rl-koX3NLFE",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "30”",
+                  "30”",
+                  "30”",
+                  "30”"
+                ]
+              },
+              {
+                "nombre": "Sentadilla de pulso",
+                "video": "https://www.youtube.com/shorts/vCYFgvG2Pck",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 reps",
+                  "10 reps",
+                  "10 reps",
+                  "10 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Peso muerto con trap bar",
+                "video": "https://www.youtube.com/watch?v=FYx76NSijfU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Prensa 45°",
+                "video": "https://www.youtube.com/watch?v=B8KqmwdomoU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Camilla de isquiotibiales",
+                "video": "https://www.youtube.com/watch?v=SbSNUXPRkc8",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de cuádriceps",
+                "video": "https://www.youtube.com/watch?v=s1JfTvyWdTs",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Pantorrillas en multipower",
+                "video": "https://www.youtube.com/watch?v=ofEDDXpFgj8",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 3",
+        "num": "03",
+        "sub": "Torso",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series al circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Sit-up",
+                "video": "https://www.youtube.com/shorts/u8cwbmk3TqQ",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "15 reps",
+                  "15 reps",
+                  "15 reps",
+                  "15 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha alta a baja",
+                "video": "https://www.youtube.com/watch?v=hqcFXBY4sH8",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "30”",
+                  "30”",
+                  "30”",
+                  "30”"
+                ]
+              },
+              {
+                "nombre": "Band pull apart",
+                "video": "https://www.youtube.com/watch?v=pASXdGKh-nc",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 reps",
+                  "10 reps",
+                  "10 reps",
+                  "10 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "video": "https://www.youtube.com/watch?v=jMQA3XtJSgo",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Remo en máquina sentado",
+                "video": "https://www.youtube.com/shorts/0XMPmlhFrMc",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Press de hombros en máquina",
+                "video": "https://www.youtube.com/watch?v=LEhz8ZXNWaY",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Tríceps francés con barra EZ",
+                "video": "https://www.youtube.com/watch?v=eluOhtYkm-0",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Curl martillo con mancuerna",
+                "video": "https://www.youtube.com/watch?v=RIEMoYL_h1Y",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "Día 4",
+        "num": "04",
+        "sub": "Piernas",
+        "bloques": [
+          {
+            "titulo": "Calentamiento",
+            "meta": "3 series del circuito",
+            "propaga": "todas",
+            "ejercicios": [
+              {
+                "nombre": "Crunch",
+                "video": "https://www.youtube.com/shorts/6okNQ2lGr3g",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "15 reps",
+                  "15 reps",
+                  "15 reps",
+                  "15 reps"
+                ]
+              },
+              {
+                "nombre": "Plancha frontal con toque hombros",
+                "video": "https://www.youtube.com/watch?v=Rl-koX3NLFE",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "30”",
+                  "30”",
+                  "30”",
+                  "30”"
+                ]
+              },
+              {
+                "nombre": "Sentadilla de pulso",
+                "video": "https://www.youtube.com/shorts/vCYFgvG2Pck",
+                "carga": "kg",
+                "tipo": "reps",
+                "reps": [
+                  "10 reps",
+                  "10 reps",
+                  "10 reps",
+                  "10 reps"
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Fuerza",
+            "meta": "3-5’ pausa entre series",
+            "propaga": "ciclo",
+            "ejercicios": [
+              {
+                "nombre": "Estocadas atrás con mancuerna",
+                "video": "https://www.youtube.com/watch?v=Q2k3kYbtOcI",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "8x3",
+                  "9x3",
+                  "10x3",
+                  "8x3"
+                ]
+              },
+              {
+                "nombre": "Sillón de isquios",
+                "video": "https://www.youtube.com/watch?v=ceG0f6ntNcw",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Aductores en máquina",
+                "video": "https://www.youtube.com/watch?v=3DaEZ0Er6cU",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Abductores en máquina",
+                "video": "https://www.youtube.com/watch?v=pVGCaMmxuEg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              },
+              {
+                "nombre": "Pantorrillas sentado",
+                "video": "https://www.youtube.com/watch?v=2Q-HQ3mnePg",
+                "carga": "kg",
+                "tipo": "sets",
+                "reps": [
+                  "10x3",
+                  "11x3",
+                  "12x3",
+                  "10x3"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "cargas:karina-agosto": {
+    "v": {
+      "0-1-0-s1-e1": "40",
+      "0-1-0-s1-e2": "40",
+      "0-1-0-s1-e3": "42",
+      "0-1-0-s2-e1": "42",
+      "0-1-0-s2-e2": "42",
+      "0-1-0-s4": "50",
+      "1-1-0-s1-e1": "corporal",
+      "9-9-9-s1-e1": "30",
+      "basura": "1",
+      "0-1-0-s7-e1": "99"
+    },
+    "r": {
+      "0-1-0-s1-e1": "8",
+      "0-1-0-s1-e2": "8"
+    },
+    "d": {
+      "0-1-0-s1-e1": true,
+      "0-1-0-s1-e2": true,
+      "0-0-0-s1-e1": true
+    },
+    "a": {
+      "0-1-0-s2-e1": true,
+      "0-1-0-s2-e2": true
+    },
+    "n": {
+      "0-1-0-s1": 5,
+      "0-1-0-s2": "muchas"
+    }
+  }
+}
