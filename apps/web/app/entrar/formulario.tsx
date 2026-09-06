@@ -13,6 +13,28 @@ type Estado =
   | { paso: "enviado"; email: string }
   | { paso: "error"; mensaje: string };
 
+/** Traduce el error de Supabase a algo que sirva para actuar.
+ *
+ * El genérico "probá de nuevo en un momento" es peor que no decir nada
+ * cuando el problema es el límite de mails: ahí el momento es una hora, y
+ * quien lo lee se queda recargando al pedo. */
+function explicar(error: { message: string; status?: number }): string {
+  const msg = error.message.toLowerCase();
+
+  if (error.status === 429 || msg.includes("rate limit")) {
+    return "Se alcanzó el límite de mails por hora del servidor de prueba. " +
+      "Esperá un rato, o pedile a quien administra la app que configure un " +
+      "proveedor de mail propio.";
+  }
+  if (error.status === 422 || msg.includes("signups not allowed")) {
+    return "Ese mail no está dado de alta. Pedile a tu coach que te invite.";
+  }
+  if (msg.includes("invalid") && msg.includes("email")) {
+    return "Ese mail no parece válido. Fijate si tiene algún error de tipeo.";
+  }
+  return "No se pudo mandar el mail. Si sigue pasando, avisale a tu coach.";
+}
+
 export function FormularioEntrar() {
   const [estado, setEstado] = useState<Estado>({ paso: "pidiendo" });
   const parametros = useSearchParams();
@@ -35,14 +57,7 @@ export function FormularioEntrar() {
     });
 
     if (error) {
-      setEstado({
-        paso: "error",
-        mensaje:
-          error.message.toLowerCase().includes("signups not allowed") ||
-          error.status === 422
-            ? "Ese mail no está dado de alta. Pedile a tu coach que te invite."
-            : "No se pudo mandar el mail. Probá de nuevo en un momento.",
-      });
+      setEstado({ paso: "error", mensaje: explicar(error) });
       return;
     }
     setEstado({ paso: "enviado", email });
