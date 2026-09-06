@@ -13,7 +13,8 @@
     "db:tipos": "supabase gen types typescript --local > packages/types/src/supabase.ts",
     "test:rls": "bash supabase/tests/correr.sh",
     "web": "npm --prefix apps/web run dev",
-    "web:build": "npm --prefix apps/web run build"
+    "web:build": "npm --prefix apps/web run build",
+    "test:e2e": "node tests/e2e/plan.mjs"
   },
   "devDependencies": {
     "playwright": "^1.48.0",
