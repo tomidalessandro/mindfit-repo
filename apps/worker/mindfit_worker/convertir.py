@@ -94,6 +94,34 @@ class Conversion:
     avisos: list[str] = field(default_factory=list)
 
 
+def normalizar_volcado(datos: dict) -> dict:
+    """Acepta las dos formas en que pueden llegar los datos.
+
+    De `mindfit_store` salen planos —{"plan:karina-agosto": {...}}— porque
+    esa tabla es clave/valor. Pero el botón "Exportar copia de seguridad" de
+    la app arma otra cosa: {"planes": {"karina-agosto": {...}}, "cargas": ...}.
+
+    Cuando la app nunca estuvo conectada a Supabase, ese export es la única
+    forma de rescatar lo que cargaron los alumnos, así que la conversión
+    tiene que entender los dos.
+    """
+    if "planes" not in datos and "cargas" not in datos:
+        return datos                       # ya viene plano
+
+    plano = {
+        "alumnos": datos.get("alumnos") or [],
+        "indice": datos.get("indice") or [],
+        "biblioteca": datos.get("biblioteca") or [],
+    }
+    for pid, plan in (datos.get("planes") or {}).items():
+        if plan:
+            plano[f"plan:{pid}"] = plan
+    for pid, cargas in (datos.get("cargas") or {}).items():
+        if cargas:
+            plano[f"cargas:{pid}"] = cargas
+    return plano
+
+
 def id_de_plan(clave_vieja: str) -> uuid.UUID:
     return uuid.uuid5(NS, clave_vieja)
 
@@ -184,6 +212,7 @@ def convertir(
     `coach_id` — el uuid del coach en auth.users.
     """
     out = Conversion()
+    volcado = normalizar_volcado(volcado)
 
     indice = volcado.get("indice") or []
     estados = {p.get("id"): p.get("estado") for p in indice if isinstance(p, dict)}

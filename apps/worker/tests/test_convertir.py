@@ -227,3 +227,44 @@ def test_el_objetivo_de_reps_sale_del_texto():
     assert objetivo == "8"
     _, objetivo = series_de({"reps": ['20" x lado']}, {"meta": ""}, 0)
     assert objetivo == '20" x lado'
+
+
+# ─────────────────────────── el export de la app, que llega anidado ──
+
+def export_de_la_app():
+    """Lo que arma el botón «Exportar copia de seguridad».
+
+    Cuando la app nunca estuvo conectada a Supabase, esto es lo único que
+    hay: el alumno exporta desde su teléfono y se lo manda al coach.
+    """
+    return {
+        "alumnos": [{"id": "al-karina", "nombre": "Karina"}],
+        "indice": [{"id": "karina-a3f9", "alumnoId": "al-karina", "estado": "activo"}],
+        "planes": {"karina-a3f9": plan_base()},
+        "cargas": {"karina-a3f9": {"v": {"0-1-0-s1-e1": "40"}, "d": {"0-1-0-s1-e1": True}}},
+    }
+
+
+def test_el_export_de_la_app_se_migra_igual_que_el_volcado_plano():
+    c = convertir(export_de_la_app(), USUARIOS, COACH)
+    assert len(c.planes) == 1
+    assert c.planes[0].titulo == "Mesociclo agosto"
+    assert len(c.registros) == 1
+    assert c.registros[0].carga == "40"
+    assert c.registros[0].hecha is True
+
+
+def test_el_export_produce_los_mismos_ids_que_el_volcado():
+    # Importa porque el coach puede migrar primero un export y después el
+    # volcado del mismo plan: no tiene que duplicarse.
+    a = convertir(export_de_la_app(), USUARIOS, COACH).planes[0].id
+    b = convertir(volcado({"v": {"0-1-0-s1-e1": "40"}}), USUARIOS, COACH).planes[0].id
+    assert a == b
+
+
+def test_un_export_con_planes_vacios_no_rompe():
+    e = export_de_la_app()
+    e["planes"]["karina-borrado"] = None
+    e["cargas"]["karina-borrado"] = None
+    c = convertir(e, USUARIOS, COACH)
+    assert len(c.planes) == 1
