@@ -1,0 +1,135 @@
+/* ============================================================================
+   MindFit · tokens de diseño
+   ----------------------------------------------------------------------------
+   Portados tal cual del index.html de la v2. La app cambió de tecnología, no
+   de identidad: mismos colores, mismo acento naranja, mismo tema oscuro por
+   defecto con el claro detrás de data-tema="claro" en <html>.
+   ========================================================================== */
+
+:root{
+    color-scheme:dark;
+
+    --accent:#FF6A2B;
+    --accent-hi:#FF8B52;
+    --accent-ink:#170800;
+    --accent-soft:#371C0C;
+    --accent-line:#66331A;
+    --accent-soft-ink:#FFB690;
+    --accent-glow:rgba(255,106,43,.20);
+
+    --frame:#050607;
+    --bg:#0C0D10;
+    --surface:#15171B;
+    --surface-2:#1D2026;
+    --surface-3:#262A31;
+    --line:#23262C;
+    --line-strong:#343943;
+
+    --ink:#F3F4F6;
+    --ink-2:#9CA2AC;
+    --ink-3:#6A707A;
+
+    --solid:#F3F4F6;
+    --solid-ink:#0C0D10;
+
+    --danger:#FF8078;
+    --danger-line:#4C2622;
+    --danger-soft:#2B1613;
+
+    --bar:#101216;
+    --bar-ink:#F3F4F6;
+    --bar-ink-2:#8A9099;
+    --bar-line:rgba(255,255,255,.10);
+
+    --scrim:rgba(2,3,4,.72);
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 28px rgba(0,0,0,.32);
+    --shadow-lift:0 18px 48px rgba(0,0,0,.55);
+
+    /* alias que usa el código para los pesos heredados de otra semana */
+    --muted:var(--ink-2);
+    --faint:var(--ink-3);
+
+    --sans:"Archivo","Archivo Narrow","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  }
+
+[data-tema="claro"]{
+    color-scheme:light;
+
+    --accent:#DD5218;
+    --accent-hi:#FF6A2B;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#FFEEE4;
+    --accent-line:#FFD0B4;
+    --accent-soft-ink:#B8420E;
+    --accent-glow:rgba(221,82,24,.16);
+
+    --frame:#E6E5E2;
+    --bg:#FBFAF8;
+    --surface:#FFFFFF;
+    --surface-2:#F2F1EE;
+    --surface-3:#E8E6E2;
+    --line:#E5E3DF;
+    --line-strong:#D2CFC9;
+
+    --ink:#1A1B1E;
+    --ink-2:#6B6F76;
+    --ink-3:#A3A6AC;
+
+    --solid:#1A1B1E;
+    --solid-ink:#FBFAF8;
+
+    --danger:#B02A20;
+    --danger-line:#EBC3BF;
+    --danger-soft:#FBEBE9;
+
+    --scrim:rgba(20,21,24,.52);
+    --shadow:0 1px 2px rgba(20,21,24,.05),0 8px 22px rgba(20,21,24,.07);
+    --shadow-lift:0 18px 44px rgba(20,21,24,.16);
+  }
+
+/* ------------------------------------------------------------------ base -- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* El teclado del celular no tiene que tapar lo que se está cargando. */
+  min-height: 100dvh;
+}
+
+/* Los alumnos usan esto entre series, con las manos ocupadas: los objetivos
+   táctiles no bajan de 44px y el foco tiene que verse sin buscarlo. */
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* El botón de salir vive en varias pantallas y no justifica un módulo. */
+.salir {
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.salir:hover:not(:disabled) { background: var(--surface-2); color: var(--ink); }
+.salir:disabled { opacity: .6; cursor: default; }

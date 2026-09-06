@@ -110,6 +110,41 @@ export type Database = {
           },
         ]
       }
+      plan_series: {
+        Row: {
+          bloque: number
+          dia: number
+          ejercicio: number
+          plan_id: string
+          semana: number
+          series: number
+        }
+        Insert: {
+          bloque: number
+          dia: number
+          ejercicio: number
+          plan_id: string
+          semana: number
+          series: number
+        }
+        Update: {
+          bloque?: number
+          dia?: number
+          ejercicio?: number
+          plan_id?: string
+          semana?: number
+          series?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_series_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "planes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planes: {
         Row: {
           actualizado: string

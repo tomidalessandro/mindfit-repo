@@ -1,0 +1,63 @@
+.pantalla {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.hola {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.titulo {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  /* 56px de alto: se toca con el pulgar sin apuntar. */
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.fila:hover { background: var(--surface-2); border-color: var(--line-strong); }
+
+.nombre { font-weight: 600; }
+
+.meta, .flecha { color: var(--ink-2); font-size: 14px; }
+.flecha { font-size: 20px; line-height: 1; }
+
+.vacio {
+  margin: 0;
+  padding: 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}

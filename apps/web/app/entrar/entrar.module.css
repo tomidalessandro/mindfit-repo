@@ -1,0 +1,84 @@
+.pantalla {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.caja {
+  width: 100%;
+  max-width: 380px;
+}
+
+.titulo {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.bajada {
+  margin: 0 0 24px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.etiqueta {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.campo {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.campo::placeholder { color: var(--ink-3); }
+.campo:disabled { opacity: .6; }
+
+.boton {
+  margin-top: 4px;
+  /* 46px de alto: se toca con el pulgar, de pie, en un vestuario. */
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton:hover:not(:disabled) { background: var(--accent-hi); }
+.boton:disabled { opacity: .6; cursor: default; }
+
+.aviso {
+  padding: 16px;
+  border: 1px solid var(--accent-line);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+}
+
+.aviso p { margin: 0 0 6px; }
+.aviso p:last-child { margin-bottom: 0; }
+
+.chico { font-size: 13px; opacity: .8; }
+
+.error {
+  margin: 4px 0 0;
+  padding: 11px 13px;
+  border: 1px solid var(--danger-line);
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 14px;
+}
