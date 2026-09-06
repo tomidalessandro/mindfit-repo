@@ -4,34 +4,51 @@ import { type NextRequest } from "next/server";
 
 import { clienteServidor } from "@/lib/supabase/servidor";
 
+/** Solo rutas propias.
+ *
+ * Sin esto, un mail con ?volver=https://otro-sitio convertiría la app en un
+ * trampolín: el usuario entra de verdad y aterriza en una página ajena que se
+ * queda con la sesión. */
+function destinoSeguro(pedido: string | null): string {
+  return pedido && pedido.startsWith("/") && !pedido.startsWith("//") ? pedido : "/";
+}
+
 /** Donde aterriza el link mágico del mail.
  *
- * Supabase manda un `token_hash` de un solo uso; acá se canjea por una sesión
- * y se guarda en cookies. El token viaja en la URL, así que nunca se
- * redirige a un destino que venga de afuera sin revisarlo. */
+ * Supabase manda una de dos cosas según cómo esté armado el mail, y las dos
+ * tienen que funcionar:
+ *
+ *   ?code=…        el flujo PKCE, que es el de la plantilla por defecto. Pide
+ *                  un verificador guardado en una cookie, así que el link hay
+ *                  que abrirlo en el mismo navegador que lo pidió.
+ *   ?token_hash=…  el flujo del lado del servidor, que sale de una plantilla
+ *                  con {{ .TokenHash }}. Este anda aunque el mail se abra en
+ *                  otro dispositivo. */
 export async function GET(pedido: NextRequest) {
-  const parametros = pedido.nextUrl.searchParams;
-  const token_hash = parametros.get("token_hash");
-  const type = parametros.get("type") as EmailOtpType | null;
+  const q = pedido.nextUrl.searchParams;
+  const volver = destinoSeguro(q.get("volver"));
 
-  // Solo rutas propias: sin esto, un mail con ?volver=https://otro-sitio
-  // convertiría la app en un trampolín para robar sesiones.
-  const pedido_volver = parametros.get("volver") ?? "/";
-  const volver =
-    pedido_volver.startsWith("/") && !pedido_volver.startsWith("//")
-      ? pedido_volver
-      : "/";
-
-  if (!token_hash || !type) {
-    redirect("/entrar?error=link-invalido");
+  // Supabase también avisa por acá cuando el link venció o ya se usó.
+  if (q.get("error")) {
+    redirect(`/entrar?error=${encodeURIComponent(q.get("error_code") ?? "link-invalido")}`);
   }
 
   const supabase = await clienteServidor();
-  const { error } = await supabase.auth.verifyOtp({ type, token_hash });
+  const code = q.get("code");
+  const token_hash = q.get("token_hash");
+  const type = q.get("type") as EmailOtpType | null;
 
-  if (error) {
-    redirect("/entrar?error=link-vencido");
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) redirect("/entrar?error=otro-navegador");
+    redirect(volver);
   }
 
-  redirect(volver);
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash });
+    if (error) redirect("/entrar?error=link-vencido");
+    redirect(volver);
+  }
+
+  redirect("/entrar?error=link-invalido");
 }

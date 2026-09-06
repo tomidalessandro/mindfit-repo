@@ -7,6 +7,21 @@ import type { Database } from "./tipos";
 const PUBLICAS = ["/entrar", "/auth"];
 
 export async function refrescarSesion(pedido: NextRequest) {
+  const ruta = pedido.nextUrl.pathname;
+
+  // Supabase manda el mail con `redirect_to` apuntando al Site URL cuando la
+  // ruta de callback no está en la lista blanca del proyecto — y ahí el link
+  // aterriza en "/" con el código colgando, sin sesión, y el usuario rebota a
+  // /entrar en un loop que no explica nada. Esto lo endereza: venga a donde
+  // venga, si trae un código va al callback.
+  const codigo = pedido.nextUrl.searchParams.get("code");
+  if (codigo && !ruta.startsWith("/auth/")) {
+    const destino = pedido.nextUrl.clone();
+    destino.pathname = "/auth/confirmar";
+    destino.searchParams.set("volver", ruta);
+    return NextResponse.redirect(destino);
+  }
+
   let respuesta = NextResponse.next({ request: pedido });
 
   const supabase = createServerClient<Database>(
@@ -27,19 +42,18 @@ export async function refrescarSesion(pedido: NextRequest) {
   );
 
   // getUser() y no getSession(): este valida el token contra Supabase en vez
-  // de confiar en lo que dice la cookie. Entre medio refresca el token si
-  // venció, y por eso esto tiene que correr antes que cualquier página.
+  // de confiar en lo que dice la cookie. Entre medio lo refresca si venció, y
+  // por eso tiene que correr antes que cualquier página.
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const ruta = pedido.nextUrl.pathname;
   const esPublica = PUBLICAS.some((p) => ruta === p || ruta.startsWith(p + "/"));
 
   if (!user && !esPublica) {
     const destino = pedido.nextUrl.clone();
     destino.pathname = "/entrar";
-    // Para volver a donde quería ir después de entrar.
+    destino.search = "";
     destino.searchParams.set("volver", ruta);
     return NextResponse.redirect(destino);
   }
