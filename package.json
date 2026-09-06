@@ -6,9 +6,15 @@
   "scripts": {
     "dev": "npx serve . -l 3000",
     "test": "node tests/smoke.mjs",
-    "test:regresion": "node tests/regresion.mjs"
+    "test:regresion": "node tests/regresion.mjs",
+    "db:start": "supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor,realtime,storage-api,mailpit,postgres-meta",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset --no-seed",
+    "db:tipos": "supabase gen types typescript --local > packages/types/src/supabase.ts",
+    "test:rls": "bash supabase/tests/correr.sh"
   },
   "devDependencies": {
-    "playwright": "^1.48.0"
+    "playwright": "^1.48.0",
+    "supabase": "^2.116.0"
   }
 }

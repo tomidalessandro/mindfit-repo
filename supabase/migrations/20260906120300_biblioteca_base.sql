@@ -1,0 +1,91 @@
+-- ============================================================================
+-- MindFit · Biblioteca base de ejercicios
+-- ----------------------------------------------------------------------------
+-- Los ~75 ejercicios que hoy viven hardcodeados en BIBLIOTECA_BASE, dentro del
+-- index.html. Van con coach_id null: son de la casa, los ve todo el mundo y no
+-- se editan desde la app (ver la política "biblioteca propia editable").
+--
+-- El tipo de carga sale de la misma heurística que usa hoy cargaSugerida():
+-- banda si el nombre menciona una, kg si menciona peso externo, corporal para
+-- planchas y compañía. Se corrige a mano cuando haga falta.
+--
+-- Generado desde index.html. Idempotente: se puede correr de nuevo.
+-- ============================================================================
+
+insert into public.ejercicios (nombre, video, carga) values
+  ('Abducciones en máquina', 'https://www.youtube.com/watch?v=pVGCaMmxuEg', 'kg'),
+  ('Aductores en máquina', 'https://www.youtube.com/watch?v=3DaEZ0Er6cU', 'kg'),
+  ('Band pull apart', 'https://www.youtube.com/watch?v=pASXdGKh-nc', 'banda'),
+  ('Bíceps con mancuerna', 'https://www.youtube.com/watch?v=l1tXK8CzxB4', 'kg'),
+  ('Crunch', 'https://www.youtube.com/shorts/6okNQ2lGr3g', 'corporal'),
+  ('Crunch invertido', 'https://www.youtube.com/watch?v=idIahhhsEC0', 'corporal'),
+  ('Crunch oblicuos', 'https://www.youtube.com/shorts/_cdt_-Bhi48', 'corporal'),
+  ('Curl de bíceps con barra', 'https://www.youtube.com/watch?v=-gSM-kqNlUw', 'kg'),
+  ('Curl de bíceps con barra EZ', 'https://www.youtube.com/watch?v=-gSM-kqNlUw', 'kg'),
+  ('Curl de bíceps con mancuerna', 'https://www.youtube.com/watch?v=l1tXK8CzxB4', 'kg'),
+  ('Curl martillo con mancuerna', 'https://www.youtube.com/watch?v=RIEMoYL_h1Y', 'kg'),
+  ('Dominadas', 'https://www.youtube.com/watch?v=2m58VKBEQuo', 'corporal'),
+  ('Estocadas atrás con déficit', 'https://www.youtube.com/shorts/7zKdEH5DLEU', 'kg'),
+  ('Estocadas atrás con mancuerna', 'https://www.youtube.com/watch?v=Q2k3kYbtOcI', 'kg'),
+  ('Extensión de tríceps en polea', 'https://www.youtube.com/watch?v=LXkCrxn3caQ', 'kg'),
+  ('Fondos', 'https://www.youtube.com/watch?v=VNa0hX_y6Fk', 'corporal'),
+  ('Hip thrust', 'https://www.youtube.com/watch?v=JVe0AjERVsE', 'kg'),
+  ('Hiperextensiones en banco romano', 'https://www.youtube.com/watch?v=YGUOyLf6BUg', 'corporal'),
+  ('Hollow hold', 'https://www.youtube.com/watch?v=EsnM8eBtazU', 'corporal'),
+  ('Hollow hold con carga', 'https://www.youtube.com/shorts/rEnq_2GiX3I', 'kg'),
+  ('Isquios en máquina sentado', 'https://www.youtube.com/watch?v=ceG0f6ntNcw', 'kg'),
+  ('Jalones en polea', 'https://www.youtube.com/watch?v=PEv0gTcMY3g', 'kg'),
+  ('Jalones en polea (toma neutra)', 'https://www.youtube.com/watch?v=gNFMkFL5yPQ', 'kg'),
+  ('Pantorrillas en multipower', 'https://www.youtube.com/watch?v=ofEDDXpFgj8', 'kg'),
+  ('Pantorrillas sentado', 'https://www.youtube.com/watch?v=2Q-HQ3mnePg', 'kg'),
+  ('Patada de glúteos (variante 45°)', 'https://www.youtube.com/watch?v=50uCtMJze0s', 'kg'),
+  ('Patada de glúteos 45°', 'https://www.youtube.com/shorts/lLqk1vIJHmU', 'kg'),
+  ('Peso muerto a una pierna', 'https://www.youtube.com/shorts/Ex_pPwkzS1k', 'kg'),
+  ('Peso muerto con trap bar', 'https://www.youtube.com/watch?v=FYx76NSijfU', 'kg'),
+  ('Peso muerto rumano', 'https://www.youtube.com/shorts/g5u75sgpn04', 'kg'),
+  ('Plancha alta a baja', 'https://www.youtube.com/watch?v=hqcFXBY4sH8', 'corporal'),
+  ('Plancha de oso', 'https://www.youtube.com/watch?v=O9lM_2t4Z0U', 'corporal'),
+  ('Plancha frontal con toque hombros', 'https://www.youtube.com/watch?v=Rl-koX3NLFE', 'corporal'),
+  ('Plancha lateral', 'https://www.youtube.com/watch?v=OMc5f_JUDUU', 'corporal'),
+  ('Plancha lateral con abducción', 'https://www.youtube.com/shorts/eOW4Zvv60i0', 'corporal'),
+  ('Plancha lateral con rotación', 'https://www.youtube.com/watch?v=OMc5f_JUDUU', 'corporal'),
+  ('Plancha oso', 'https://www.youtube.com/shorts/fUM4U38lgbk', 'corporal'),
+  ('Prensa 45°', 'https://www.youtube.com/watch?v=B8KqmwdomoU', 'kg'),
+  ('Press de banca', 'https://www.youtube.com/watch?v=ejI1Nlsul9k', 'kg'),
+  ('Press de hombros', 'https://www.youtube.com/watch?v=RgkzQ008m3I', 'kg'),
+  ('Press de hombros en máquina', 'https://www.youtube.com/watch?v=LEhz8ZXNWaY', 'kg'),
+  ('Press en landmine', 'https://www.youtube.com/watch?v=5KZF1xdgA-A', 'kg'),
+  ('Press inclinado con mancuernas', 'https://www.youtube.com/watch?v=jMQA3XtJSgo', 'kg'),
+  ('Press landmine', 'https://www.youtube.com/watch?v=5KZF1xdgA-A', 'kg'),
+  ('Press plano con mancuernas', 'https://www.youtube.com/watch?v=ZaDlbm8E8Tg', 'kg'),
+  ('Puente de glúteos a una pierna', 'https://www.youtube.com/watch?v=sVfp4LN9niA', 'corporal'),
+  ('Push-up', 'https://www.youtube.com/watch?v=Ql8PKKsDE70', 'corporal'),
+  ('Push-up (rodillas)', 'https://www.youtube.com/watch?v=8XQ-okb5NWE', 'corporal'),
+  ('Remo a un brazo con mancuerna', 'https://www.youtube.com/watch?v=iLhwICt4R9A', 'kg'),
+  ('Remo bajo', 'https://www.youtube.com/watch?v=lJoozxC0Rns', 'kg'),
+  ('Remo sentado', 'https://www.youtube.com/shorts/0XMPmlhFrMc', 'kg'),
+  ('Remo en máquina sentado', 'https://www.youtube.com/shorts/0XMPmlhFrMc', 'kg'),
+  ('Roll-out', 'https://www.youtube.com/shorts/F6NlDOcgr04', 'corporal'),
+  ('Sentadilla', 'https://www.youtube.com/watch?v=5KlSXnQWCXg', 'kg'),
+  ('Sentadilla búlgara', 'https://www.youtube.com/watch?v=8kvZmrlOo2M', 'kg'),
+  ('Sentadilla con barra', 'https://www.youtube.com/watch?v=j-KDHkRMer0', 'kg'),
+  ('Sentadilla con barra atrás', 'https://www.youtube.com/watch?v=j-KDHkRMer0', 'kg'),
+  ('Sentadilla de pulso', 'https://www.youtube.com/shorts/vCYFgvG2Pck', 'corporal'),
+  ('Sentadilla profunda', 'https://youtube.com/shorts/4omGbN19aog', 'kg'),
+  ('Sentadillas', 'https://www.youtube.com/watch?v=iiKn5FiVUjI', 'corporal'),
+  ('Sillón de cuádriceps', 'https://www.youtube.com/watch?v=s1JfTvyWdTs', 'kg'),
+  ('Sillón de isquiotibiales', 'https://www.youtube.com/watch?v=ceG0f6ntNcw', 'kg'),
+  ('Sillón de isquios', 'https://www.youtube.com/watch?v=ceG0f6ntNcw', 'kg'),
+  ('Sit-up', 'https://www.youtube.com/shorts/u8cwbmk3TqQ', 'corporal'),
+  ('Sit-up con disco', 'https://www.youtube.com/watch?v=pTZL-Hirhwg', 'kg'),
+  ('Superman alternado', 'https://www.youtube.com/shorts/60rDAM5BUEU', 'corporal'),
+  ('Thruster con mancuerna', 'https://www.youtube.com/watch?v=sLIswEpOHng', 'kg'),
+  ('Thruster con mancuernas', 'https://www.youtube.com/watch?v=sLIswEpOHng', 'kg'),
+  ('Tríceps en polea alta', 'https://www.youtube.com/watch?v=LXkCrxn3caQ', 'kg'),
+  ('Tríceps francés con barra EZ', 'https://www.youtube.com/watch?v=eluOhtYkm-0', 'kg'),
+  ('Vitalizaciones', 'https://www.youtube.com/watch?v=pdbME8Z03Yg', 'corporal'),
+  ('Vitalizaciones con disco', 'https://www.youtube.com/watch?v=pdbME8Z03Yg', 'kg'),
+  ('Vuelos laterales', 'https://www.youtube.com/watch?v=XPPfnSEATJA', 'kg'),
+  ('Vuelos laterales con mancuerna', 'https://www.youtube.com/watch?v=8aUc9snLOxU', 'kg'),
+  ('Camilla de isquiotibiales', 'https://www.youtube.com/watch?v=SbSNUXPRkc8', 'kg')
+on conflict do nothing;
