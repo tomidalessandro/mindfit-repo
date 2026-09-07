@@ -38,9 +38,14 @@ const fallos = [];
 const ok = (c, q) => { console.log((c ? "  ✓ " : "  ✗ ") + q); if (!c) fallos.push(q); };
 
 await ponerClave(COACH);
-// Un alumno cualquiera del coach.
-const perfiles = await (await fetch(`${API}/rest/v1/perfiles?select=id,nombre&rol=eq.alumno&limit=1`, { headers: cab })).json();
-const alumno = perfiles[0];
+
+// Siempre la cuenta de prueba, nunca "un alumno cualquiera": esta prueba le
+// cambia la contraseña a quien use, y hacérselo a una alumna de verdad la
+// dejaría afuera sin que nadie se entere.
+const ALUMNO_PRUEBA = process.env.EMAIL_ALUMNO ?? "nicodalessandro11@gmail.com";
+const uPrueba = await usuario(ALUMNO_PRUEBA);
+if (!uPrueba) throw new Error(`no existe la cuenta de prueba ${ALUMNO_PRUEBA}`);
+const alumno = { id: uPrueba.id, nombre: "prueba" };
 
 const nav = await chromium.launch();
 const pg = await nav.newPage({ viewport: { width: 390, height: 844 } });
