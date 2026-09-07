@@ -3,11 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import type { Database } from "./tipos";
 
-/** Rutas que se pueden abrir sin sesión. Todo lo demás manda a /entrar.
- *
- * `/e` es la del link de acceso directo: si pidiera sesión no serviría para
- * nada, porque su razón de existir es dártela. */
-const PUBLICAS = ["/entrar", "/auth", "/e"];
+/** Rutas que se pueden abrir sin sesión. Todo lo demás manda a /entrar. */
+const PUBLICAS = ["/entrar", "/auth"];
 
 export async function refrescarSesion(pedido: NextRequest) {
   const ruta = pedido.nextUrl.pathname;

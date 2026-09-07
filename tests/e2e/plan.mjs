@@ -3,17 +3,16 @@
  *   npm run web            (en otra terminal)
  *   node tests/e2e/plan.mjs
  *
- * Recorre lo que más duele si se rompe: entrar con el link mágico, cargar un
- * peso, tildar una serie, recargar y que siga ahí, y que la propagación
+ *   APP_URL=https://mindfit-repo.vercel.app node tests/e2e/plan.mjs
+ *
+ * Recorre lo que más duele si se rompe: entrar con mail y contraseña, cargar
+ * un peso, tildar una serie, recargar y que siga ahí, y que la propagación
  * respete el ciclo de carga.
  *
- * Dos cosas que la hacen repetible, y que costaron un rato de falsos fallos:
- *
- *  · Borra los registros del plan antes de empezar. Sin eso, la segunda
- *    corrida encuentra los tildes que dejó la primera y los interpreta al
- *    revés: el clic que debía marcar, desmarca.
- *  · Genera su propio link mágico. Son de un solo uso, y reutilizar uno da un
- *    `otp_expired` que parece un bug de la app y no lo es.
+ * Se le pone una contraseña conocida al usuario de prueba antes de arrancar,
+ * y borra sus registros. Sin eso, la segunda corrida encuentra los tildes que
+ * dejó la primera y los interpreta al revés: el clic que debía marcar,
+ * desmarca.
  */
 import { chromium } from "playwright";
 import fs from "node:fs";
@@ -22,6 +21,7 @@ import path from "node:path";
 const RAIZ = path.resolve(import.meta.dirname, "../..");
 const APP = process.env.APP_URL ?? "http://localhost:3000";
 const ALUMNO = process.env.EMAIL_ALUMNO ?? "nicodalessandro11@gmail.com";
+const TITULO_PLAN = process.env.TITULO_PLAN ?? "Prueba · Full body";
 
 const env = Object.fromEntries(
   fs.readFileSync(path.join(RAIZ, ".env.local"), "utf8")
@@ -36,13 +36,23 @@ const cabeceras = {
   "Content-Type": "application/json",
 };
 
-async function linkMagico(email) {
-  const r = await fetch(`${API}/auth/v1/admin/generate_link`, {
-    method: "POST", headers: cabeceras,
-    body: JSON.stringify({ type: "magiclink", email }),
+const CLAVE = "prueba-e2e-no-usar-" + process.pid;
+
+/** Le pone una contraseña conocida al usuario de prueba.
+ *
+ * Cambia en cada corrida, así una contraseña que se escape en un log no sirve
+ * para nada después. */
+async function ponerClave(email) {
+  const r = await fetch(`${API}/auth/v1/admin/users?filter=${encodeURIComponent(email)}`,
+                        { headers: cabeceras });
+  const u = (await r.json()).users.find((x) => (x.email ?? "").toLowerCase() === email);
+  if (!u) throw new Error(`no existe el usuario ${email}`);
+
+  const w = await fetch(`${API}/auth/v1/admin/users/${u.id}`, {
+    method: "PUT", headers: cabeceras, body: JSON.stringify({ password: CLAVE }),
   });
-  if (!r.ok) throw new Error(`generate_link: ${r.status} ${await r.text()}`);
-  return (await r.json()).action_link;
+  if (!w.ok) throw new Error(`no se pudo cambiar la clave: ${w.status}`);
+  return u.id;
 }
 
 /** Deja el plan sin registros, para que cada corrida empiece igual. */
@@ -69,7 +79,8 @@ const ok = (cond, que) => {
 };
 
 console.log("── preparar ──");
-console.log(`  limpiados los registros de ${await limpiar()} plan(es)`);
+await ponerClave(ALUMNO);
+console.log(`  contraseña de prueba puesta · limpiados los registros de ${await limpiar()} plan(es)`);
 
 const navegador = await chromium.launch();
 // Tamaño de celular: es donde se usa esto, entre series.
@@ -77,14 +88,17 @@ const pagina = await navegador.newPage({ viewport: { width: 390, height: 844 } }
 pagina.on("pageerror", (e) => fallos.push("error de JS: " + String(e).slice(0, 120)));
 
 try {
-  console.log("\n── entrar con el link mágico ──");
-  await pagina.goto(await linkMagico(ALUMNO), { waitUntil: "networkidle" });
-  await pagina.waitForURL((u) => !String(u).includes("/entrar"), { timeout: 20000 });
+  console.log("\n── entrar con mail y contraseña ──");
+  await pagina.goto(`${APP}/entrar`, { waitUntil: "domcontentloaded" });
+  await pagina.getByLabel("Tu mail").fill(ALUMNO);
+  await pagina.getByLabel("Tu contraseña").fill(CLAVE);
+  await pagina.getByRole("button", { name: "Entrar" }).click();
+  await pagina.waitForURL((u) => !String(u).includes("/entrar"), { timeout: 25000 });
   await pagina.waitForLoadState("networkidle");
-  ok(!pagina.url().includes("/entrar"), "entra sin quedar en el loop de /entrar");
+  ok(!pagina.url().includes("/entrar"), "entra con la contraseña");
 
   console.log("\n── abrir el mesociclo ──");
-  await pagina.getByText("Agosto · Full body").click();
+  await pagina.getByText(TITULO_PLAN).click();
   await pagina.waitForURL(/\/plan\//, { timeout: 20000 });
   await pagina.waitForLoadState("networkidle");
   const cuerpo = await pagina.locator("body").innerText();

@@ -94,7 +94,10 @@ def escribir(cur, c) -> None:
            on conflict (id) do update set
              titulo = excluded.titulo, semanas = excluded.semanas,
              ciclo_carga = excluded.ciclo_carga, estructura = excluded.estructura,
-             estado = excluded.estado""",
+             estado = excluded.estado,
+             -- alumno_id y coach_id también, o un plan que se reasigna a otra
+             -- persona se queda con el dueño viejo y la corrida no avisa nada.
+             alumno_id = excluded.alumno_id, coach_id = excluded.coach_id""",
         [(p.id, p.alumno_id, p.coach_id, p.titulo, p.semanas,
           json.dumps(p.ciclo_carga), json.dumps(p.estructura, ensure_ascii=False),
           p.estado, p.origen) for p in c.planes],

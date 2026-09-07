@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { clienteNavegador } from "@/lib/supabase/navegador";
@@ -9,75 +9,64 @@ import estilos from "./entrar.module.css";
 
 type Estado =
   | { paso: "pidiendo" }
-  | { paso: "enviando" }
-  | { paso: "enviado"; email: string }
+  | { paso: "entrando" }
   | { paso: "error"; mensaje: string };
 
 /** Traduce el error de Supabase a algo que sirva para actuar.
  *
- * El genérico "probá de nuevo en un momento" es peor que no decir nada
- * cuando el problema es el límite de mails: ahí el momento es una hora, y
- * quien lo lee se queda recargando al pedo. */
+ * Un "algo salió mal" genérico deja a la persona recargando sin saber si se
+ * equivocó de contraseña, de mail, o si el problema es del otro lado. */
 function explicar(error: { message: string; status?: number }): string {
   const msg = error.message.toLowerCase();
 
+  if (msg.includes("invalid login credentials")) {
+    return "El mail o la contraseña no coinciden. Fijate que no haya quedado " +
+      "una mayúscula del teclado del celular.";
+  }
   if (error.status === 429 || msg.includes("rate limit")) {
-    return "Se alcanzó el límite de mails por hora del servidor de prueba. " +
-      "Esperá un rato, o pedile a quien administra la app que configure un " +
-      "proveedor de mail propio.";
+    return "Demasiados intentos seguidos. Esperá un minuto y probá de nuevo.";
   }
-  if (error.status === 422 || msg.includes("signups not allowed")) {
-    return "Ese mail no está dado de alta. Pedile a tu coach que te invite.";
+  if (msg.includes("email not confirmed")) {
+    return "Tu cuenta todavía no está habilitada. Avisale a tu coach.";
   }
-  if (msg.includes("invalid") && msg.includes("email")) {
-    return "Ese mail no parece válido. Fijate si tiene algún error de tipeo.";
-  }
-  return "No se pudo mandar el mail. Si sigue pasando, avisale a tu coach.";
+  return "No se pudo entrar. Si sigue pasando, avisale a tu coach.";
 }
 
 export function FormularioEntrar() {
   const [estado, setEstado] = useState<Estado>({ paso: "pidiendo" });
+  const router = useRouter();
   const parametros = useSearchParams();
   const volver = parametros.get("volver") ?? "/";
 
-  async function enviar(datos: FormData) {
+  async function entrar(datos: FormData) {
     const email = String(datos.get("email") ?? "").trim().toLowerCase();
-    if (!email) return;
+    const password = String(datos.get("password") ?? "");
+    if (!email || !password) return;
 
-    setEstado({ paso: "enviando" });
-    const supabase = clienteNavegador();
-    const { error } = await supabase.auth.signInWithOtp({
+    setEstado({ paso: "entrando" });
+
+    const { error } = await clienteNavegador().auth.signInWithPassword({
       email,
-      options: {
-        // Nadie se da de alta solo: los alumnos los invita el coach. Sin esto,
-        // cualquiera con el link de la app se crearía una cuenta.
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/confirmar?volver=${encodeURIComponent(volver)}`,
-      },
+      password,
     });
 
     if (error) {
       setEstado({ paso: "error", mensaje: explicar(error) });
       return;
     }
-    setEstado({ paso: "enviado", email });
+
+    // Solo rutas propias: `volver` sale de la URL y no hay que confiar en ella.
+    const destino = volver.startsWith("/") && !volver.startsWith("//") ? volver : "/";
+    router.replace(destino);
+    // Los Server Components se pintaron sin sesión; sin esto queda la pantalla
+    // de antes de entrar.
+    router.refresh();
   }
 
-  if (estado.paso === "enviado") {
-    return (
-      <div className={estilos.aviso} role="status">
-        <p>
-          Te mandamos un link a <strong>{estado.email}</strong>.
-        </p>
-        <p className={estilos.chico}>
-          Abrilo desde este mismo teléfono. Vence en una hora.
-        </p>
-      </div>
-    );
-  }
+  const ocupado = estado.paso === "entrando";
 
   return (
-    <form action={enviar} className={estilos.form}>
+    <form action={entrar} className={estilos.form}>
       <label className={estilos.etiqueta} htmlFor="email">
         Tu mail
       </label>
@@ -87,17 +76,31 @@ export function FormularioEntrar() {
         type="email"
         autoComplete="email"
         inputMode="email"
+        autoCapitalize="none"
+        autoCorrect="off"
         required
         placeholder="vos@ejemplo.com"
         className={estilos.campo}
-        disabled={estado.paso === "enviando"}
+        disabled={ocupado}
       />
-      <button
-        type="submit"
-        className={estilos.boton}
-        disabled={estado.paso === "enviando"}
-      >
-        {estado.paso === "enviando" ? "Mandando…" : "Mandame el link"}
+
+      <label className={estilos.etiqueta} htmlFor="password">
+        Tu contraseña
+      </label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        // `current-password` deja que el llavero del celular la guarde y la
+        // complete sola la próxima vez. Sin esto hay que tipearla siempre.
+        autoComplete="current-password"
+        required
+        className={estilos.campo}
+        disabled={ocupado}
+      />
+
+      <button type="submit" className={estilos.boton} disabled={ocupado}>
+        {ocupado ? "Entrando…" : "Entrar"}
       </button>
 
       {estado.paso === "error" && (
@@ -105,6 +108,11 @@ export function FormularioEntrar() {
           {estado.mensaje}
         </p>
       )}
+
+      <p className={estilos.chico}>
+        La contraseña te la da tu coach. Si te la olvidaste, pedísela: por ahora
+        no hay recuperación por mail.
+      </p>
     </form>
   );
 }
