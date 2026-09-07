@@ -43,6 +43,23 @@ export async function misAlumnos(coachId: string): Promise<Perfil[]> {
   return data ?? [];
 }
 
+/** El perfil de un alumno.
+ *
+ * Devuelve null si no existe o si quien mira no tiene por qué verlo: la
+ * política "perfil visible" solo deja pasar el propio y los de sus alumnos,
+ * así que el coach de otro gimnasio recibe null y termina en un 404. Eso es
+ * lo correcto: un "no tenés permiso" ya confirmaría que esa persona existe. */
+export async function perfilDe(id: string): Promise<Perfil | null> {
+  const supabase = await clienteServidor();
+  const { data } = await supabase
+    .from("perfiles")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  return data;
+}
+
 export async function planesDe(alumnoId: string): Promise<Plan[]> {
   const supabase = await clienteServidor();
   const { data } = await supabase

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -161,6 +162,16 @@ export function PantallaPlan({
 
   return (
     <main className={estilos.pantalla}>
+      {/* El coach llega acá desde la ficha de su alumno y el alumno desde su
+          lista: cada uno vuelve a donde estaba. Sin esto la pantalla del plan
+          es un pozo, y en el celular no hay barra de navegación que ayude. */}
+      <Link
+        href={soyElAlumno ? "/" : `/alumno/${plan.alumnoId}`}
+        className={estilos.volver}
+      >
+        ‹ Volver
+      </Link>
+
       <nav className={estilos.dias} aria-label="Días">
         {plan.dias.map((d, i) => (
           <button key={i} type="button" className={estilos.diaTab}

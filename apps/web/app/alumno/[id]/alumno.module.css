@@ -1,0 +1,74 @@
+.pantalla {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 20px 48px;
+}
+
+.volver {
+  display: inline-block;
+  padding: 6px 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.volver:hover { color: var(--ink); }
+
+.cabecera { margin: 14px 0 24px; }
+
+.titulo {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.meta { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
+
+.subtitulo {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.fila:hover { background: var(--surface-2); border-color: var(--line-strong); }
+
+/* Los archivados se ven, pero no compiten con el mesociclo en curso. */
+.filaTenue { background: transparent; color: var(--ink-2); }
+.filaTenue:hover { background: var(--surface); }
+
+.nombre { font-weight: 600; }
+.semanas { color: var(--ink-2); font-size: 14px; }
+
+.archivados { margin-top: 28px; }
+
+.vacio {
+  margin: 0;
+  padding: 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
