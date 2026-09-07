@@ -14,7 +14,8 @@
     "test:rls": "bash supabase/tests/correr.sh",
     "web": "npm --prefix apps/web run dev",
     "web:build": "npm --prefix apps/web run build",
-    "test:e2e": "node tests/e2e/plan.mjs"
+    "test:e2e": "node tests/e2e/plan.mjs && node tests/e2e/acceso.mjs",
+    "accesos": "npm --prefix apps/worker exec -- true 2>/dev/null; cd apps/worker && uv run python -m mindfit_worker.accesos --listar"
   },
   "devDependencies": {
     "playwright": "^1.48.0",
