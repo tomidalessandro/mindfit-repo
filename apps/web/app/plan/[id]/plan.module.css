@@ -186,14 +186,32 @@ a.nombre { text-decoration: underline; text-underline-offset: 3px; }
 .hecha .campo { border-color: var(--accent-line); }
 
 .estado {
-  position: sticky;
-  bottom: 0;
-  margin: 24px 0 0;
-  padding: 10px 0;
-  background: linear-gradient(transparent, var(--bg) 40%);
+  margin: 0;
   text-align: center;
   font-size: 12px;
   color: var(--ink-3);
 }
 
 .vacio { padding: 24px; color: var(--ink-2); }
+
+/* Con el cronómetro fijo abajo, la última serie quedaría tapada justo cuando
+   hay que cargarla. */
+.conCrono { padding-bottom: 160px; }
+
+.pie {
+  margin-top: 28px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.interruptor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.interruptor input { accent-color: var(--accent); width: 16px; height: 16px; }

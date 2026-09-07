@@ -23,6 +23,8 @@ export type Ejercicio = {
   /** Va unido al anterior: forma una superserie con él. */
   unido?: boolean;
   propaga?: Propagacion;
+  /** Segundos de pausa, o el texto que escribió el coach ("2:00", "90 seg"). */
+  descanso?: number | string;
 };
 
 export type Bloque = {
@@ -30,7 +32,7 @@ export type Bloque = {
   meta?: string;
   propaga?: Propagacion;
   series?: number;
-  descanso?: number;
+  descanso?: number | string;
   ejercicios: Ejercicio[];
 };
 
@@ -147,6 +149,51 @@ export function agruparEjercicios(
     });
   }
   return grupos;
+}
+
+/** Cuántos segundos dice un texto de descanso.
+ *
+ * El coach lo escribe a mano y lo escribe distinto cada vez: "2:00", "120",
+ * "2'", "90 seg". Los cuatro tienen que dar lo mismo. */
+export function parseDescanso(txt: string | number | null | undefined): number | null {
+  if (typeof txt === "number") return txt;
+  const t = String(txt ?? "").trim().toLowerCase();
+  if (!t) return null;
+
+  const reloj = t.match(/^(\d+)\s*:\s*(\d{1,2})$/);
+  if (reloj) return Number(reloj[1]) * 60 + Number(reloj[2]);
+
+  const min = t.match(/^(\d+(?:[.,]\d+)?)\s*(?:'|’|m|min)/);
+  if (min) return Math.round(parseFloat(min[1].replace(",", ".")) * 60);
+
+  const num = t.match(/^(\d+)/);
+  return num ? Number(num[1]) : null;
+}
+
+/** La pausa por defecto cuando el coach no cargó ninguna.
+ *
+ * Dos minutos en fuerza, treinta segundos en circuito, y cero si la nota del
+ * bloque dice "sin pausa". Se cambia a mano por bloque o por ejercicio. */
+export function descansoDesdeTexto(meta: string | undefined, esCircuito: boolean): number {
+  if (/sin pausa/i.test(String(meta ?? ""))) return 0;
+  return esCircuito ? 30 : 120;
+}
+
+export function descansoDe(bloque: Bloque, ej?: Ejercicio): number {
+  const delEjercicio = parseDescanso(ej?.descanso);
+  if (delEjercicio !== null) return delEjercicio;
+
+  const delBloque = parseDescanso(bloque.descanso);
+  if (delBloque !== null) return delBloque;
+
+  // Un bloque que propaga a todas las semanas es la entrada en calor, que va
+  // en circuito. Es el mismo criterio que usa la v2.
+  return descansoDesdeTexto(bloque.meta, (bloque.propaga ?? "ciclo") === "todas");
+}
+
+export function mmss(segundos: number): string {
+  const s = Math.max(0, Math.round(segundos));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
 /** La clave con la que se indexa un registro en memoria.

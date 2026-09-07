@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  CARGAS, COLORES_BANDA, agruparEjercicios, claveSerie, hermanas, modoDe,
-  seriesDe, tipoCarga, type Dia,
+  CARGAS, COLORES_BANDA, agruparEjercicios, claveSerie, descansoDe, hermanas,
+  modoDe, nombreGrupo, seriesDe, tipoCarga, type Dia,
 } from "@/lib/modelo";
+import { useBandera } from "@/lib/preferencias";
 import { clienteNavegador } from "@/lib/supabase/navegador";
 
+import { Cronometro, type Descanso } from "./cronometro";
 import estilos from "./plan.module.css";
 
 type Registro = {
@@ -42,6 +44,18 @@ export function PantallaPlan({
 }) {
   const [dia, setDia] = useState(0);
   const [semana, setSemana] = useState(0);
+
+  const [descanso, setDescanso] = useState<Descanso | null>(null);
+  const [cronoOn, setCronoOn] = useBandera("mf:crono");
+  // iOS solo deja crear un AudioContext dentro de un gesto del usuario, así
+  // que se arma en el clic que marca la serie. Para cuando termina la pausa
+  // ya no hay gesto al que colgarse.
+  const audio = useRef<AudioContext | null>(null);
+
+  const cambiarCrono = useCallback((valor: boolean) => {
+    setCronoOn(valor);
+    if (!valor) setDescanso(null);
+  }, [setCronoOn]);
 
   const [registros, setRegistros] = useState(() => {
     const m = new Map<string, Registro>();
@@ -161,7 +175,7 @@ export function PantallaPlan({
   if (!diaActual) return <p className={estilos.vacio}>Este mesociclo no tiene días cargados.</p>;
 
   return (
-    <main className={estilos.pantalla}>
+    <main className={`${estilos.pantalla} ${descanso ? estilos.conCrono : ""}`}>
       {/* El coach llega acá desde la ficha de su alumno y el alumno desde su
           lista: cada uno vuelve a donde estaba. Sin esto la pantalla del plan
           es un pozo, y en el celular no hay barra de navegación que ayude. */}
@@ -214,8 +228,15 @@ export function PantallaPlan({
           <h2 className={estilos.bloqueTitulo}>{bloque.titulo}</h2>
           {bloque.meta && <p className={estilos.bloqueMeta}>{bloque.meta}</p>}
 
-          {agruparEjercicios(bloque).map((grupo) =>
-            grupo.items.map(({ ej, ei, etiqueta }) => {
+          {agruparEjercicios(bloque).map((grupo) => {
+            // En una superserie la pausa va al cerrar la vuelta, y la define
+            // el último ejercicio del grupo.
+            const cierre = grupo.items[grupo.items.length - 1].ej;
+            const etiquetaPausa = grupo.items.length > 1
+              ? `Descanso · ${nombreGrupo(grupo.items.length)} ${grupo.letra}`
+              : `Descanso · ${cierre.nombre}`;
+
+            return grupo.items.map(({ ej, ei, etiqueta, ultimo }) => {
               const info = seriesDe(ej, bloque, semana);
               const n = seriesExtra.get(`${dia}|${bi}|${ei}|${semana}`) ?? info.n;
               const tipo = tipoCarga(ej);
@@ -279,16 +300,37 @@ export function PantallaPlan({
                             className={estilos.ok}
                             aria-pressed={r.hecha}
                             aria-label={`Marcar la serie ${serie} de ${ej.nombre} como hecha`}
-                            onClick={() =>
+                            onClick={() => {
+                              const marcando = !r.hecha;
                               encolar([{
                                 ...r,
-                                hecha: !r.hecha,
+                                hecha: marcando,
                                 // Si no escribió las reps, se dan por hechas
                                 // las que pedía el plan.
-                                reps: !r.hecha && !r.reps && info.objetivo
+                                reps: marcando && !r.reps && info.objetivo
                                   ? info.objetivo : r.reps,
-                              }])
-                            }
+                              }]);
+
+                              // La pausa arranca solo al marcar, nunca al
+                              // desmarcar: desmarcar es corregir un error, no
+                              // terminar una serie. Y solo en el último
+                              // ejercicio del grupo, porque en una superserie
+                              // no se descansa entre A1 y A2.
+                              if (!marcando || !cronoOn || !ultimo) return;
+                              const segundos = descansoDe(bloque, cierre);
+                              if (!segundos) return;
+
+                              try {
+                                audio.current ??= new AudioContext();
+                              } catch {
+                                // Sin sonido igual vibra y se ve.
+                              }
+                              setDescanso({
+                                total: segundos,
+                                etiqueta: etiquetaPausa,
+                                desde: Date.now(),
+                              });
+                            }}
                           >
                             ✓
                           </button>
@@ -298,20 +340,44 @@ export function PantallaPlan({
                   </div>
                 </article>
               );
-            }),
-          )}
+            });
+          })}
         </section>
       ))}
 
-      <p className={estilos.estado} role="status">
-        {falló
-          ? "Sin conexión. Lo guardado queda acá y sube solo cuando vuelva."
-          : guardando
-            ? "Guardando…"
-            : soyElAlumno
-              ? "Se guarda solo"
-              : "Estás viendo la rutina de tu alumno"}
-      </p>
+      <div className={estilos.pie}>
+        {soyElAlumno && (
+          <label className={estilos.interruptor}>
+            <input
+              type="checkbox"
+              checked={cronoOn}
+              onChange={(e) => cambiarCrono(e.target.checked)}
+            />
+            Cronometrar los descansos
+          </label>
+        )}
+
+        <p className={estilos.estado} role="status">
+          {falló
+            ? "Sin conexión. Lo guardado queda acá y sube solo cuando vuelva."
+            : guardando
+              ? "Guardando…"
+              : soyElAlumno
+                ? "Se guarda solo"
+                : "Estás viendo la rutina de tu alumno"}
+        </p>
+      </div>
+
+      {descanso && (
+        <Cronometro
+          // Remonta en cada serie: así el componente arranca limpio sin un
+          // efecto que resetee su estado a mano.
+          key={descanso.desde}
+          descanso={descanso}
+          audio={audio}
+          onCerrar={() => setDescanso(null)}
+        />
+      )}
     </main>
   );
 }
