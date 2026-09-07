@@ -10,8 +10,7 @@ export default function Entrar() {
       <div className={estilos.caja}>
         <h1 className={estilos.titulo}>MindFit</h1>
         <p className={estilos.bajada}>
-          Poné tu mail y te mandamos un link para entrar. Sin contraseña que
-          recordar.
+          Entrá con el mail y la contraseña que te pasó tu coach.
         </p>
         {/* Antes que el formulario: si el link mágico dejó la sesión en el
             fragmento de la URL, esto la rescata y ni se ve esta pantalla. */}
