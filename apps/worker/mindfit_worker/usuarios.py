@@ -162,6 +162,61 @@ def alta(ruta: pathlib.Path, coach_email: str) -> int:
     return 0
 
 
+# Las cuentas que usan las pruebas de punta a punta.
+#
+# Existen porque la suite le cambia la contraseña a quien use para poder
+# entrar, y hacérselo a Tomás o a una alumna los deja afuera sin que nadie se
+# entere. Ya pasó dos veces.
+COACH_PRUEBA = "e2e-coach@mindfit.local"
+ALUMNO_PRUEBA = "e2e-alumno@mindfit.local"
+PLAN_PRUEBA = "Prueba · Full body"
+
+
+def cuentas_de_prueba() -> int:
+    """Deja listas las cuentas de las pruebas. Se puede correr muchas veces."""
+    admin = Admin()
+
+    coach = admin.buscar(COACH_PRUEBA)
+    if not coach:
+        coach = admin.crear(COACH_PRUEBA, "Coach de prueba", clave_nueva())
+        print(f"  · creado {COACH_PRUEBA}")
+    alumno = admin.buscar(ALUMNO_PRUEBA)
+    if not alumno:
+        alumno = admin.crear(ALUMNO_PRUEBA, "Alumno de prueba", clave_nueva())
+        print(f"  · creado {ALUMNO_PRUEBA}")
+
+    with psycopg.connect(os.getenv("DATABASE_URL", LOCAL), connect_timeout=20) as con, con.cursor() as cur:
+        cur.execute("select public.promover_a_coach(%s)", (coach["id"],))
+        cur.execute("""update public.perfiles set coach_id = %s, nombre = 'Alumno de prueba'
+                       where id = %s""", (coach["id"], alumno["id"]))
+
+        # Un plan para que las pruebas tengan qué abrir. Se copia la estructura
+        # de un mesociclo real: si fuera inventada, las pruebas pasarían con
+        # una forma de datos que no existe en producción.
+        cur.execute("""select estructura, semanas, ciclo_carga from public.planes
+                       where origen is not null order by creado limit 1""")
+        modelo = cur.fetchone()
+        if not modelo:
+            print("No hay ningún plan del que copiar la estructura.", file=sys.stderr)
+            return 1
+
+        cur.execute("""insert into public.planes
+                         (alumno_id, coach_id, titulo, semanas, ciclo_carga, estructura, origen)
+                       values (%s,%s,%s,%s,%s,%s,'e2e')
+                       on conflict (origen) where origen is not null do update set
+                         alumno_id = excluded.alumno_id, coach_id = excluded.coach_id,
+                         estructura = excluded.estructura""",
+                    (alumno["id"], coach["id"], PLAN_PRUEBA,
+                     modelo[1], json.dumps(modelo[2]), json.dumps(modelo[0])))
+        con.commit()
+
+    print(f"\n✓ listas. Las pruebas manejan sus contraseñas solas.")
+    print(f"  coach:  {COACH_PRUEBA}")
+    print(f"  alumno: {ALUMNO_PRUEBA}")
+    print(f"  plan:   {PLAN_PRUEBA}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     cargar()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -169,6 +224,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="da de alta los alumnos de un csv con nombre,email")
     ap.add_argument("--clave", metavar="EMAIL", help="le genera una contraseña nueva a alguien")
     ap.add_argument("--listar", action="store_true", help="muestra quién está dado de alta")
+    ap.add_argument("--prueba", action="store_true",
+                    help="arma las cuentas que usan las pruebas e2e")
     ap.add_argument("--coach", default=os.getenv("COACH_EMAIL", ""),
                     help="el mail del coach al que se cuelgan los alumnos")
     args = ap.parse_args(argv)
@@ -184,6 +241,9 @@ def main(argv: list[str] | None = None) -> int:
         admin.cambiar_clave(u["id"], clave)
         print(f"{email}\n  contraseña: {clave}")
         return 0
+
+    if args.prueba:
+        return cuentas_de_prueba()
 
     if args.alta:
         if not args.alta.exists():

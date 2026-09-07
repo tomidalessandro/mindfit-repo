@@ -9,7 +9,12 @@ import path from "node:path";
 
 const RAIZ = path.resolve(import.meta.dirname, "../..");
 const APP = process.env.APP_URL ?? "http://localhost:3000";
-const ALUMNO = process.env.EMAIL_ALUMNO ?? "nicodalessandro11@gmail.com";
+// Las cuentas de prueba, nunca las de personas reales: esta suite le cambia
+// la contraseña a quien use para poder entrar, y hacérselo a Tomás o a una
+// alumna los deja afuera sin que nadie se entere. Se arman con:
+//   cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba
+const COACH = process.env.EMAIL_COACH ?? "e2e-coach@mindfit.local";
+const ALUMNO = process.env.EMAIL_ALUMNO ?? "e2e-alumno@mindfit.local";
 const CLAVE = "prueba-e2e-no-usar-" + process.pid;
 
 const env = Object.fromEntries(

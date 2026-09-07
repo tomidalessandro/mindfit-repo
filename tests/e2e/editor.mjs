@@ -12,6 +12,12 @@ import path from "node:path";
 
 const RAIZ = path.resolve(import.meta.dirname, "../..");
 const APP = process.env.APP_URL ?? "http://localhost:3000";
+// Las cuentas de prueba, nunca las de personas reales: esta suite le cambia
+// la contraseña a quien use para poder entrar, y hacérselo a Tomás o a una
+// alumna los deja afuera sin que nadie se entere. Se arman con:
+//   cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba
+const COACH = process.env.EMAIL_COACH ?? "e2e-coach@mindfit.local";
+const ALUMNO = process.env.EMAIL_ALUMNO ?? "e2e-alumno@mindfit.local";
 const CLAVE = "prueba-e2e-no-usar-" + process.pid;
 const TITULO = "Prueba automática " + process.pid;
 
@@ -22,7 +28,6 @@ const env = Object.fromEntries(
 );
 const API = env.SUPABASE_URL.replace(/\/$/, "");
 const cab = { apikey: env.SUPABASE_SECRET_KEY, Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`, "Content-Type": "application/json" };
-const COACH = env.COACH_EMAIL.toLowerCase();
 
 async function usuario(email) {
   const r = await fetch(`${API}/auth/v1/admin/users?filter=${encodeURIComponent(email)}`, { headers: cab });
@@ -42,9 +47,9 @@ await ponerClave(COACH);
 // Siempre la cuenta de prueba, nunca "un alumno cualquiera": esta prueba le
 // cambia la contraseña a quien use, y hacérselo a una alumna de verdad la
 // dejaría afuera sin que nadie se entere.
-const ALUMNO_PRUEBA = process.env.EMAIL_ALUMNO ?? "nicodalessandro11@gmail.com";
-const uPrueba = await usuario(ALUMNO_PRUEBA);
-if (!uPrueba) throw new Error(`no existe la cuenta de prueba ${ALUMNO_PRUEBA}`);
+const uPrueba = await usuario(ALUMNO);
+if (!uPrueba) throw new Error(
+  `no existe ${ALUMNO}. Corré: cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba`);
 const alumno = { id: uPrueba.id, nombre: "prueba" };
 
 const nav = await chromium.launch();

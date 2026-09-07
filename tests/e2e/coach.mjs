@@ -14,6 +14,12 @@ import path from "node:path";
 
 const RAIZ = path.resolve(import.meta.dirname, "../..");
 const APP = process.env.APP_URL ?? "http://localhost:3000";
+// Las cuentas de prueba, nunca las de personas reales: esta suite le cambia
+// la contraseña a quien use para poder entrar, y hacérselo a Tomás o a una
+// alumna los deja afuera sin que nadie se entere. Se arman con:
+//   cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba
+const COACH = process.env.EMAIL_COACH ?? "e2e-coach@mindfit.local";
+const ALUMNO = process.env.EMAIL_ALUMNO ?? "e2e-alumno@mindfit.local";
 
 const env = Object.fromEntries(
   fs.readFileSync(path.join(RAIZ, ".env.local"), "utf8").split("\n")
@@ -26,7 +32,6 @@ const cabeceras = {
   Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
   "Content-Type": "application/json",
 };
-const COACH = env.COACH_EMAIL.toLowerCase();
 const CLAVE = "prueba-e2e-no-usar-" + process.pid;
 
 async function ponerClave(email) {
@@ -59,16 +64,16 @@ try {
   ok((await pagina.locator("body").innerText()).includes("Tus alumnos"), "ve la lista de sus alumnos");
 
   console.log("\n── abrir la ficha de un alumno ──");
-  await pagina.getByText("Karina", { exact: true }).click();
+  await pagina.getByText("Alumno de prueba", { exact: true }).click();
   await pagina.waitForURL(/\/alumno\//, { timeout: 20000 });
   await pagina.waitForLoadState("networkidle");
   const ficha = await pagina.locator("body").innerText();
   ok(!ficha.includes("could not be found"), "la ficha existe (no es 404)");
-  ok(ficha.includes("Karina"), "muestra el nombre");
-  ok(ficha.includes("Agosto"), "lista su mesociclo");
+  ok(ficha.includes("Alumno de prueba"), "muestra el nombre");
+  ok(ficha.includes("Prueba · Full body"), "lista su mesociclo");
 
   console.log("\n── entrar al mesociclo del alumno ──");
-  await pagina.getByText("Agosto · Full body").click();
+  await pagina.getByText("Prueba · Full body").click();
   await pagina.waitForURL(/\/plan\//, { timeout: 20000 });
   await pagina.waitForLoadState("networkidle");
   const plan = await pagina.locator("body").innerText();

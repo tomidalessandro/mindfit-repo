@@ -16,7 +16,8 @@
     "web:build": "npm --prefix apps/web run build",
     "test:e2e": "node tests/e2e/plan.mjs && node tests/e2e/coach.mjs && node tests/e2e/cronometro.mjs && node tests/e2e/guia-progreso.mjs && node tests/e2e/editor.mjs",
     "usuarios": "cd apps/worker && uv run python -m mindfit_worker.usuarios --listar",
-    "test:unidad": "node tests/unidad/progreso.mjs"
+    "test:unidad": "node tests/unidad/progreso.mjs",
+    "test:cuentas": "cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba"
   },
   "devDependencies": {
     "playwright": "^1.48.0",

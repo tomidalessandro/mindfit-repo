@@ -20,8 +20,13 @@ import path from "node:path";
 
 const RAIZ = path.resolve(import.meta.dirname, "../..");
 const APP = process.env.APP_URL ?? "http://localhost:3000";
-const ALUMNO = process.env.EMAIL_ALUMNO ?? "nicodalessandro11@gmail.com";
-const TITULO_PLAN = process.env.TITULO_PLAN ?? "Prueba · Full body";
+// Las cuentas de prueba, nunca las de personas reales: esta suite le cambia
+// la contraseña a quien use para poder entrar, y hacérselo a Tomás o a una
+// alumna los deja afuera sin que nadie se entere. Se arman con:
+//   cd apps/worker && uv run python -m mindfit_worker.usuarios --prueba
+const COACH = process.env.EMAIL_COACH ?? "e2e-coach@mindfit.local";
+const ALUMNO = process.env.EMAIL_ALUMNO ?? "e2e-alumno@mindfit.local";
+
 
 const env = Object.fromEntries(
   fs.readFileSync(path.join(RAIZ, ".env.local"), "utf8")
@@ -98,7 +103,7 @@ try {
   ok(!pagina.url().includes("/entrar"), "entra con la contraseña");
 
   console.log("\n── abrir el mesociclo ──");
-  await pagina.getByText(TITULO_PLAN).click();
+  await pagina.getByText("Prueba · Full body").click();
   await pagina.waitForURL(/\/plan\//, { timeout: 20000 });
   await pagina.waitForLoadState("networkidle");
   const cuerpo = await pagina.locator("body").innerText();
