@@ -72,3 +72,111 @@
 .enlaceGuia:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .pie { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 26px; }
+
+/* ---------------------------------------------------- alta de alumno ----- */
+.alta { margin-top: 22px; }
+
+.botonPrimario {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botonPrimario:hover:not(:disabled) { background: var(--accent-hi); }
+.botonPrimario:disabled { opacity: .6; cursor: default; }
+
+.botonSecundario {
+  padding: 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.botonSecundario:hover:not(:disabled) { color: var(--ink); }
+
+.formulario,
+.altaLista {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.campoEtiqueta { font-size: 13px; color: var(--ink-2); }
+
+.campo {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.campo:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.ayuda { margin: 0; font-size: 13px; color: var(--ink-3); line-height: 1.5; }
+.acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.error {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--danger-line);
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 14px;
+}
+
+/* ------------------------------------------------ credenciales nuevas ---- */
+.altaTitulo { margin: 0; font-size: 16px; }
+
+.credenciales {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 13px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  font-size: 14px;
+}
+
+.credenciales dt { color: var(--ink-3); }
+.credenciales dd {
+  margin: 0;
+  font-weight: 600;
+  /* Una contraseña larga no tiene que empujar la tarjeta fuera de pantalla. */
+  overflow-wrap: anywhere;
+}
+
+.aviso {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--accent-line);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mensaje {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+}

@@ -51,6 +51,13 @@ export async function refrescarSesion(pedido: NextRequest) {
   const esPublica = PUBLICAS.some((p) => ruta === p || ruta.startsWith(p + "/"));
 
   if (!user && !esPublica) {
+    // Las rutas de API contestan por su cuenta, con un código y un JSON.
+    // Redirigirlas a la pantalla de login les devolvería un 200 con HTML
+    // adentro, que un cliente distraído lee como si hubiera funcionado.
+    if (ruta.startsWith("/api/")) {
+      return NextResponse.json({ error: "Sin sesión." }, { status: 401 });
+    }
+
     const destino = pedido.nextUrl.clone();
     destino.pathname = "/entrar";
     destino.search = "";

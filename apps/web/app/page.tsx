@@ -3,6 +3,7 @@ import Link from "next/link";
 import { misAlumnos, miPerfil, planesDe } from "@/lib/datos";
 
 import estilos from "./inicio.module.css";
+import { NuevoAlumno } from "./nuevo-alumno";
 import { Salir } from "./salir";
 
 export default async function Inicio() {
@@ -43,8 +44,7 @@ async function InicioCoach({ perfil }: { perfil: { id: string; nombre: string } 
 
       {alumnos.length === 0 ? (
         <p className={estilos.vacio}>
-          Todavía no tenés alumnos. Se dan de alta invitándolos por mail desde
-          Supabase Auth.
+          Todavía no tenés alumnos.
         </p>
       ) : (
         <ul className={estilos.lista}>
@@ -60,6 +60,10 @@ async function InicioCoach({ perfil }: { perfil: { id: string; nombre: string } 
           ))}
         </ul>
       )}
+
+      <div className={estilos.alta}>
+        <NuevoAlumno />
+      </div>
     </main>
   );
 }
