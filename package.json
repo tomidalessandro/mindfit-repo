@@ -14,8 +14,9 @@
     "test:rls": "bash supabase/tests/correr.sh",
     "web": "npm --prefix apps/web run dev",
     "web:build": "npm --prefix apps/web run build",
-    "test:e2e": "node tests/e2e/plan.mjs && node tests/e2e/coach.mjs && node tests/e2e/cronometro.mjs",
-    "usuarios": "cd apps/worker && uv run python -m mindfit_worker.usuarios --listar"
+    "test:e2e": "node tests/e2e/plan.mjs && node tests/e2e/coach.mjs && node tests/e2e/cronometro.mjs && node tests/e2e/guia-progreso.mjs",
+    "usuarios": "cd apps/worker && uv run python -m mindfit_worker.usuarios --listar",
+    "test:unidad": "node tests/unidad/progreso.mjs"
   },
   "devDependencies": {
     "playwright": "^1.48.0",

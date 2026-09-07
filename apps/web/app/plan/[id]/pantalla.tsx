@@ -194,6 +194,11 @@ export function PantallaPlan({
             {d.nombre}
           </button>
         ))}
+        {/* La guía va acá, entre los días, igual que en la v2: es donde surge
+            la duda de cuánto peso poner. */}
+        <Link href="/guia" className={estilos.diaTab}>
+          Guía
+        </Link>
       </nav>
 
       <header className={estilos.cabecera}>

@@ -74,6 +74,12 @@ export default async function PaginaAlumno({
           )}
         </>
       )}
+
+      <nav className={estilos.pie}>
+        <Link href={`/progreso/${id}`} className={estilos.enlace}>
+          Ver su progreso →
+        </Link>
+      </nav>
     </main>
   );
 }

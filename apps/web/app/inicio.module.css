@@ -61,3 +61,14 @@
   color: var(--ink-2);
   line-height: 1.6;
 }
+
+.enlaceGuia {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.enlaceGuia:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.pie { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 26px; }

@@ -95,6 +95,15 @@ async function InicioAlumno({ perfil }: { perfil: { id: string; nombre: string }
           ))}
         </ul>
       )}
+
+      <nav className={estilos.pie}>
+        <Link href={`/progreso/${perfil.id}`} className={estilos.enlaceGuia}>
+          Tu progreso →
+        </Link>
+        <Link href="/guia" className={estilos.enlaceGuia}>
+          ¿Cómo progresar? →
+        </Link>
+      </nav>
     </main>
   );
 }

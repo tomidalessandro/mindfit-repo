@@ -1,0 +1,97 @@
+.pantalla {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 12px 20px 56px;
+}
+
+.volver {
+  display: inline-block;
+  padding: 6px 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.volver:hover { color: var(--ink); }
+
+.cabecera { margin: 14px 0 24px; }
+
+.eyebrow {
+  margin: 0 0 5px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.titulo { margin: 0 0 10px; font-size: 26px; letter-spacing: -0.02em; }
+.intro { margin: 0; color: var(--ink-2); line-height: 1.6; font-size: 14px; }
+
+.cuenta {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.info { min-width: 0; }
+
+.nombre {
+  margin: 0 0 3px;
+  font-weight: 600;
+  /* Los nombres largos ("Peso muerto a una pierna") no tienen que empujar el
+     delta fuera de la pantalla. */
+  overflow-wrap: anywhere;
+}
+
+.recorrido {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.delta {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Solo se destaca lo que subió. Un retroceso puede ser una descarga
+   planificada, y pintarlo de rojo diría algo que no sabemos. */
+.subio {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+}
+
+.vacio {
+  padding: 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+}
+
+.vacioTitulo { margin: 0 0 6px; font-weight: 600; }
+.vacioTexto { margin: 0; color: var(--ink-2); line-height: 1.6; font-size: 14px; }

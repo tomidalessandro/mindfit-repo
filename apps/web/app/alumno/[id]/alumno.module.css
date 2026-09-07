@@ -72,3 +72,13 @@
   color: var(--ink-2);
   line-height: 1.6;
 }
+
+.pie { margin-top: 28px; }
+
+.enlace {
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.enlace:hover { text-decoration: underline; text-underline-offset: 3px; }
