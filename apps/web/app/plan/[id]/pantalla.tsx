@@ -11,6 +11,7 @@ import { useBandera } from "@/lib/preferencias";
 import { clienteNavegador } from "@/lib/supabase/navegador";
 
 import { Cronometro, type Descanso } from "./cronometro";
+import { Editor } from "./editor";
 import estilos from "./plan.module.css";
 
 type Registro = {
@@ -35,13 +36,20 @@ type Plan = {
 const RETARDO = 500;
 
 export function PantallaPlan({
-  plan, registros: iniciales, series: seriesIniciales, soyElAlumno,
+  plan, registros: iniciales, series: seriesIniciales, soyElAlumno, soyElCoach,
+  biblioteca,
 }: {
   plan: Plan;
   registros: Registro[];
   series: SerieDePlan[];
   soyElAlumno: boolean;
+  soyElCoach: boolean;
+  biblioteca: { nombre: string; video: string | null; carga: string }[];
 }) {
+  // La estructura vive en estado porque el coach la edita en la misma
+  // pantalla: al agregar un ejercicio tiene que verlo aparecer, no recargar.
+  const [dias, setDias] = useState(plan.dias);
+  const [editando, setEditando] = useState(false);
   const [dia, setDia] = useState(0);
   const [semana, setSemana] = useState(0);
 
@@ -148,7 +156,7 @@ export function PantallaPlan({
    *  salvo que ahí ya lo hayan cargado a mano. */
   const guardarCarga = useCallback(
     (bi: number, ei: number, serie: number, valor: string) => {
-      const bloque = plan.dias[dia].bloques[bi];
+      const bloque = dias[dia].bloques[bi];
       const ej = bloque.ejercicios[ei];
       const propio = leer(bi, ei, semana, serie);
       const filas: Registro[] = [
@@ -168,10 +176,10 @@ export function PantallaPlan({
       }
       encolar(filas);
     },
-    [plan, dia, semana, registros, leer, encolar],
+    [dias, plan.semanas, plan.cicloCarga, dia, semana, registros, leer, encolar],
   );
 
-  const diaActual = plan.dias[dia];
+  const diaActual = dias[dia];
   if (!diaActual) return <p className={estilos.vacio}>Este mesociclo no tiene días cargados.</p>;
 
   return (
@@ -179,15 +187,28 @@ export function PantallaPlan({
       {/* El coach llega acá desde la ficha de su alumno y el alumno desde su
           lista: cada uno vuelve a donde estaba. Sin esto la pantalla del plan
           es un pozo, y en el celular no hay barra de navegación que ayude. */}
-      <Link
-        href={soyElAlumno ? "/" : `/alumno/${plan.alumnoId}`}
-        className={estilos.volver}
-      >
-        ‹ Volver
-      </Link>
+      <div className={estilos.encabezado}>
+        <Link
+          href={soyElAlumno ? "/" : `/alumno/${plan.alumnoId}`}
+          className={estilos.volver}
+        >
+          ‹ Volver
+        </Link>
+
+        {soyElCoach && (
+          <button
+            type="button"
+            className={estilos.modo}
+            aria-pressed={editando}
+            onClick={() => setEditando((v) => !v)}
+          >
+            {editando ? "Listo" : "Editar"}
+          </button>
+        )}
+      </div>
 
       <nav className={estilos.dias} aria-label="Días">
-        {plan.dias.map((d, i) => (
+        {dias.map((d, i) => (
           <button key={i} type="button" className={estilos.diaTab}
                   aria-current={i === dia ? "true" : undefined}
                   onClick={() => setDia(i)}>
@@ -228,7 +249,21 @@ export function PantallaPlan({
         {COLORES_BANDA.map((c) => <option key={c} value={c} />)}
       </datalist>
 
-      {diaActual.bloques.map((bloque, bi) => (
+      {editando ? (
+        <Editor
+          planId={plan.id}
+          dias={dias}
+          semanas={plan.semanas}
+          diaActivo={dia}
+          biblioteca={biblioteca}
+          onCambio={(nuevos) => {
+            setDias(nuevos);
+            // Si borró el día que estaba abierto, hay que moverse a uno que
+            // exista o la pantalla queda en blanco.
+            if (dia >= nuevos.length) setDia(Math.max(0, nuevos.length - 1));
+          }}
+        />
+      ) : diaActual.bloques.map((bloque, bi) => (
         <section key={bi} className={estilos.bloque}>
           <h2 className={estilos.bloqueTitulo}>{bloque.titulo}</h2>
           {bloque.meta && <p className={estilos.bloqueMeta}>{bloque.meta}</p>}

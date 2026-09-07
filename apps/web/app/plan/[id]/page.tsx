@@ -16,11 +16,14 @@ export default async function PaginaPlan({
   // Las tres consultas son independientes: van juntas y no en fila.
   // RLS ya limita cada una a lo que este usuario puede ver, así que si el
   // plan es de otro alumno esto devuelve vacío y termina en un 404.
-  const [plan, registros, series, sesion] = await Promise.all([
+  const [plan, registros, series, sesion, biblioteca] = await Promise.all([
     supabase.from("planes").select("*").eq("id", id).maybeSingle(),
     supabase.from("registros").select("*").eq("plan_id", id),
     supabase.from("plan_series").select("*").eq("plan_id", id),
     supabase.auth.getUser(),
+    // La biblioteca alimenta el autocompletar del editor. RLS ya la limita a
+    // la base más la del coach que mira.
+    supabase.from("ejercicios").select("nombre, video, carga").order("nombre"),
   ]);
 
   if (!plan.data) notFound();
@@ -38,6 +41,8 @@ export default async function PaginaPlan({
       registros={registros.data ?? []}
       series={series.data ?? []}
       soyElAlumno={sesion.data.user?.id === plan.data.alumno_id}
+      soyElCoach={sesion.data.user?.id === plan.data.coach_id}
+      biblioteca={biblioteca.data ?? []}
     />
   );
 }

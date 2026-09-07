@@ -215,3 +215,29 @@ a.nombre { text-decoration: underline; text-underline-offset: 3px; }
 }
 
 .interruptor input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modo {
+  padding: 7px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.modo[aria-pressed="true"] {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+  font-weight: 600;
+}
+
+.modo:hover { border-color: var(--accent); }

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { perfilDe, planesDe } from "@/lib/datos";
+import { miPerfil, perfilDe, planesDe } from "@/lib/datos";
 
 import estilos from "./alumno.module.css";
+import { NuevoMesociclo } from "./nuevo-mesociclo";
 
 export default async function PaginaAlumno({
   params,
@@ -12,12 +13,13 @@ export default async function PaginaAlumno({
 }) {
   const { id } = await params;
 
-  const perfil = await perfilDe(id);
+  const [perfil, quienMira] = await Promise.all([perfilDe(id), miPerfil()]);
   // RLS ya filtró: si llega null, o no existe o no es alumno de quien mira.
   // Las dos cosas se contestan igual, porque un "no tenés permiso" confirmaría
   // que esa persona existe.
   if (!perfil) notFound();
 
+  const soyElCoach = quienMira?.rol === "coach" && perfil.coach_id === quienMira.id;
   const planes = await planesDe(id);
   const activos = planes.filter((p) => p.estado === "activo");
   const archivados = planes.filter((p) => p.estado === "archivado");
@@ -41,8 +43,7 @@ export default async function PaginaAlumno({
 
       {planes.length === 0 ? (
         <p className={estilos.vacio}>
-          Todavía no tiene ninguna rutina cargada. Por ahora los mesociclos se
-          arman desde el worker; la pantalla para crearlos acá está pendiente.
+          Todavía no tiene ninguna rutina cargada.
         </p>
       ) : (
         <>
@@ -73,6 +74,16 @@ export default async function PaginaAlumno({
             </section>
           )}
         </>
+      )}
+
+      {soyElCoach && (
+        <div className={estilos.alta}>
+          <NuevoMesociclo
+            alumnoId={id}
+            coachId={quienMira.id}
+            nombreAlumno={perfil.nombre}
+          />
+        </div>
       )}
 
       <nav className={estilos.pie}>

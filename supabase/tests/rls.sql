@@ -109,6 +109,19 @@ select pg_temp.afirmar_prohibido(
   $$insert into public.planes (alumno_id, coach_id, titulo) values ('aaaaaaaa-0000-0000-0000-000000000001','aaaaaaaa-0000-0000-0000-000000000001','Me armo yo')$$,
   'Ana no puede armarse un plan');
 
+-- Esto es lo que sostiene al editor. En la app el botón de editar solo se le
+-- muestra al coach, pero esconder un botón no es una cerradura: lo que impide
+-- de verdad que una alumna se cambie la rutina es esta política.
+select pg_temp.afirmar_prohibido(
+  $$update public.planes set estructura = '[]'::jsonb where id='99999999-0000-0000-0000-00000000000a'$$,
+  'Ana no puede reescribir la estructura de su propio plan');
+select pg_temp.afirmar_prohibido(
+  $$update public.planes set semanas = 12 where id='99999999-0000-0000-0000-00000000000a'$$,
+  'Ana no puede cambiarle las semanas a su plan');
+select pg_temp.afirmar_prohibido(
+  $$delete from public.planes where id='99999999-0000-0000-0000-00000000000a'$$,
+  'Ana no puede borrar su plan');
+
 -- El agujero que tenía el esquema original: mirar solo `alumno_id = auth.uid()`
 -- dejaba escribir con el propio id dentro del plan de otro.
 select pg_temp.afirmar_prohibido(
