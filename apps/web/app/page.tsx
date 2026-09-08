@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { misAlumnos, miPerfil, planesDe } from "@/lib/datos";
+import { misAlumnos, misArchivados, miPerfil, planesDe } from "@/lib/datos";
 
 import estilos from "./inicio.module.css";
 import { NuevoAlumno } from "./nuevo-alumno";
@@ -30,7 +30,10 @@ export default async function Inicio() {
 }
 
 async function InicioCoach({ perfil }: { perfil: { id: string; nombre: string } }) {
-  const alumnos = await misAlumnos(perfil.id);
+  const [alumnos, archivados] = await Promise.all([
+    misAlumnos(perfil.id),
+    misArchivados(perfil.id),
+  ]);
 
   return (
     <main className={estilos.pantalla}>
@@ -64,6 +67,30 @@ async function InicioCoach({ perfil }: { perfil: { id: string; nombre: string } 
       <div className={estilos.alta}>
         <NuevoAlumno />
       </div>
+
+      {archivados.length > 0 && (
+        <section className={estilos.archivados}>
+          <h2 className={estilos.subtitulo}>
+            {archivados.length === 1 ? "1 baja" : `${archivados.length} bajas`}
+          </h2>
+          <ul className={estilos.lista}>
+            {archivados.map((a) => (
+              <li key={a.id}>
+                <Link href={`/alumno/${a.id}`} className={`${estilos.fila} ${estilos.filaTenue}`}>
+                  <span className={estilos.nombre}>{a.nombre}</span>
+                  <span className={estilos.meta}>
+                    {/* Se dice qué quedó guardado, o "dar de baja" suena a
+                        borrar y nadie se anima a usarlo. */}
+                    {a.planes === 0
+                      ? "sin datos"
+                      : `${a.planes} ${a.planes === 1 ? "mesociclo" : "mesociclos"} · ${a.registros} series`}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </main>
   );
 }

@@ -67,6 +67,13 @@ export type Database = {
             foreignKeyName: "ejercicios_coach_id_fkey"
             columns: ["coach_id"]
             isOneToOne: false
+            referencedRelation: "alumnos_archivados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ejercicios_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
           },
@@ -75,7 +82,9 @@ export type Database = {
       perfiles: {
         Row: {
           actualizado: string
+          archivado_en: string | null
           coach_id: string | null
+          codigo_acceso: string | null
           creado: string
           id: string
           nombre: string
@@ -84,7 +93,9 @@ export type Database = {
         }
         Insert: {
           actualizado?: string
+          archivado_en?: string | null
           coach_id?: string | null
+          codigo_acceso?: string | null
           creado?: string
           id: string
           nombre: string
@@ -93,7 +104,9 @@ export type Database = {
         }
         Update: {
           actualizado?: string
+          archivado_en?: string | null
           coach_id?: string | null
+          codigo_acceso?: string | null
           creado?: string
           id?: string
           nombre?: string
@@ -101,6 +114,13 @@ export type Database = {
           telefono?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "perfiles_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "alumnos_archivados"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "perfiles_coach_id_fkey"
             columns: ["coach_id"]
@@ -190,7 +210,21 @@ export type Database = {
             foreignKeyName: "planes_alumno_id_fkey"
             columns: ["alumno_id"]
             isOneToOne: false
+            referencedRelation: "alumnos_archivados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planes_alumno_id_fkey"
+            columns: ["alumno_id"]
+            isOneToOne: false
             referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planes_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "alumnos_archivados"
             referencedColumns: ["id"]
           },
           {
@@ -253,6 +287,13 @@ export type Database = {
             foreignKeyName: "registros_alumno_id_fkey"
             columns: ["alumno_id"]
             isOneToOne: false
+            referencedRelation: "alumnos_archivados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registros_alumno_id_fkey"
+            columns: ["alumno_id"]
+            isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
           },
@@ -267,7 +308,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      alumnos_archivados: {
+        Row: {
+          archivado_en: string | null
+          coach_id: string | null
+          creado: string | null
+          id: string | null
+          nombre: string | null
+          planes: number | null
+          registros: number | null
+          rol: string | null
+          telefono: string | null
+        }
+        Insert: {
+          archivado_en?: string | null
+          coach_id?: string | null
+          creado?: string | null
+          id?: string | null
+          nombre?: string | null
+          planes?: never
+          registros?: never
+          rol?: string | null
+          telefono?: string | null
+        }
+        Update: {
+          archivado_en?: string | null
+          coach_id?: string | null
+          creado?: string | null
+          id?: string | null
+          nombre?: string | null
+          planes?: never
+          registros?: never
+          rol?: string | null
+          telefono?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "perfiles_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "alumnos_archivados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "perfiles_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       es_coach_de: { Args: { alumno: string }; Returns: boolean }

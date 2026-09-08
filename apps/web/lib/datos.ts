@@ -38,7 +38,26 @@ export async function misAlumnos(coachId: string): Promise<Perfil[]> {
     .from("perfiles")
     .select("*")
     .eq("coach_id", coachId)
+    // Los dados de baja no van en la lista de trabajo. Siguen en la base con
+    // todo lo suyo; se ven aparte.
+    .is("archivado_en", null)
     .order("nombre");
+
+  return data ?? [];
+}
+
+/** Los alumnos dados de baja, con cuánto dejaron cargado.
+ *
+ * Sale de la vista `alumnos_archivados`, que es la "tabla de deprecados": los
+ * mismos perfiles, filtrados por fecha de baja. RLS aplica igual que en la
+ * tabla, así que cada coach ve solo los suyos. */
+export async function misArchivados(coachId: string) {
+  const supabase = await clienteServidor();
+  const { data } = await supabase
+    .from("alumnos_archivados")
+    .select("id, nombre, archivado_en, planes, registros")
+    .eq("coach_id", coachId)
+    .order("archivado_en", { ascending: false });
 
   return data ?? [];
 }

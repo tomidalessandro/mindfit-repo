@@ -149,3 +149,44 @@
   color: var(--danger);
   font-size: 14px;
 }
+
+/* ------------------------------------------------------------ la baja ---- */
+.baja { margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+.bajaEnlace {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.bajaEnlace:hover { color: var(--danger); }
+
+.bajaCaja {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.bajaTexto { margin: 0; line-height: 1.6; font-size: 14px; color: var(--ink-2); }
+.bajaTexto strong { color: var(--ink); }
+
+.botonPeligro {
+  padding: 12px 18px;
+  border: 1px solid var(--danger-line);
+  border-radius: 12px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botonPeligro:hover:not(:disabled) { background: var(--danger-line); }
+.botonPeligro:disabled { opacity: .6; cursor: default; }

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { miPerfil, perfilDe, planesDe } from "@/lib/datos";
 
 import estilos from "./alumno.module.css";
+import { Baja } from "./baja";
 import { NuevoMesociclo } from "./nuevo-mesociclo";
 
 export default async function PaginaAlumno({
@@ -76,12 +77,23 @@ export default async function PaginaAlumno({
         </>
       )}
 
-      {soyElCoach && (
+      {soyElCoach && !perfil.archivado_en && (
         <div className={estilos.alta}>
           <NuevoMesociclo
             alumnoId={id}
             coachId={quienMira.id}
             nombreAlumno={perfil.nombre}
+          />
+        </div>
+      )}
+
+      {soyElCoach && (
+        <div className={estilos.baja}>
+          <Baja
+            alumnoId={id}
+            nombre={perfil.nombre}
+            archivado={!!perfil.archivado_en}
+            planes={planes.length}
           />
         </div>
       )}

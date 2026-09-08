@@ -106,6 +106,9 @@ select pg_temp.afirmar_prohibido(
   $$update public.perfiles set coach_id='22222222-2222-2222-2222-222222222222' where id='aaaaaaaa-0000-0000-0000-000000000001'$$,
   'Ana no puede cambiarse de coach sola');
 select pg_temp.afirmar_prohibido(
+  $$update public.perfiles set archivado_en = now() where id='aaaaaaaa-0000-0000-0000-000000000001'$$,
+  'Ana no puede darse de baja sola');
+select pg_temp.afirmar_prohibido(
   $$insert into public.planes (alumno_id, coach_id, titulo) values ('aaaaaaaa-0000-0000-0000-000000000001','aaaaaaaa-0000-0000-0000-000000000001','Me armo yo')$$,
   'Ana no puede armarse un plan');
 
@@ -176,6 +179,28 @@ reset role;
 
 
 -- ═══════════════════════════════════════════════════════════════ Coach B ══
+\echo ''
+\echo '── las bajas ──'
+-- El coach archiva a Beto (con la conexión de servicio, como hace la app).
+update public.perfiles set archivado_en = now()
+  where id = 'aaaaaaaa-0000-0000-0000-000000000002';
+
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
+select pg_temp.afirmar((select count(*) from public.alumnos_archivados) = 1,
+  'el Coach A ve a su alumno archivado en la vista');
+select pg_temp.afirmar((select nombre from public.alumnos_archivados) = 'Beto',
+  'y es el que archivó');
+select pg_temp.afirmar((select count(*) from public.perfiles where archivado_en is null) = 2,
+  'los activos siguen siendo dos: él y Ana');
+reset role;
+
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}';
+select pg_temp.afirmar((select count(*) from public.alumnos_archivados) = 0,
+  'el Coach B no ve las bajas del Coach A');
+reset role;
+
 \echo ''
 \echo '── Coach B: el aislamiento entre coaches ──'
 set local role authenticated;

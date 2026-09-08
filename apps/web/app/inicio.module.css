@@ -180,3 +180,18 @@
   line-height: 1.5;
   resize: vertical;
 }
+
+/* --------------------------------------------------------- las bajas ----- */
+.archivados { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+.subtitulo {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Se ven, pero no compiten con los alumnos que están entrenando. */
+.filaTenue { background: transparent; color: var(--ink-2); }
+.filaTenue:hover { background: var(--surface); }
