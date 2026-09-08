@@ -1,0 +1,78 @@
+.envoltorio {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.campo {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.campo:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.campo::placeholder { color: var(--ink-3); font-weight: 400; }
+
+.lista {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  /* Por encima de todo lo del editor, incluido el cronómetro fijo. */
+  z-index: 60;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  /* ~6 filas y media: se ve que hay más y se llega al final con un pulgar. */
+  max-height: 292px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface-3);
+  box-shadow: var(--shadow-lift);
+  -webkit-overflow-scrolling: touch;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  /* 44px de alto: es el mínimo para tocarlo con el pulgar sin apuntar. Era
+     justo lo que el datalist no garantizaba en el teléfono. */
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.activa { background: var(--accent-soft); color: var(--accent-soft-ink); }
+
+.nombre { overflow-wrap: anywhere; }
+
+.tipo {
+  flex: 0 0 auto;
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.activa .tipo { color: var(--accent-soft-ink); opacity: .75; }
+
+.vacio {
+  padding: 12px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.5;
+}

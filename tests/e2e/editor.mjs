@@ -83,9 +83,13 @@ try {
   await pg.getByRole("button", { name: "+ Ejercicio" }).last().click();
   await pg.waitForTimeout(300);
 
-  const nombre = pg.locator('[list="biblioteca-ejercicios"]').first();
-  // Un nombre de la biblioteca: tiene que traerse el video solo.
+  // Se elige de la lista, no se escribe: escribirlo a mano deja solo el
+  // nombre, y lo que interesa probar es que al elegirlo se traiga el resto.
+  const nombre = pg.getByRole("combobox").first();
+  await nombre.click();
   await nombre.fill("Sentadilla");
+  await pg.waitForTimeout(400);
+  await pg.getByRole("listbox").first().getByRole("option").first().click();
   await pg.waitForTimeout(1400);
   const video = pg.locator('input[inputmode="url"]').first();
   ok((await video.inputValue()).includes("youtube"),

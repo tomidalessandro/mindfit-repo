@@ -290,7 +290,11 @@ export function PantallaPlan({
                       <a className={estilos.nombre} href={ej.video}
                          target="_blank" rel="noopener noreferrer">{ej.nombre}</a>
                     ) : (
-                      <span className={estilos.nombre}>{ej.nombre}</span>
+                      <span className={`${estilos.nombre} ${ej.nombre ? "" : estilos.sinNombre}`}>
+                        {/* Sin nombre se ve incompleto y no invisible: el
+                            coach tiene que darse cuenta de que le falta. */}
+                        {ej.nombre || "Sin nombre"}
+                      </span>
                     )}
                   </div>
 

@@ -20,7 +20,11 @@ export function cicloPorDefecto(semanas: number): number[][] {
 
 export function ejercicioVacio(semanas: number): Ejercicio {
   return {
-    nombre: "Ejercicio nuevo",
+    // Vacío y no "Ejercicio nuevo": ese texto se veía como un nombre puesto a
+    // propósito, así que si el coach se distraía le llegaba así al alumno. Y
+    // además el buscador arrancaba filtrando por él, mostrando casi nada
+    // justo cuando más sirve ver la biblioteca entera.
+    nombre: "",
     video: "",
     carga: "kg",
     reps: Array(semanas).fill("8x3"),

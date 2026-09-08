@@ -37,7 +37,6 @@
 .filaCampos input,
 .filaCampos select,
 .repsCampo input,
-.nombre,
 .bloqueTitulo {
   width: 100%;
   padding: 10px 12px;
@@ -51,7 +50,6 @@
 .filaCampos input:focus,
 .filaCampos select:focus,
 .repsCampo input:focus,
-.nombre:focus,
 .bloqueTitulo:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* --------------------------------------------------------- bloques ------ */
@@ -77,8 +75,13 @@
   background: var(--surface-2);
 }
 
-.filaNombre { display: flex; gap: 8px; align-items: center; }
-.nombre { font-weight: 500; }
+.filaNombre {
+  display: flex;
+  gap: 8px;
+  /* flex-start y no center: cuando el buscador abre su lista, los botones de
+     mover no tienen que bajar con ella. */
+  align-items: flex-start;
+}
 
 .mover { display: flex; gap: 4px; flex: 0 0 auto; }
 

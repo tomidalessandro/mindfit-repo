@@ -6,6 +6,8 @@ import { CARGAS, type Bloque, type Dia, type Ejercicio, type TipoCarga } from "@
 import { bloqueFuerza, diaVacio, ejercicioVacio } from "@/lib/plantillas";
 import { clienteNavegador } from "@/lib/supabase/navegador";
 
+import { BuscadorEjercicio, type EjercicioBiblioteca } from "./buscador-ejercicio";
+
 import estilos from "./editor.module.css";
 
 /** La edición de la estructura del plan, solo para el coach.
@@ -21,7 +23,7 @@ type Props = {
   dias: Dia[];
   semanas: number;
   diaActivo: number;
-  biblioteca: { nombre: string; video: string | null; carga: string }[];
+  biblioteca: EjercicioBiblioteca[];
   onCambio: (dias: Dia[]) => void;
 };
 
@@ -234,23 +236,18 @@ export function Editor({
           {bloque.ejercicios.map((ej, ei) => (
             <div key={ei} className={estilos.ejercicio}>
               <div className={estilos.filaNombre}>
-                <input
-                  className={estilos.nombre}
-                  value={ej.nombre}
-                  list="biblioteca-ejercicios"
-                  onChange={(e) => {
-                    const elegido = biblioteca.find((b) => b.nombre === e.target.value);
-                    // Al elegir uno de la biblioteca se traen su video y su
-                    // tipo de carga: escribirlos de nuevo a mano en cada
-                    // mesociclo es donde aparecen los errores.
-                    editarEjercicio(bi, ei, elegido
-                      ? {
-                          nombre: elegido.nombre,
-                          video: elegido.video ?? "",
-                          carga: elegido.carga as TipoCarga,
-                        }
-                      : { nombre: e.target.value });
-                  }}
+                <BuscadorEjercicio
+                  valor={ej.nombre}
+                  biblioteca={biblioteca}
+                  onNombre={(nombre) => editarEjercicio(bi, ei, { nombre })}
+                  // Al elegir uno de la biblioteca se traen su video y su tipo
+                  // de carga: escribirlos de nuevo a mano en cada mesociclo es
+                  // donde aparecen los errores.
+                  onElegir={(elegido) => editarEjercicio(bi, ei, {
+                    nombre: elegido.nombre,
+                    video: elegido.video ?? "",
+                    carga: elegido.carga as TipoCarga,
+                  })}
                 />
                 <div className={estilos.mover}>
                   <button type="button" onClick={() => moverEjercicio(bi, ei, -1)}
@@ -361,9 +358,6 @@ export function Editor({
         )}
       </div>
 
-      <datalist id="biblioteca-ejercicios">
-        {biblioteca.map((b) => <option key={b.nombre} value={b.nombre} />)}
-      </datalist>
     </div>
   );
 }
